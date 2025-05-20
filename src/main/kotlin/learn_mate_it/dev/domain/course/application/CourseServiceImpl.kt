@@ -1,9 +1,11 @@
 package learn_mate_it.dev.domain.course.application
 
-import lombok.extern.slf4j.Slf4j
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
-@Slf4j
 @Service
 class CourseServiceImpl : CourseService {
+    private val log = LoggerFactory.getLogger(this::class.java)
+
+
 }
