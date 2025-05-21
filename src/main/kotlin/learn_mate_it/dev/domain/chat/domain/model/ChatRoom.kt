@@ -2,12 +2,17 @@ package learn_mate_it.dev.domain.chat.domain.model
 
 import jakarta.persistence.*
 import learn_mate_it.dev.common.base.BaseEntity
+import learn_mate_it.dev.domain.chat.domain.enums.ChatRoomType
 
 @Entity
 @Table(name = "chat_rooms")
 data class ChatRoom(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var chatRoomId: Long = 0,
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    var type: ChatRoomType,
 
     @Column(nullable = false)
     var userId: Long,
