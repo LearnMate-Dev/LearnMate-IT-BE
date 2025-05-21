@@ -1,0 +1,12 @@
+package learn_mate_it.dev.domain.chat.presentation.dto.response
+
+data class StepInitDto (
+    val stepProgressId: Long,
+    val courseNum : Int,
+    val stepNum : Int,
+    val stepTitle: String,
+    val stepDescription: String,
+    val stepSituation: String,
+    val firstQuiz: String,
+    val firstQuizOptions: List<String>
+)

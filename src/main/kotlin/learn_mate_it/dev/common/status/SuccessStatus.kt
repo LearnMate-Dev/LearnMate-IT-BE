@@ -11,4 +11,7 @@ enum class SuccessStatus (
 
     OK(HttpStatus.OK, "200", "요청이 성공적으로 처리되었습니다."),
 
+    // course
+    START_STEP_SUCCESS(HttpStatus.OK, "200", "스텝 시작하기가 성공적으로 완료되었습니다.")
+
 }
