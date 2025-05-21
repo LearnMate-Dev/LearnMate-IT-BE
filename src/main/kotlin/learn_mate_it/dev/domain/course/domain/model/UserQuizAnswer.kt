@@ -4,11 +4,10 @@ import jakarta.persistence.*
 import learn_mate_it.dev.common.base.BaseEntity
 import learn_mate_it.dev.domain.course.domain.enums.QuizType
 import java.io.Serializable
-import java.util.*
 
 data class UserQuizAnswerId(
 
-    val stepProgressId: UUID = UUID.randomUUID(),
+    val stepProgressId: Long,
     val quizType: QuizType
 
 ) : Serializable
@@ -19,8 +18,8 @@ data class UserQuizAnswerId(
 data class UserQuizAnswer(
 
     @Id
-    @Column(nullable = false, columnDefinition = "UUID")
-    val stepProgressId: UUID = UUID.randomUUID(),
+    @Column(nullable = false)
+    val stepProgressId: Long,
 
     @Id
     @Enumerated(EnumType.STRING)
