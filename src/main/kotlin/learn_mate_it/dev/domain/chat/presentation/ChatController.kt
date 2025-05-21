@@ -1,6 +1,6 @@
 package learn_mate_it.dev.domain.chat.presentation
 
-import learn_mate_it.dev.domain.chat.application.ChatService
+import learn_mate_it.dev.domain.chat.application.service.ChatService
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 

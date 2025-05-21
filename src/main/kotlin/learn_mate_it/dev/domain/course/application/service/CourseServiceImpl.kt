@@ -1,9 +1,9 @@
-package learn_mate_it.dev.domain.course.application
+package learn_mate_it.dev.domain.course.application.service
 
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
-import learn_mate_it.dev.domain.course.presentation.dto.response.StepInitDto
+import learn_mate_it.dev.domain.course.application.dto.response.StepInitDto
 import learn_mate_it.dev.domain.course.domain.enums.CourseType
 import learn_mate_it.dev.domain.course.domain.enums.QuizType
 import learn_mate_it.dev.domain.course.domain.enums.StepType
@@ -50,15 +50,12 @@ class CourseServiceImpl(
             userId = user.userId
         ).let { stepProgressRepository.save(it) }
 
-        return StepInitDto(
+        return StepInitDto.toStepInitDto(
             stepProgressId = stepProgress.stepProgressId,
             courseLv = courseLv,
             stepLv = stepLv,
-            stepTitle = step.title,
-            stepDescription = step.description,
-            stepSituation = step.situation,
-            firstQuiz = firstQuiz.quiz,
-            firstQuizOptions = firstQuiz.options.map { it.answer }
+            step = step,
+            quiz = firstQuiz
         )
     }
 

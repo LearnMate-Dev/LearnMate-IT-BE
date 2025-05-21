@@ -2,8 +2,8 @@ package learn_mate_it.dev.domain.course.presentation
 
 import ApiResponse
 import learn_mate_it.dev.common.status.SuccessStatus
-import learn_mate_it.dev.domain.course.presentation.dto.response.StepInitDto
-import learn_mate_it.dev.domain.course.application.CourseService
+import learn_mate_it.dev.domain.course.application.dto.response.StepInitDto
+import learn_mate_it.dev.domain.course.application.service.CourseService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
