@@ -3,10 +3,12 @@ package learn_mate_it.dev.domain.course.application.service
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
+import learn_mate_it.dev.domain.course.application.dto.response.QuizAnswerDto
 import learn_mate_it.dev.domain.course.application.dto.response.StepInitDto
 import learn_mate_it.dev.domain.course.domain.enums.CourseType
 import learn_mate_it.dev.domain.course.domain.enums.QuizType
 import learn_mate_it.dev.domain.course.domain.enums.StepType
+import learn_mate_it.dev.domain.course.domain.model.UserQuizAnswer
 import learn_mate_it.dev.domain.course.domain.model.UserStepProgress
 import learn_mate_it.dev.domain.course.domain.repository.UserQuizAnswerRepository
 import learn_mate_it.dev.domain.course.domain.repository.UserStepProgressRepository
@@ -63,6 +65,63 @@ class CourseServiceImpl(
         if (stepProgressRepository.findByStepTypeAndUserIdAndCompletedAtIsNull(step, userId) != null) {
             throw GeneralException(ErrorStatus.ALREADY_ON_STEP)
         }
+    }
+
+    /**
+     * Solve Quiz of Step
+     *
+     * @param stepProgressId id of user's step progress
+     * @param quizLv level of solving quiz
+     * @param selectedIdx selected index of quiz options list
+     * @return QuizAnswerDto answer of quiz, is step completed, is quiz correct, info of next quiz
+     */
+    @Transactional
+    override fun solveQuiz(stepProgressId: Long, quizLv: Int, selectedIdx: Int): QuizAnswerDto {
+        // TODO: get user info
+        val user: User = User(
+            username = "username"
+        )
+
+        // get and valid step progress and quiz
+        val stepProgress: UserStepProgress = getStepProgress(stepProgressId)
+        val quiz: QuizType = QuizType.getQuiz(stepProgress.stepType, quizLv)
+        validIsQuizOnStep(stepProgress.stepProgressId, quiz)
+
+        // check is quiz correct
+        val isCorrect = quiz.correctIdx == selectedIdx
+        val isCompleted = isCorrect && quizLv == 3
+        val nextQuiz = if (isCorrect && !isCompleted) QuizType.getQuiz(stepProgress.stepType, quizLv + 1) else null
+
+        // save userQuizAnswer
+        val userQuizAnswer = UserQuizAnswer(
+            stepProgressId = stepProgressId,
+            quizType = quiz,
+            selectedOptionIdx = selectedIdx,
+            isCorrect = isCorrect
+        ).let { quizAnswerRepository.save(it) }
+
+        // if the step is completed, set quiz info of step progress
+        if (isCompleted) {
+            stepProgress.completeStep()
+        }
+
+        return QuizAnswerDto.toQuizAnswerDto(
+            isStepCompleted = isCompleted,
+            isCorrect = isCorrect,
+            description = quiz.options[selectedIdx].description,
+            nextQuiz = nextQuiz
+        )
+    }
+
+    private fun validIsQuizOnStep(stepProgressId: Long, quiz: QuizType) {
+        if (quizAnswerRepository.existsByStepProgressIdAndQuizTypeAndIsCorrectIsTrue(stepProgressId, quiz)) {
+            throw GeneralException(ErrorStatus.ALREADY_ON_QUIZ)
+        }
+    }
+
+    private fun getStepProgress(stepProgressId: Long): UserStepProgress {
+        return stepProgressRepository.findByStepProgressIdAndCompletedAtIsNull(stepProgressId)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_STEP_PROGRESS)
     }
 
 }

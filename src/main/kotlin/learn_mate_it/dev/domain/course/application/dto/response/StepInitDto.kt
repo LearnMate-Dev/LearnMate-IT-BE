@@ -9,9 +9,7 @@ data class StepInitDto (
     val stepLv : Int,
     val stepTitle: String,
     val stepDescription: String,
-    val stepSituation: String,
-    val firstQuiz: String,
-    val firstQuizOptions: List<String>
+    val quizDto: QuizDto
 ) {
     companion object {
         fun toStepInitDto(stepProgressId: Long,
@@ -26,9 +24,7 @@ data class StepInitDto (
                 stepLv = stepLv,
                 stepTitle = step.title,
                 stepDescription = step.description,
-                stepSituation = step.situation,
-                firstQuiz = quiz.quiz,
-                firstQuizOptions = quiz.options.map { it.answer }
+                quizDto = QuizDto.toQuizDto(quiz)
             )
         }
     }

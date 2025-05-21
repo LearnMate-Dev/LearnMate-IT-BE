@@ -10,7 +10,9 @@ data class UserQuizAnswerId(
     val stepProgressId: Long,
     val quizType: QuizType
 
-) : Serializable
+) : Serializable {
+    constructor() : this(0L, QuizType.Quiz1_1_1)
+}
 
 @Entity
 @IdClass(UserQuizAnswerId::class)
