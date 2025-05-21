@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(value = ["/api/diary"])
+@RequestMapping(value = ["/api/diaries"])
 class DiaryController(
     private val DiaryService: DiaryService
 ) {
