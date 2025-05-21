@@ -1,0 +1,91 @@
+package learn_mate_it.dev.domain.course.domain.enums
+
+enum class StepType (
+    val course: CourseType,
+    val title: String,
+    val description: String,
+    val situation: String,
+    val quizes: List<QuizType>
+) {
+
+    /**
+     * Course 1
+     */
+    Step1_1(CourseType.COURSE_1, "처음 보는 사람과 인사하기",
+        "인사와 대화의 첫 걸음을 배워요",
+        "당신은 체험 첫날, 안내 데스크에 도착했어요.\n 직원 한 분이 다가오며 웃으면서 말을 걸어요.",
+        listOf(QuizType.Quiz1_1_1,
+            QuizType.Quiz1_1_2,
+            QuizType.Quiz1_1_3)
+    ),
+
+    Step1_2(CourseType.COURSE_1, "전화로 대화하기",
+        "전화 예절을 배워요",
+        "",
+        listOf(QuizType.Quiz1_2_1,
+            QuizType.Quiz1_2_2,
+            QuizType.Quiz1_2_3)
+    ),
+
+    Step1_3(CourseType.COURSE_1, "문제 생겼을 때 말하기",
+        "불편하거나 문제가 생기면, 말해도 될까요?",
+        "",
+        listOf(QuizType.Quiz1_3_1,
+            QuizType.Quiz1_3_2,
+            QuizType.Quiz1_3_3)
+    ),
+
+    /**
+     * Course 2
+     */
+    Step2_1(CourseType.COURSE_2, "",
+        "",
+        "",
+        listOf(QuizType.Quiz2_1_1,
+            QuizType.Quiz2_1_2,
+            QuizType.Quiz2_1_3)
+    ),
+
+    Step2_2(CourseType.COURSE_2, "",
+        "",
+        "",
+        listOf(QuizType.Quiz2_2_1,
+            QuizType.Quiz2_2_2,
+            QuizType.Quiz2_2_3)
+    ),
+
+    Step2_3(CourseType.COURSE_2, "",
+        "",
+        "",
+        listOf(QuizType.Quiz2_3_1,
+            QuizType.Quiz2_3_2,
+            QuizType.Quiz2_3_3)
+    ),
+
+    /**
+     * Course 3
+     */
+    Step3_1(CourseType.COURSE_3, "",
+        "",
+        "",
+        listOf(QuizType.Quiz3_1_1,
+            QuizType.Quiz3_1_2,
+            QuizType.Quiz3_1_3)
+    ),
+
+    Step3_2(CourseType.COURSE_3, "",
+        "",
+        "",
+        listOf(QuizType.Quiz3_2_1,
+            QuizType.Quiz3_2_2,
+            QuizType.Quiz3_2_3)
+    ),
+
+    Step3_3(CourseType.COURSE_3, "",
+        "",
+        "",
+        listOf(QuizType.Quiz3_3_1,
+            QuizType.Quiz3_3_2,
+            QuizType.Quiz3_3_3)
+    )
+}

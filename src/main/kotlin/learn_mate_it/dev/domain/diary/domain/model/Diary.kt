@@ -4,8 +4,9 @@ import jakarta.persistence.*
 import learn_mate_it.dev.common.base.BaseEntity
 
 @Entity
-@Table(name = "diaries")
+@Table(name = "diary")
 data class Diary(
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var diaryId: Long = 0,
 
@@ -20,4 +21,5 @@ data class Diary(
 
     @OneToOne(mappedBy = "diary", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var spellingFeedback : SpellingFeedback? = null
+
 ) : BaseEntity()
