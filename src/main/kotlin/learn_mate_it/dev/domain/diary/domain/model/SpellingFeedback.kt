@@ -4,8 +4,9 @@ import jakarta.persistence.*
 import learn_mate_it.dev.common.base.BaseEntity
 
 @Entity
-@Table(name = "spelling_feedbacks")
+@Table(name = "spelling_feedback")
 data class SpellingFeedback(
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var spellingFeedbackId: Long = 0,
 
@@ -15,4 +16,5 @@ data class SpellingFeedback(
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id", nullable = false)
     var diary: Diary
+
 ) : BaseEntity()
