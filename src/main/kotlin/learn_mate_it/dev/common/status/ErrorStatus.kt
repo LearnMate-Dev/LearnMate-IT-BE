@@ -25,5 +25,6 @@ enum class ErrorStatus (
     INVALID_COURSE_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 코스 번호입니다. 1과 3 사이의 값을 입력해주세요."),
     INVALID_STEP_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 스텝 번호입니다. 1과 3 사이의 값을 입력해주세요."),
     INVALID_QUIZ_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 퀴즈 번호입니다. 코스와 스텝 번호를 올바르게 입력해주세요."),
+    ALREADY_ON_STEP(HttpStatus.BAD_REQUEST, "400", "이미 진행 중인 스텝입니다.")
 
 }
