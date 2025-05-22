@@ -9,11 +9,24 @@ enum class ErrorStatus (
     override val message: String
 ) : BaseErrorStatus {
 
+    /**
+     * Common
+     */
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "400", "잘못된 요청입니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "401", "인증이 필요합니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "403", "접근 권한이 없습니다."),
     NOT_FOUND(HttpStatus.NOT_FOUND, "404", "요청한 자원을 찾을 수 없습니다."),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "405", "허용되지 않은 메소드입니다."),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "서버 내부 오류입니다.")
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "서버 내부 오류입니다."),
+
+    /**
+     * Course
+     */
+    INVALID_COURSE_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 코스 번호입니다. 1과 3 사이의 값을 입력해주세요."),
+    INVALID_STEP_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 스텝 번호입니다. 1과 3 사이의 값을 입력해주세요."),
+    INVALID_QUIZ_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 퀴즈 번호입니다. 코스와 스텝 번호를 올바르게 입력해주세요."),
+    ALREADY_ON_STEP(HttpStatus.BAD_REQUEST, "400", "이미 진행 중인 스텝입니다."),
+    ALREADY_ON_QUIZ(HttpStatus.BAD_REQUEST, "400", "이미 풀이한 퀴즈입니다."),
+    NOT_FOUND_STEP_PROGRESS(HttpStatus.NOT_FOUND, "404", "존재하지 않는 스텝 진행 현황입니다.")
 
 }
