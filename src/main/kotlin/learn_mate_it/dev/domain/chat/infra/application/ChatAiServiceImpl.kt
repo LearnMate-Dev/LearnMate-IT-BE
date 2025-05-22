@@ -17,7 +17,7 @@ class ChatAiServiceImpl(
         val RECOMMEND_SUBJECT_PROMPT: String = resourceLoader.getResourceContent("recommend-subject-prompt.txt")
         try {
             val response: String = chatModel.call(RECOMMEND_SUBJECT_PROMPT)
-            return response.split("\n").map { it.trim() }
+            return response.split("\n").map { it.trim() }.filter { it.isNotEmpty() }
         } catch (e: Exception) {
             throw GeneralException(ErrorStatus.CHAT_AI_SERVER_ERROR)
         }
