@@ -3,6 +3,7 @@ package learn_mate_it.dev.domain.chat.application.service
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
+import learn_mate_it.dev.domain.chat.application.dto.request.ChatArchiveRequest
 import learn_mate_it.dev.domain.chat.application.dto.request.ChatRequest
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatDto
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomDto
@@ -23,6 +24,8 @@ class ChatServiceImpl(
     private val chatRepository: ChatRepository
 ): ChatService {
 
+    private final val CONTENT_LENGTH: Int = 500
+    private final val TITLE_LENGTH: Int = 30
     private val log = LoggerFactory.getLogger(this::class.java)
 
     /**
@@ -65,7 +68,7 @@ class ChatServiceImpl(
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
 
         // save user's chat
-        validChatContentLength(request.content, false)
+        validStringLength(request.content, CONTENT_LENGTH, ErrorStatus.CHAT_CONTENT_OVER_FLOW)
         chatRepository.save(
             Chat(
                 author = ChatAuthor.HUMAN,
@@ -76,7 +79,7 @@ class ChatServiceImpl(
 
         // get ai's response
         val response = chatAiService.getChatResponse(request.content)
-        validChatContentLength(response, true)
+        validStringLength(response, CONTENT_LENGTH, ErrorStatus.CHAT_AI_CONTENT_OVER_FLOW)
         val aiChat = chatRepository.save(
             Chat(
                 author = ChatAuthor.AI,
@@ -86,17 +89,6 @@ class ChatServiceImpl(
         )
 
         return ChatDto.toChatDto(aiChat)
-    }
-
-    private fun validChatContentLength(content: String, isChatResponse: Boolean) {
-        if (content.length <= 500) return
-
-        val errorStatus = if (isChatResponse) {
-            ErrorStatus.CHAT_AI_CONTENT_OVER_FLOW
-        } else {
-            ErrorStatus.CHAT_CONTENT_OVER_FLOW
-        }
-        throw GeneralException(errorStatus)
     }
 
     /**
@@ -112,6 +104,30 @@ class ChatServiceImpl(
 
         chatRepository.deleteByChatRoomId(chatRoomId)
         chatRoomRepository.deleteByChatRoomId(chatRoomId)
+    }
+
+    /**
+     * Archive ChatRoom with Title
+     *
+     * @param id of chatRoom for archiving
+     * @param title of chatRoom
+     */
+    @Transactional
+    override fun archiveChatRoom(chatRoomId: Long, request: ChatArchiveRequest) {
+        val user: User = getUser()
+        val chatRoom: ChatRoom = getChatRoom(chatRoomId)
+        validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
+
+        val title: String = request.title
+        validStringLength(title, TITLE_LENGTH, ErrorStatus.CHAT_ROOM_TITLE_OVER_FLOW)
+
+        chatRoom.archive(title)
+    }
+
+    private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
+        if (content.length > length) {
+            throw GeneralException(errorStatus)
+        }
     }
 
     private fun validIsUserAuthorizedForChatRoom(userId: Long, chatRoom: ChatRoom) {
