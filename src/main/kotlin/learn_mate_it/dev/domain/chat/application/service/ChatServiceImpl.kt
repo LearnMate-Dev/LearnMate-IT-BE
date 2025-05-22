@@ -61,9 +61,10 @@ class ChatServiceImpl(
     @Transactional
     override fun chatWithText(chatRoomId: Long, request: ChatRequest): ChatDto {
         val user: User = getUser()
+        val chatRoom: ChatRoom = getChatRoom(chatRoomId)
+        validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
 
-        // get chat room and save chat
-        val chatRoom: ChatRoom = getChatRoom(chatRoomId, user.userId)
+        // save user's chat
         validChatContentLength(request.content, false)
         chatRepository.save(
             Chat(
@@ -98,8 +99,29 @@ class ChatServiceImpl(
         throw GeneralException(errorStatus)
     }
 
-    private fun getChatRoom(chatRoomId: Long, userId: Long): ChatRoom {
-        return chatRoomRepository.findByChatRoomIdAndUserId(chatRoomId, userId)
+    /**
+     * Delete ChatRoom
+     *
+     * @param id of chatroom for delete
+     */
+    @Transactional
+    override fun deleteChatRoom(chatRoomId: Long) {
+        val user: User = getUser()
+        val chatRoom: ChatRoom = getChatRoom(chatRoomId)
+        validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
+
+        chatRepository.deleteByChatRoomId(chatRoomId)
+        chatRoomRepository.deleteByChatRoomId(chatRoomId)
+    }
+
+    private fun validIsUserAuthorizedForChatRoom(userId: Long, chatRoom: ChatRoom) {
+        if (chatRoom.userId != userId) {
+            throw GeneralException(ErrorStatus.FORBIDDEN_FOR_CHAT_ROOM)
+        }
+    }
+
+    private fun getChatRoom(chatRoomId: Long): ChatRoom {
+        return chatRoomRepository.findByChatRoomId(chatRoomId)
             ?: throw GeneralException(ErrorStatus.NOT_FOUND_CHAT_ROOM)
     }
 

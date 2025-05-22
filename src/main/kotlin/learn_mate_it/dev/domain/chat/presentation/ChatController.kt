@@ -30,4 +30,12 @@ class ChatController (
         return ApiResponse.success(SuccessStatus.CHAT_WITH_TEXT_SUCCESS, response)
     }
 
+    @DeleteMapping("/{chatRoomId}")
+    fun deleteChatRoom(
+        @PathVariable chatRoomId: Long
+    ): ResponseEntity<ApiResponse<String>> {
+        chatService.deleteChatRoom(chatRoomId)
+        return ApiResponse.success(SuccessStatus.DELETE_CHAT_ROOM_SUCCESS)
+    }
+
 }

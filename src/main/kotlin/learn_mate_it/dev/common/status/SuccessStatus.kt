@@ -17,6 +17,7 @@ enum class SuccessStatus (
 
     // chat
     START_TEXT_CHAT_SUCCESS(HttpStatus.OK, "200", "텍스트 채팅방 생성이 성공적으로 완료되었습니다."),
-    CHAT_WITH_TEXT_SUCCESS(HttpStatus.OK, "200", "텍스트 채팅이 성공적으로 완료되었습니다.")
+    CHAT_WITH_TEXT_SUCCESS(HttpStatus.OK, "200", "텍스트 채팅이 성공적으로 완료되었습니다."),
+    DELETE_CHAT_ROOM_SUCCESS(HttpStatus.OK, "200", "채팅방 삭제가 성공적으로 완료되었습니다.")
 
 }

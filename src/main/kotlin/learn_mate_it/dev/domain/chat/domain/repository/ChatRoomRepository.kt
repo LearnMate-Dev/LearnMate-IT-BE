@@ -2,9 +2,18 @@ package learn_mate_it.dev.domain.chat.domain.repository
 
 import learn_mate_it.dev.domain.chat.domain.model.ChatRoom
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
 interface ChatRoomRepository: JpaRepository<ChatRoom, Long> {
 
-    fun findByChatRoomIdAndUserId(chatRoomId: Long, userId: Long): ChatRoom?
+    fun findByChatRoomId(chatRoomId: Long): ChatRoom?
+
+    @Modifying
+    @Query("DELETE " +
+            "FROM ChatRoom cr " +
+            "WHERE cr.chatRoomId IN :chatRoomId")
+    fun deleteByChatRoomId(@Param(value = "chatRoomId") chatRoomId: Long)
 
 }

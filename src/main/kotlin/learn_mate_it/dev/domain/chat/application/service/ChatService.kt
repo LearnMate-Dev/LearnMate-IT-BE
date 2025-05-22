@@ -8,5 +8,6 @@ interface ChatService {
 
     fun startTextChat(): ChatRoomDto
     fun chatWithText(chatRoomId: Long, request: ChatRequest): ChatDto
+    fun deleteChatRoom(chatRoomId: Long)
 
 }

@@ -27,6 +27,7 @@ enum class ErrorStatus (
     INVALID_QUIZ_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 퀴즈 번호입니다. 코스와 스텝 번호를 올바르게 입력해주세요."),
     ALREADY_ON_STEP(HttpStatus.BAD_REQUEST, "400", "이미 진행 중인 스텝입니다."),
     ALREADY_ON_QUIZ(HttpStatus.BAD_REQUEST, "400", "이미 풀이한 퀴즈입니다."),
+
     NOT_FOUND_STEP_PROGRESS(HttpStatus.NOT_FOUND, "404", "존재하지 않는 스텝 진행 현황입니다."),
 
     /**
@@ -34,6 +35,9 @@ enum class ErrorStatus (
      */
     INVALID_CHAT_ROOM_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 채팅방 유형입니다."),
     CHAT_CONTENT_OVER_FLOW(HttpStatus.BAD_REQUEST, "400", "채팅 글자수는 500자 이하여야 합니다."),
+
+    FORBIDDEN_FOR_CHAT_ROOM(HttpStatus.FORBIDDEN, "403", "채팅방에 대한 접근 권한이 없습니다."),
+
     NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "404", "존재하지 않는 채팅방입니다."),
     CHAT_AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "채팅 기능 처리 중 AI 서버에서 오류가 발생했습니다."),
     CHAT_AI_CONTENT_OVER_FLOW(HttpStatus.INTERNAL_SERVER_ERROR, "500", "채팅 응답 생성 중 오류가 발생했습니다.")
