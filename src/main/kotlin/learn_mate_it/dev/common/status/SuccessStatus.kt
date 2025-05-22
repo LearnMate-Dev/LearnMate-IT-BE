@@ -13,6 +13,11 @@ enum class SuccessStatus (
 
     // course
     START_STEP_SUCCESS(HttpStatus.OK, "200", "스텝 시작하기가 성공적으로 완료되었습니다."),
-    SOLVE_QUIZ_SUCCESS(HttpStatus.OK, "200", "퀴즈 풀이가 성공적으로 완료되었습니다.")
+    SOLVE_QUIZ_SUCCESS(HttpStatus.OK, "200", "퀴즈 풀이가 성공적으로 완료되었습니다."),
+
+    // chat
+    START_TEXT_CHAT_SUCCESS(HttpStatus.OK, "200", "텍스트 채팅방 생성이 성공적으로 완료되었습니다."),
+    CHAT_WITH_TEXT_SUCCESS(HttpStatus.OK, "200", "텍스트 채팅이 성공적으로 완료되었습니다."),
+    DELETE_CHAT_ROOM_SUCCESS(HttpStatus.OK, "200", "채팅방 삭제가 성공적으로 완료되었습니다.")
 
 }
