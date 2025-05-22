@@ -44,3 +44,4 @@ src/main/resources/application-secret.yml
 
 ### PROMPT ###
 src/main/resources/recommend-subject-prompt.txt
+src/main/resources/chat-prompt.txt

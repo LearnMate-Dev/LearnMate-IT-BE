@@ -23,4 +23,14 @@ class ChatAiServiceImpl(
         }
     }
 
+    override fun getChatResponse(content: String): String {
+        val CHAT_PROMPT: String = resourceLoader.getResourceContent("chat-prompt.txt")
+        try {
+            val response: String = chatModel.call(CHAT_PROMPT + content)
+            return response.trim()
+        } catch (e: Exception) {
+            throw GeneralException(ErrorStatus.CHAT_AI_SERVER_ERROR)
+        }
+    }
+
 }

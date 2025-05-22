@@ -33,10 +33,7 @@ class CourseServiceImpl(
      */
     @Transactional
     override fun startStep(courseLv: Int, stepLv: Int): StepInitDto {
-        // TODO: get user info
-        val user: User = User(
-            username = "username"
-        )
+        val user: User = getUser()
 
         // valid step info and get step, course type
         val course: CourseType = CourseType.from(courseLv)
@@ -47,10 +44,12 @@ class CourseServiceImpl(
         val firstQuiz: QuizType = QuizType.getQuiz(step, 1)
 
         // save step progress
-        val stepProgress = UserStepProgress(
-            stepType = step,
-            userId = user.userId
-        ).let { stepProgressRepository.save(it) }
+        val stepProgress = stepProgressRepository.save(
+            UserStepProgress(
+                stepType = step,
+                userId = user.userId
+            )
+        )
 
         return StepInitDto.toStepInitDto(
             stepProgressId = stepProgress.stepProgressId,
@@ -77,10 +76,7 @@ class CourseServiceImpl(
      */
     @Transactional
     override fun solveQuiz(stepProgressId: Long, quizLv: Int, selectedIdx: Int): QuizAnswerDto {
-        // TODO: get user info
-        val user: User = User(
-            username = "username"
-        )
+        val user: User = getUser()
 
         // get and valid step progress and quiz
         val stepProgress: UserStepProgress = getStepProgress(stepProgressId)
@@ -93,12 +89,14 @@ class CourseServiceImpl(
         val nextQuiz = if (isCorrect && !isCompleted) QuizType.getQuiz(stepProgress.stepType, quizLv + 1) else null
 
         // save userQuizAnswer
-        val userQuizAnswer = UserQuizAnswer(
-            stepProgressId = stepProgressId,
-            quizType = quiz,
-            selectedOptionIdx = selectedIdx,
-            isCorrect = isCorrect
-        ).let { quizAnswerRepository.save(it) }
+        quizAnswerRepository.save(
+            UserQuizAnswer(
+                stepProgressId = stepProgressId,
+                quizType = quiz,
+                selectedOptionIdx = selectedIdx,
+                isCorrect = isCorrect
+            )
+        )
 
         // if the step is completed, set quiz info of step progress
         if (isCompleted) {
@@ -122,6 +120,11 @@ class CourseServiceImpl(
     private fun getStepProgress(stepProgressId: Long): UserStepProgress {
         return stepProgressRepository.findByStepProgressIdAndCompletedAtIsNull(stepProgressId)
             ?: throw GeneralException(ErrorStatus.NOT_FOUND_STEP_PROGRESS)
+    }
+
+    private fun getUser(): User {
+        // TODO: get user info
+        return User(username = "username")
     }
 
 }

@@ -2,12 +2,12 @@ package learn_mate_it.dev.domain.chat.presentation
 
 import ApiResponse
 import learn_mate_it.dev.common.status.SuccessStatus
+import learn_mate_it.dev.domain.chat.application.dto.request.ChatRequest
+import learn_mate_it.dev.domain.chat.application.dto.response.ChatDto
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomDto
 import learn_mate_it.dev.domain.chat.application.service.ChatService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/chats")
@@ -20,4 +20,14 @@ class ChatController (
         val response: ChatRoomDto = chatService.startTextChat()
         return ApiResponse.success(SuccessStatus.START_TEXT_CHAT_SUCCESS, response)
     }
+
+    @PostMapping("/text/{chatRoomId}")
+    fun chatWithText(
+        @PathVariable chatRoomId: Long,
+        @RequestBody chatRequest: ChatRequest
+    ): ResponseEntity<ApiResponse<ChatDto>> {
+        val response: ChatDto = chatService.chatWithText(chatRoomId, chatRequest)
+        return ApiResponse.success(SuccessStatus.CHAT_WITH_TEXT_SUCCESS, response)
+    }
+
 }
