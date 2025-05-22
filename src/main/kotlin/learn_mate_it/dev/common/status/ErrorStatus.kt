@@ -27,6 +27,13 @@ enum class ErrorStatus (
     INVALID_QUIZ_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 퀴즈 번호입니다. 코스와 스텝 번호를 올바르게 입력해주세요."),
     ALREADY_ON_STEP(HttpStatus.BAD_REQUEST, "400", "이미 진행 중인 스텝입니다."),
     ALREADY_ON_QUIZ(HttpStatus.BAD_REQUEST, "400", "이미 풀이한 퀴즈입니다."),
-    NOT_FOUND_STEP_PROGRESS(HttpStatus.NOT_FOUND, "404", "존재하지 않는 스텝 진행 현황입니다.")
+    NOT_FOUND_STEP_PROGRESS(HttpStatus.NOT_FOUND, "404", "존재하지 않는 스텝 진행 현황입니다."),
+
+    /**
+     * Chat
+     */
+    INVALID_CHAT_ROOM_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 채팅방 유형입니다."),
+    CHAT_AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "채팅 기능 처리 중 AI 서버에서 오류가 발생했습니다.")
+
 
 }
