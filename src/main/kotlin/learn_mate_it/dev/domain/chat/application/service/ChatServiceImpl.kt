@@ -68,6 +68,7 @@ class ChatServiceImpl(
         val user = getUser()
         val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
+        validIsChatRoomArchived(chatRoom)
 
         // save user's chat
         validStringLength(request.content, CONTENT_LENGTH, ErrorStatus.CHAT_CONTENT_OVER_FLOW)
@@ -91,6 +92,12 @@ class ChatServiceImpl(
         )
 
         return ChatDto.toChatDto(aiChat)
+    }
+
+    private fun validIsChatRoomArchived(chatRoom: ChatRoom) {
+        if (chatRoom.title != null) {
+            throw GeneralException(ErrorStatus.ALREADY_ARCHIVED_CHAT_ROOM)
+        }
     }
 
     /**
