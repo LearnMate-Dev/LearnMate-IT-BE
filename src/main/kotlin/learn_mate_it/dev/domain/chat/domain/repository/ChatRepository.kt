@@ -8,6 +8,12 @@ import org.springframework.data.repository.query.Param
 
 interface ChatRepository: JpaRepository<Chat, Long> {
 
+    @Query(value = "SELECT c " +
+            "FROM Chat c " +
+            "WHERE c.chatRoom.chatRoomId = :chatRoomId " +
+            "ORDER BY c.createdAt ASC")
+    fun findByChatRoomId(@Param(value = "chatRoomId") chatRoomId: Long): List<Chat>
+
     @Modifying
     @Query("DELETE " +
             "FROM Chat c " +

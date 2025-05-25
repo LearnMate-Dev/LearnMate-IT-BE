@@ -6,7 +6,9 @@ import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.chat.application.dto.request.ChatArchiveRequest
 import learn_mate_it.dev.domain.chat.application.dto.request.ChatRequest
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatDto
-import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomDto
+import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomDetailDto
+import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomInitDto
+import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomListDto
 import learn_mate_it.dev.domain.chat.domain.enums.ChatAuthor
 import learn_mate_it.dev.domain.chat.domain.enums.ChatRoomType
 import learn_mate_it.dev.domain.chat.domain.model.Chat
@@ -34,8 +36,8 @@ class ChatServiceImpl(
      * @return ChatRoomDto chatRoomId and recommend subject list
      */
     @Transactional
-    override fun startTextChat(): ChatRoomDto {
-        val user: User = getUser()
+    override fun startTextChat(): ChatRoomInitDto {
+        val user = getUser()
 
         // save chat room
         val chatRoom = chatRoomRepository.save(
@@ -48,7 +50,7 @@ class ChatServiceImpl(
         // get ai's recommend subject
         val recommendSubjects = chatAiService.getRecommendSubjects()
 
-        return ChatRoomDto.toChatRoomDto(
+        return ChatRoomInitDto.toChatRoomDto(
             chatRoomId = chatRoom.chatRoomId,
             recommendSubjects = recommendSubjects
         )
@@ -63,8 +65,8 @@ class ChatServiceImpl(
      */
     @Transactional
     override fun chatWithText(chatRoomId: Long, request: ChatRequest): ChatDto {
-        val user: User = getUser()
-        val chatRoom: ChatRoom = getChatRoom(chatRoomId)
+        val user = getUser()
+        val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
 
         // save user's chat
@@ -98,8 +100,8 @@ class ChatServiceImpl(
      */
     @Transactional
     override fun deleteChatRoom(chatRoomId: Long) {
-        val user: User = getUser()
-        val chatRoom: ChatRoom = getChatRoom(chatRoomId)
+        val user = getUser()
+        val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
 
         chatRepository.deleteByChatRoomId(chatRoomId)
@@ -114,14 +116,41 @@ class ChatServiceImpl(
      */
     @Transactional
     override fun archiveChatRoom(chatRoomId: Long, request: ChatArchiveRequest) {
-        val user: User = getUser()
-        val chatRoom: ChatRoom = getChatRoom(chatRoomId)
+        val user = getUser()
+        val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
 
-        val title: String = request.title
+        val title = request.title
         validStringLength(title, TITLE_LENGTH, ErrorStatus.CHAT_ROOM_TITLE_OVER_FLOW)
 
         chatRoom.archive(title)
+    }
+
+    /**
+     * Get User's Archived Chat Room List
+     *
+     * @return ChatRoomListDto id, title, created info of each chatRoom
+     */
+    override fun getArchivedChatRoomList(): ChatRoomListDto {
+        val user = getUser()
+        val chatRoomList = chatRoomRepository.findArchivedChatRoomList(user.userId)
+
+        return ChatRoomListDto.toChatRoomListDto(chatRoomList)
+    }
+
+    /**
+     * Get Archived Chat Room's Detail
+     *
+     * @param chatRoomId id of chatRoom
+     * @return ChatRoomDetailDto chatRoom info and chat content, chat author, chat comment list
+     */
+    override fun getChatRoomDetail(chatRoomId: Long): ChatRoomDetailDto {
+        val user = getUser()
+        val chatRoom = getChatRoom(chatRoomId)
+        validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
+
+        val chatList = chatRepository.findByChatRoomId(chatRoomId)
+        return ChatRoomDetailDto.toChatRoomDetailDto(chatRoomId, chatList)
     }
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {

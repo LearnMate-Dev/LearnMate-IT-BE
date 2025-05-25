@@ -1,6 +1,6 @@
 package learn_mate_it.dev.domain.chat.application.dto.response
 
-data class ChatRoomDto(
+data class ChatRoomInitDto(
     val chatRoomId: Long,
     val recommendSubjects: List<String>?
 ) {
@@ -8,8 +8,8 @@ data class ChatRoomDto(
         fun toChatRoomDto(
             chatRoomId: Long,
             recommendSubjects: List<String>?
-        ): ChatRoomDto {
-            return ChatRoomDto(
+        ): ChatRoomInitDto {
+            return ChatRoomInitDto(
                 chatRoomId=chatRoomId,
                 recommendSubjects = recommendSubjects
             )
