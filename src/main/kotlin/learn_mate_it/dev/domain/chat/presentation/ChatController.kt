@@ -20,7 +20,7 @@ class ChatController (
 
     @PostMapping("/text")
     fun startTextChat(): ResponseEntity<ApiResponse<ChatRoomInitDto>> {
-        val response: ChatRoomInitDto = chatService.startTextChat()
+        val response = chatService.startTextChat()
         return ApiResponse.success(SuccessStatus.START_TEXT_CHAT_SUCCESS, response)
     }
 
@@ -29,7 +29,7 @@ class ChatController (
         @PathVariable chatRoomId: Long,
         @RequestBody chatRequest: ChatRequest
     ): ResponseEntity<ApiResponse<ChatDto>> {
-        val response: ChatDto = chatService.chatWithText(chatRoomId, chatRequest)
+        val response = chatService.chatWithText(chatRoomId, chatRequest)
         return ApiResponse.success(SuccessStatus.CHAT_WITH_TEXT_SUCCESS, response)
     }
 
@@ -53,7 +53,7 @@ class ChatController (
     @GetMapping
     fun getArchivedChatRoomList(
     ): ResponseEntity<ApiResponse<ChatRoomListDto>> {
-        val response: ChatRoomListDto = chatService.getArchivedChatRoomList()
+        val response = chatService.getArchivedChatRoomList()
         return ApiResponse.success(SuccessStatus.GET_ARCHIVED_CHAT_ROOM_LIST_SUCCESS, response)
     }
 

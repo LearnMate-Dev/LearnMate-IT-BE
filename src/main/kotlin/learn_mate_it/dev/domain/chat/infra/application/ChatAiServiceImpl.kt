@@ -16,7 +16,7 @@ class ChatAiServiceImpl(
     override fun getRecommendSubjects(): List<String> {
         val RECOMMEND_SUBJECT_PROMPT: String = resourceLoader.getResourceContent("recommend-subject-prompt.txt")
         try {
-            val response: String = chatModel.call(RECOMMEND_SUBJECT_PROMPT)
+            val response = chatModel.call(RECOMMEND_SUBJECT_PROMPT)
             return response.split("\n").map { it.trim() }.filter { it.isNotEmpty() }
         } catch (e: Exception) {
             throw GeneralException(ErrorStatus.CHAT_AI_SERVER_ERROR)
@@ -24,9 +24,9 @@ class ChatAiServiceImpl(
     }
 
     override fun getChatResponse(content: String): String {
-        val CHAT_PROMPT: String = resourceLoader.getResourceContent("chat-prompt.txt")
+        val CHAT_PROMPT = resourceLoader.getResourceContent("chat-prompt.txt")
         try {
-            val response: String = chatModel.call(CHAT_PROMPT + content)
+            val response = chatModel.call(CHAT_PROMPT + content)
             return response.trim()
         } catch (e: Exception) {
             throw GeneralException(ErrorStatus.CHAT_AI_SERVER_ERROR)

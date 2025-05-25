@@ -150,7 +150,7 @@ class ChatServiceImpl(
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
 
         val chatList = chatRepository.findByChatRoomId(chatRoomId)
-        return ChatRoomDetailDto.toChatRoomDetailDto(chatRoomId, chatList)
+        return ChatRoomDetailDto.toChatRoomDetailDto(chatRoom, chatList)
     }
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {

@@ -19,7 +19,7 @@ class CourseController (
         @RequestParam("course") courseLv : Int,
         @RequestParam("step") stepLv: Int
     ): ResponseEntity<ApiResponse<StepInitDto>> {
-        val response: StepInitDto = courseService.startStep(courseLv, stepLv)
+        val response = courseService.startStep(courseLv, stepLv)
         return ApiResponse.success(SuccessStatus.START_STEP_SUCCESS, response)
     }
 
@@ -29,7 +29,7 @@ class CourseController (
         @RequestParam("quiz") quizLv: Int,
         @RequestParam("selectedIdx") selectedIdx: Int,
     ): ResponseEntity<ApiResponse<QuizAnswerDto>> {
-        val response: QuizAnswerDto = courseService.solveQuiz(stepProgressId, quizLv, selectedIdx)
+        val response = courseService.solveQuiz(stepProgressId, quizLv, selectedIdx)
         return ApiResponse.success(SuccessStatus.SOLVE_QUIZ_SUCCESS, response)
     }
 
