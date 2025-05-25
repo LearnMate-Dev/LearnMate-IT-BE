@@ -24,4 +24,9 @@ data class ChatRoom(
     @OneToMany(mappedBy = "chatRoom", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
     var chats: MutableList<Chat> = mutableListOf(),
 
-) : BaseEntity()
+) : BaseEntity() {
+
+    fun archive(title: String) {
+        this.title = title
+    }
+}

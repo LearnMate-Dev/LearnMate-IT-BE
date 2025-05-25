@@ -10,6 +10,13 @@ interface ChatRoomRepository: JpaRepository<ChatRoom, Long> {
 
     fun findByChatRoomId(chatRoomId: Long): ChatRoom?
 
+    @Query(value = "SELECT cr " +
+            "FROM ChatRoom cr " +
+            "WHERE cr.userId = :userId " +
+            "AND cr.title IS NOT NULL " +
+            "ORDER BY cr.createdAt DESC")
+    fun findArchivedChatRoomList(@Param(value = "userId") userId: Long): List<ChatRoom>
+
     @Modifying
     @Query("DELETE " +
             "FROM ChatRoom cr " +

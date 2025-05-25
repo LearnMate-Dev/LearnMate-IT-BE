@@ -35,6 +35,8 @@ enum class ErrorStatus (
      */
     INVALID_CHAT_ROOM_TYPE(HttpStatus.BAD_REQUEST, "400", "잘못된 채팅방 유형입니다."),
     CHAT_CONTENT_OVER_FLOW(HttpStatus.BAD_REQUEST, "400", "채팅 글자수는 500자 이하여야 합니다."),
+    CHAT_ROOM_TITLE_OVER_FLOW(HttpStatus.BAD_REQUEST, "400", "채팅방 제목은 30글자 이하여야 합니다."),
+    ALREADY_ARCHIVED_CHAT_ROOM(HttpStatus.BAD_REQUEST, "400", "이미 저장된 채팅방은 사용할 수 없습니다."),
 
     FORBIDDEN_FOR_CHAT_ROOM(HttpStatus.FORBIDDEN, "403", "채팅방에 대한 접근 권한이 없습니다."),
 

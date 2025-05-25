@@ -25,4 +25,9 @@ abstract class BaseEntity {
         val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
         return createdAt!!.format(formatter)
     }
+
+    fun getCreatedAtDetailedFormatted(): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")
+        return createdAt!!.format(formatter)
+    }
 }

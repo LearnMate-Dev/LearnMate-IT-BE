@@ -17,7 +17,7 @@ data class StepInitDto (
                           stepLv: Int,
                           step: StepType,
                           quiz: QuizType
-                          ) : StepInitDto {
+        ) : StepInitDto {
             return StepInitDto(
                 stepProgressId = stepProgressId,
                 courseLv = courseLv,
