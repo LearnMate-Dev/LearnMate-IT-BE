@@ -33,15 +33,15 @@ class CourseServiceImpl(
      */
     @Transactional
     override fun startStep(courseLv: Int, stepLv: Int): StepInitDto {
-        val user: User = getUser()
+        val user = getUser()
 
         // valid step info and get step, course type
-        val course: CourseType = CourseType.from(courseLv)
-        val step: StepType = StepType.from(course, stepLv)
+        val course = CourseType.from(courseLv)
+        val step = StepType.from(course, stepLv)
         validIsAlreadyOnStep(step, user.userId)
 
         // get first quiz type
-        val firstQuiz: QuizType = QuizType.getQuiz(step, 1)
+        val firstQuiz = QuizType.getQuiz(step, 1)
 
         // save step progress
         val stepProgress = stepProgressRepository.save(
@@ -76,11 +76,11 @@ class CourseServiceImpl(
      */
     @Transactional
     override fun solveQuiz(stepProgressId: Long, quizLv: Int, selectedIdx: Int): QuizAnswerDto {
-        val user: User = getUser()
+        val user = getUser()
 
         // get and valid step progress and quiz
-        val stepProgress: UserStepProgress = getStepProgress(stepProgressId)
-        val quiz: QuizType = QuizType.getQuiz(stepProgress.stepType, quizLv)
+        val stepProgress = getStepProgress(stepProgressId, user.userId)
+        val quiz = QuizType.getQuiz(stepProgress.stepType, quizLv)
         validIsQuizOnStep(stepProgress.stepProgressId, quiz)
 
         // check is quiz correct
@@ -111,15 +111,15 @@ class CourseServiceImpl(
         )
     }
 
+    private fun getStepProgress(stepProgressId: Long, userId: Long): UserStepProgress {
+        return stepProgressRepository.findByStepProgressIdAndUserIdAndCompletedAtIsNull(stepProgressId, userId)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_STEP_PROGRESS)
+    }
+
     private fun validIsQuizOnStep(stepProgressId: Long, quiz: QuizType) {
         if (quizAnswerRepository.existsByStepProgressIdAndQuizTypeAndIsCorrectIsTrue(stepProgressId, quiz)) {
             throw GeneralException(ErrorStatus.ALREADY_ON_QUIZ)
         }
-    }
-
-    private fun getStepProgress(stepProgressId: Long): UserStepProgress {
-        return stepProgressRepository.findByStepProgressIdAndCompletedAtIsNull(stepProgressId)
-            ?: throw GeneralException(ErrorStatus.NOT_FOUND_STEP_PROGRESS)
     }
 
     private fun getUser(): User {
