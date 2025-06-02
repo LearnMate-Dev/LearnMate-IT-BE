@@ -1,7 +1,5 @@
 package learn_mate_it.dev.domain.course.domain.enums
 
-import learn_mate_it.dev.common.exception.GeneralException
-import learn_mate_it.dev.common.status.ErrorStatus
 
 data class QuizOption (
     val answer: String,
@@ -279,12 +277,5 @@ enum class QuizType (
         QuizOption("B. ", ""),
         QuizOption("C. ", "")
     ));
-
-    companion object {
-        fun getQuiz(step: StepType, level: Int): QuizType {
-            return entries.find { it.step == step && it.level == level }
-                ?: throw GeneralException(ErrorStatus.INVALID_QUIZ_TYPE)
-        }
-    }
 
 }

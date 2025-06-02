@@ -1,12 +1,14 @@
 package learn_mate_it.dev.domain.course.application.dto.response
 
+import learn_mate_it.dev.domain.course.domain.enums.QuizOption
 import learn_mate_it.dev.domain.course.domain.enums.QuizType
 
 data class QuizDto(
     val quizLv: Int,
     val quizSituation: String?,
     val quiz: String,
-    val quizOptions: List<String>
+    val correctIdx: Int,
+    val quizOptions: List<QuizOptionDto>
 ) {
     companion object {
         fun toQuizDto(quiz: QuizType): QuizDto {
@@ -14,30 +16,22 @@ data class QuizDto(
                 quizLv = quiz.level,
                 quizSituation = quiz.situation,
                 quiz = quiz.quiz,
-                quizOptions = quiz.options.map { it.answer }
+                correctIdx = quiz.correctIdx,
+                quizOptions = quiz.options.map{ QuizOptionDto.toQuizOptionDto(it)}
             )
         }
     }
 }
 
-data class QuizAnswerDto(
-    val isStepCompleted: Boolean?,
-    val isCorrect: Boolean,
-    val description: String,
-    val nextQuiz: QuizDto?
+data class QuizOptionDto(
+    val answer: String,
+    val description: String
 ) {
     companion object {
-        fun toQuizAnswerDto(
-            isStepCompleted: Boolean?,
-            isCorrect: Boolean,
-            description: String,
-            nextQuiz: QuizType?
-        ): QuizAnswerDto {
-            return QuizAnswerDto(
-                isStepCompleted = isStepCompleted,
-                isCorrect = isCorrect,
-                description = description,
-                nextQuiz = nextQuiz?.let { QuizDto.toQuizDto(it) }
+        fun toQuizOptionDto(quizOption: QuizOption): QuizOptionDto {
+            return QuizOptionDto(
+                answer = quizOption.answer,
+                description = quizOption.description
             )
         }
     }

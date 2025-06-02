@@ -33,4 +33,6 @@ data class UserStepProgress(
         this.durationTime = Duration.between(createdAt, completedAt).toMillis()
     }
 
+    fun isCompleted() = this.completedAt != null
+
 }

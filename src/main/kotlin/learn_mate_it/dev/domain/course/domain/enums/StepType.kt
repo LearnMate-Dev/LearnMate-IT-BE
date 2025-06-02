@@ -92,6 +92,21 @@ enum class StepType (
             QuizType.Quiz3_3_3)
     );
 
+    fun isFirstStep(): Boolean {
+        return this == Step1_1
+    }
+
+    fun getPreviousStep(): List<StepType> {
+        val allSteps = entries.toTypedArray()
+        val currentIdx = this.ordinal
+
+        return if (currentIdx > 0) {
+            allSteps.copyOfRange(0, currentIdx).toList()
+        } else {
+            emptyList()
+        }
+    }
+
     companion object {
         fun from(course: CourseType, level: Int): StepType {
             return entries.find { it.course == course && it.level == level}

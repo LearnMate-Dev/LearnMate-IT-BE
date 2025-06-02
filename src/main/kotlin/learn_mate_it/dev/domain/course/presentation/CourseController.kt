@@ -2,7 +2,6 @@ package learn_mate_it.dev.domain.course.presentation
 
 import ApiResponse
 import learn_mate_it.dev.common.status.SuccessStatus
-import learn_mate_it.dev.domain.course.application.dto.response.QuizAnswerDto
 import learn_mate_it.dev.domain.course.application.dto.response.StepInitDto
 import learn_mate_it.dev.domain.course.application.service.CourseService
 import org.springframework.http.ResponseEntity
@@ -23,14 +22,20 @@ class CourseController (
         return ApiResponse.success(SuccessStatus.START_STEP_SUCCESS, response)
     }
 
-    @PostMapping("/{stepProgressId}")
-    fun solveQuiz(
-        @PathVariable("stepProgressId") stepProgressId: Long,
-        @RequestParam("quiz") quizLv: Int,
-        @RequestParam("selectedIdx") selectedIdx: Int,
-    ): ResponseEntity<ApiResponse<QuizAnswerDto>> {
-        val response = courseService.solveQuiz(stepProgressId, quizLv, selectedIdx)
-        return ApiResponse.success(SuccessStatus.SOLVE_QUIZ_SUCCESS, response)
+    @PatchMapping("/{stepProgressId}")
+    fun endStep(
+        @PathVariable stepProgressId: Long
+    ): ResponseEntity<ApiResponse<String>> {
+        courseService.endStep(stepProgressId)
+        return ApiResponse.success(SuccessStatus.END_STEP_SUCCESS)
+    }
+
+    @DeleteMapping("/{stepProgressId}")
+    fun deleteStep(
+        @PathVariable stepProgressId: Long
+    ): ResponseEntity<ApiResponse<String>> {
+        courseService.deleteStep(stepProgressId)
+        return ApiResponse.success(SuccessStatus.DELETE_STEP_SUCCESS)
     }
 
 }
