@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface UserStepProgressRepository: JpaRepository<UserStepProgress, Long> {
 
     fun findByStepProgressIdAndUserIdAndCompletedAtIsNull(stepId: Long, userId: Long): UserStepProgress?
-    fun findByStepTypeAndUserIdAndCompletedAtIsNull(step: StepType, userId: Long): UserStepProgress?
+    fun existsByStepTypeAndUserIdAndCompletedAtIsNull(step: StepType, userId: Long): Boolean
+    fun findByStepTypeInAndUserIdAndCompletedAtIsNotNull(previousStepList: List<StepType>, userId: Long): List<UserStepProgress>
 
 }

@@ -5,7 +5,6 @@ import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.course.application.dto.response.StepInitDto
 import learn_mate_it.dev.domain.course.domain.enums.CourseType
-import learn_mate_it.dev.domain.course.domain.enums.QuizType
 import learn_mate_it.dev.domain.course.domain.enums.StepType
 import learn_mate_it.dev.domain.course.domain.model.UserStepProgress
 import learn_mate_it.dev.domain.course.domain.repository.UserStepProgressRepository
@@ -25,7 +24,7 @@ class CourseServiceImpl(
      *
      * @param courseLv level of course to start (1 ~ 3)
      * @param stepLv level of step to start (1 ~ 3)
-     * @return StepInitDto id of step progress, info of step, info of first quiz of step
+     * @return StepInitDto id of step progress, info of step, info of all quizes
      */
     @Transactional
     override fun startStep(courseLv: Int, stepLv: Int): StepInitDto {
@@ -34,10 +33,7 @@ class CourseServiceImpl(
         // valid step info and get step, course type
         val course = CourseType.from(courseLv)
         val step = StepType.from(course, stepLv)
-        validIsAlreadyOnStep(step, user.userId)
-
-        // get first quiz type
-        val firstQuiz = QuizType.getQuiz(step, 1)
+        validIsStepInOrder(step, user.userId)
 
         // save step progress
         val stepProgress = stepProgressRepository.save(
@@ -51,13 +47,30 @@ class CourseServiceImpl(
             stepProgressId = stepProgress.stepProgressId,
             courseLv = courseLv,
             stepLv = stepLv,
-            step = step,
-            quiz = firstQuiz
+            step = step
         )
     }
 
-    private fun validIsAlreadyOnStep(step: StepType, userId: Long) {
-        if (stepProgressRepository.findByStepTypeAndUserIdAndCompletedAtIsNull(step, userId) != null) {
+    private fun validIsStepInOrder(step: StepType, userId: Long) {
+        if (step.isFirstStep()) {
+            return
+        }
+
+        // check previous step's complete
+        val previousStepList = step.getPreviousStep()
+        val completedStepList = stepProgressRepository.findByStepTypeInAndUserIdAndCompletedAtIsNotNull(previousStepList, userId)
+        val completedStepTypes = completedStepList.map { it.stepType }.toSet()
+
+        val isAllCompleted = previousStepList.all { previousStep ->
+            completedStepTypes.contains(previousStep)
+        }
+        if (!isAllCompleted) {
+            throw GeneralException(ErrorStatus.INVALID_STEP_ORDER)
+        }
+
+        // check if this step is not completed
+        val isStepAlreadyStarted = stepProgressRepository.existsByStepTypeAndUserIdAndCompletedAtIsNull(step, userId)
+        if (isStepAlreadyStarted) {
             throw GeneralException(ErrorStatus.ALREADY_ON_STEP)
         }
     }
