@@ -5,5 +5,6 @@ import learn_mate_it.dev.domain.course.application.dto.response.StepInitDto
 interface CourseService {
 
     fun startStep(courseLv: Int, stepLv: Int): StepInitDto
+    fun endStep(stepProgressId: Long)
 
 }

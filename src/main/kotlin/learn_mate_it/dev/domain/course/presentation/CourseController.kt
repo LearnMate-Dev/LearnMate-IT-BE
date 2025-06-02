@@ -22,4 +22,12 @@ class CourseController (
         return ApiResponse.success(SuccessStatus.START_STEP_SUCCESS, response)
     }
 
+    @PatchMapping("/{stepProgressId}")
+    fun endStep(
+        @PathVariable stepProgressId: Long
+    ): ResponseEntity<ApiResponse<String>> {
+        courseService.endStep(stepProgressId)
+        return ApiResponse.success(SuccessStatus.END_STEP_SUCCESS)
+    }
+
 }

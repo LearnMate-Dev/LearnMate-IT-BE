@@ -75,8 +75,25 @@ class CourseServiceImpl(
         }
     }
 
+    /**
+     * Set Complete User's Step Progress
+     *
+     * @param stepProgressId id of step progress
+     */
+    @Transactional
+    override fun endStep(stepProgressId: Long) {
+        val user = getUser()
+        val stepProgress = getStepProgress(stepProgressId, user.userId)
+
+        if (stepProgress.isCompleted()) {
+            throw GeneralException(ErrorStatus.ALREADY_COMPLETED_STEP)
+        }
+
+        stepProgress.completeStep()
+    }
+
     private fun getStepProgress(stepProgressId: Long, userId: Long): UserStepProgress {
-        return stepProgressRepository.findByStepProgressIdAndUserIdAndCompletedAtIsNull(stepProgressId, userId)
+        return stepProgressRepository.findByStepProgressIdAndUserId(stepProgressId, userId)
             ?: throw GeneralException(ErrorStatus.NOT_FOUND_STEP_PROGRESS)
     }
 
