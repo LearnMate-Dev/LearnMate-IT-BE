@@ -92,6 +92,23 @@ class CourseServiceImpl(
         stepProgress.completeStep()
     }
 
+    /**
+     * Delete User's Step Progress
+     *
+     * @param stepProgressId if of step progress
+     */
+    @Transactional
+    override fun deleteStep(stepProgressId: Long) {
+        val user = getUser()
+        val stepProgress = getStepProgress(stepProgressId, user.userId)
+
+        if (stepProgress.isCompleted()) {
+            throw GeneralException(ErrorStatus.ALREADY_COMPLETED_STEP)
+        }
+
+        stepProgressRepository.delete(stepProgress)
+    }
+
     private fun getStepProgress(stepProgressId: Long, userId: Long): UserStepProgress {
         return stepProgressRepository.findByStepProgressIdAndUserId(stepProgressId, userId)
             ?: throw GeneralException(ErrorStatus.NOT_FOUND_STEP_PROGRESS)

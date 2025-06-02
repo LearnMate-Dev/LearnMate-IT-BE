@@ -30,4 +30,12 @@ class CourseController (
         return ApiResponse.success(SuccessStatus.END_STEP_SUCCESS)
     }
 
+    @DeleteMapping("/{stepProgressId}")
+    fun deleteStep(
+        @PathVariable stepProgressId: Long
+    ): ResponseEntity<ApiResponse<String>> {
+        courseService.deleteStep(stepProgressId)
+        return ApiResponse.success(SuccessStatus.DELETE_STEP_SUCCESS)
+    }
+
 }

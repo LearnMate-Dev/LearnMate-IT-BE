@@ -6,5 +6,6 @@ interface CourseService {
 
     fun startStep(courseLv: Int, stepLv: Int): StepInitDto
     fun endStep(stepProgressId: Long)
+    fun deleteStep(stepProgressId: Long)
 
 }
