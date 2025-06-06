@@ -2,7 +2,6 @@ package learn_mate_it.dev.domain.chat.presentation
 
 import ApiResponse
 import learn_mate_it.dev.common.status.SuccessStatus
-import learn_mate_it.dev.domain.chat.application.dto.request.ChatArchiveRequest
 import learn_mate_it.dev.domain.chat.application.dto.request.ChatRequest
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatDto
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomDetailDto
@@ -39,15 +38,6 @@ class ChatController (
     ): ResponseEntity<ApiResponse<String>> {
         chatService.deleteChatRoom(chatRoomId)
         return ApiResponse.success(SuccessStatus.DELETE_CHAT_ROOM_SUCCESS)
-    }
-
-    @PatchMapping("/{chatRoomId}/archive")
-    fun archiveChat(
-        @PathVariable chatRoomId: Long,
-        @RequestBody chatArchiveRequest: ChatArchiveRequest
-    ): ResponseEntity<ApiResponse<String>> {
-        chatService.archiveChatRoom(chatRoomId, chatArchiveRequest)
-        return ApiResponse.success(SuccessStatus.ARCHIVE_CHAT_ROOM_SUCCESS)
     }
 
     @GetMapping

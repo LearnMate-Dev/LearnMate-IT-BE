@@ -116,24 +116,6 @@ class ChatServiceImpl(
     }
 
     /**
-     * Archive ChatRoom with Title
-     *
-     * @param id of chatRoom for archiving
-     * @param title of chatRoom
-     */
-    @Transactional
-    override fun archiveChatRoom(chatRoomId: Long, request: ChatArchiveRequest) {
-        val user = getUser()
-        val chatRoom = getChatRoom(chatRoomId)
-        validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
-
-        val title = request.title
-        validStringLength(title, TITLE_LENGTH, ErrorStatus.CHAT_ROOM_TITLE_OVER_FLOW)
-
-        chatRoom.archive(title)
-    }
-
-    /**
      * Get User's Archived Chat Room List
      *
      * @return ChatRoomListDto id, title, created info of each chatRoom
