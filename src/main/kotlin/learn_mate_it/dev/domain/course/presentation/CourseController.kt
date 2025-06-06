@@ -2,6 +2,7 @@ package learn_mate_it.dev.domain.course.presentation
 
 import ApiResponse
 import learn_mate_it.dev.common.status.SuccessStatus
+import learn_mate_it.dev.domain.course.application.dto.response.CourseDto
 import learn_mate_it.dev.domain.course.application.dto.response.StepInitDto
 import learn_mate_it.dev.domain.course.application.service.CourseService
 import org.springframework.http.ResponseEntity
@@ -36,6 +37,14 @@ class CourseController (
     ): ResponseEntity<ApiResponse<String>> {
         courseService.deleteStep(stepProgressId)
         return ApiResponse.success(SuccessStatus.DELETE_STEP_SUCCESS)
+    }
+
+    @GetMapping()
+    fun getCourses(
+        @RequestParam("course", defaultValue = "1", required = false) courseLv : Int
+    ): ResponseEntity<ApiResponse<CourseDto>> {
+        val response = courseService.getCourseInfo(courseLv)
+        return ApiResponse.success(SuccessStatus.GET_COURSE_INFO_SUCCESS, response)
     }
 
 }

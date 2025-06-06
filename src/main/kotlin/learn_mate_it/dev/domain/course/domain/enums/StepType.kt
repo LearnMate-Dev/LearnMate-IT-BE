@@ -3,12 +3,16 @@ package learn_mate_it.dev.domain.course.domain.enums
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 
+enum class StepStatus {
+        LOCK, UNSOLVED, SOLVED
+}
+
 enum class StepType (
     val course: CourseType,
     val level: Int,
     val title: String,
     val description: String,
-    val quizes: List<QuizType>
+    val quizList: List<QuizType>
 ) {
 
     /**
@@ -97,11 +101,9 @@ enum class StepType (
     }
 
     fun getPreviousStep(): List<StepType> {
-        val allSteps = entries.toTypedArray()
         val currentIdx = this.ordinal
-
         return if (currentIdx > 0) {
-            allSteps.copyOfRange(0, currentIdx).toList()
+            entries.subList(0, currentIdx)
         } else {
             emptyList()
         }
@@ -111,6 +113,12 @@ enum class StepType (
         fun from(course: CourseType, level: Int): StepType {
             return entries.find { it.course == course && it.level == level}
             ?: throw GeneralException(ErrorStatus.INVALID_STEP_TYPE)
+        }
+
+        fun getStepList(courseLv: Int): List<StepType> {
+            return entries
+                .filter { it.course.level == courseLv }
+                .sortedBy { it.level }
         }
     }
 }
