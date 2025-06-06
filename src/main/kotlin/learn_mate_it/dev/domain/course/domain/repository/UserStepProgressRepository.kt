@@ -9,5 +9,6 @@ interface UserStepProgressRepository: JpaRepository<UserStepProgress, Long> {
     fun findByStepProgressIdAndUserId(stepId: Long, userId: Long): UserStepProgress?
     fun existsByStepTypeAndUserIdAndCompletedAtIsNull(step: StepType, userId: Long): Boolean
     fun findByStepTypeInAndUserIdAndCompletedAtIsNotNull(previousStepList: List<StepType>, userId: Long): List<UserStepProgress>
+    fun findByUserIdAndCompletedAtIsNotNull(userId: Long): List<UserStepProgress>
 
 }
