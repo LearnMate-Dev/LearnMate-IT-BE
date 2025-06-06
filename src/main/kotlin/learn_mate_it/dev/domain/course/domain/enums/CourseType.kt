@@ -6,7 +6,7 @@ import learn_mate_it.dev.common.status.ErrorStatus
 enum class CourseStatus {
     UNLOCK, LOCK;
 
-    fun IsLock(): Boolean {
+    fun isLocked(): Boolean {
         return this == LOCK
     }
 }
@@ -38,6 +38,10 @@ enum class CourseType(
         fun from(level: Int): CourseType {
             return entries.find { it.level == level }
             ?: throw GeneralException(ErrorStatus.INVALID_COURSE_TYPE)
+        }
+
+        fun getAllCourseList(): List<CourseType> {
+            return entries
         }
     }
 }

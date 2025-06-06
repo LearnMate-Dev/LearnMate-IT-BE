@@ -27,3 +27,15 @@ data class CourseDto(
         }
     }
 }
+
+data class CourseListDto(
+    val courseList: List<CourseDto>
+) {
+    companion object {
+        fun toCourseListDto(courseList: List<CourseDto>): CourseListDto {
+            return CourseListDto(
+                courseList = courseList
+            )
+        }
+    }
+}
