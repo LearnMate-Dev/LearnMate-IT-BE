@@ -67,7 +67,7 @@ class ChatServiceImpl(
         val user = getUser()
         val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
-        validIsChatRoomArchived(chatRoom)
+        validIsChatRoomAlreadyAnalysis(chatRoom)
 
         // save user's chat
         validStringLength(request.content, CONTENT_LENGTH, ErrorStatus.CHAT_CONTENT_OVER_FLOW)
@@ -91,12 +91,6 @@ class ChatServiceImpl(
         )
 
         return ChatDto.toChatDto(aiChat)
-    }
-
-    private fun validIsChatRoomArchived(chatRoom: ChatRoom) {
-        if (chatRoom.title != null) {
-            throw GeneralException(ErrorStatus.ALREADY_ARCHIVED_CHAT_ROOM)
-        }
     }
 
     /**
@@ -130,8 +124,7 @@ class ChatServiceImpl(
 
         // call AI for analysis chat room and get title
         val chatList = chatRoom.chats
-        val chatDtoList = chatList
-            .map { ChatDto.toChatDto(it) }
+        val chatDtoList = chatList.map { ChatDto.toChatDto(it) }
         val chatAnalysisResponse = chatAiService.analysisChatRoom(chatDtoList)
 
         // save chat room title
@@ -156,9 +149,7 @@ class ChatServiceImpl(
     }
 
     private fun validIsChatRoomAlreadyAnalysis(chatRoom: ChatRoom) {
-        if (chatRoom.title != null) {
-            throw GeneralException(ErrorStatus.ALREADY_ANALYSIS_CHAT_ROOM)
-        }
+        require(chatRoom.title != null) { throw GeneralException(ErrorStatus.ALREADY_ANALYSIS_CHAT_ROOM) }
     }
 
     /**
@@ -184,20 +175,16 @@ class ChatServiceImpl(
         val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
 
-        val chatList = chatRepository.findByChatRoomId(chatRoomId)
+        val chatList = chatRoom.chats
         return ChatRoomDetailDto.toChatRoomDetailDto(chatRoom, chatList)
     }
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
-        if (content.length > length) {
-            throw GeneralException(errorStatus)
-        }
+        require(content.length <= length) { throw GeneralException(errorStatus) }
     }
 
     private fun validIsUserAuthorizedForChatRoom(userId: Long, chatRoom: ChatRoom) {
-        if (chatRoom.userId != userId) {
-            throw GeneralException(ErrorStatus.FORBIDDEN_FOR_CHAT_ROOM)
-        }
+        require(chatRoom.userId != userId) { throw GeneralException(ErrorStatus.FORBIDDEN_FOR_CHAT_ROOM) }
     }
 
     private fun getChatRoom(chatRoomId: Long): ChatRoom {

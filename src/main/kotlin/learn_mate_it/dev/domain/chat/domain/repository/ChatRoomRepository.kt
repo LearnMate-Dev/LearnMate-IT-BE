@@ -8,7 +8,11 @@ import org.springframework.data.repository.query.Param
 
 interface ChatRoomRepository: JpaRepository<ChatRoom, Long> {
 
-    fun findByChatRoomId(chatRoomId: Long): ChatRoom?
+    @Query(value = "SELECT cr " +
+            "FROM ChatRoom cr " +
+            "LEFT JOIN FETCH cr.chats " +
+            "WHERE cr.chatRoomId = :chatRoomId")
+    fun findByChatRoomId(@Param(value = "chatRoomId") chatRoomId: Long): ChatRoom?
 
     @Query(value = "SELECT cr " +
             "FROM ChatRoom cr " +
