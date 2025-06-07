@@ -25,4 +25,9 @@ data class Chat(
     @JoinColumn(name = "chat_room_id", nullable = false)
     var chatRoom: ChatRoom
 
-) : BaseEntity()
+) : BaseEntity() {
+
+    fun updateComment(comment: String) {
+        this.comment = comment
+    }
+}

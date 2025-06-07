@@ -57,9 +57,7 @@ class CourseServiceImpl(
     }
 
     private fun validIsStepInOrder(step: StepType, userId: Long) {
-        if (step.isFirstStep()) {
-            return
-        }
+        if (step.isFirstStep()) return
 
         validArePreviousStepsCompleted(step, userId)
         validIsStepAlreadyStarted(step, userId)
@@ -69,13 +67,8 @@ class CourseServiceImpl(
         val previousStepList = step.getPreviousStep()
         val completedStepSet = getCompletedStepTypeSet(previousStepList, userId)
 
-        val isAllCompleted = previousStepList.all { previousStep ->
-            completedStepSet.contains(previousStep)
-        }
-
-        if (!isAllCompleted) {
-            throw GeneralException(ErrorStatus.INVALID_STEP_ORDER)
-        }
+        val isAllCompleted = previousStepList.all { completedStepSet.contains(it) }
+        require(isAllCompleted) { throw GeneralException(ErrorStatus.INVALID_STEP_ORDER) }
     }
 
     private fun getCompletedStepTypeSet(stepTypeList: List<StepType>, userId: Long): Set<StepType> {
@@ -87,9 +80,7 @@ class CourseServiceImpl(
 
     private fun validIsStepAlreadyStarted(step: StepType, userId: Long) {
         val isStepAlreadyStarted = stepProgressRepository.existsByStepTypeAndUserIdAndCompletedAtIsNull(step, userId)
-        if (isStepAlreadyStarted) {
-            throw GeneralException(ErrorStatus.ALREADY_ON_STEP)
-        }
+        require(!isStepAlreadyStarted) { throw GeneralException(ErrorStatus.ALREADY_ON_STEP) }
     }
 
     /**
@@ -121,9 +112,7 @@ class CourseServiceImpl(
     }
 
     private fun validIsStepAlreadyCompleted(stepProgress: UserStepProgress) {
-        if (stepProgress.isCompleted()) {
-            throw GeneralException(ErrorStatus.ALREADY_COMPLETED_STEP)
-        }
+        require(!stepProgress.isCompleted()){ throw GeneralException(ErrorStatus.ALREADY_COMPLETED_STEP) }
     }
 
     /**
@@ -163,10 +152,7 @@ class CourseServiceImpl(
         val previousStepList = previousCourseList.flatMap { StepType.getStepList(it.level) }
 
         // check is all previous step are completed
-        val isAllCompleted = previousStepList.all { previousStep ->
-            completedStepSet.contains(previousStep)
-        }
-
+        val isAllCompleted = previousStepList.all { completedStepSet.contains(it) }
         return if (isAllCompleted) CourseStatus.UNLOCK else CourseStatus.LOCK
     }
 
@@ -175,14 +161,13 @@ class CourseServiceImpl(
 
         // if course is locked, return LOCK step list
         if (courseStatus.isLocked()) {
-            return stepList
-                .map { StepDto.toStepDto(it, StepStatus.LOCK) }
+            return stepList.map { StepDto.toStepDto(it, StepStatus.LOCK) }
         }
 
         return stepList
-            .map { step ->
-                val status = if (step in completedStepSet) StepStatus.SOLVED else StepStatus.UNSOLVED
-                StepDto.toStepDto(step, status)
+            .map {
+                val status = if (it in completedStepSet) StepStatus.SOLVED else StepStatus.UNSOLVED
+                StepDto.toStepDto(it, status)
             }
     }
 

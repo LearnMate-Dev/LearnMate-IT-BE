@@ -3,7 +3,6 @@ package learn_mate_it.dev.domain.chat.application.service
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
-import learn_mate_it.dev.domain.chat.application.dto.request.ChatArchiveRequest
 import learn_mate_it.dev.domain.chat.application.dto.request.ChatRequest
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatDto
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomDetailDto
@@ -68,7 +67,7 @@ class ChatServiceImpl(
         val user = getUser()
         val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
-        validIsChatRoomArchived(chatRoom)
+        validIsChatRoomAlreadyAnalysis(chatRoom)
 
         // save user's chat
         validStringLength(request.content, CONTENT_LENGTH, ErrorStatus.CHAT_CONTENT_OVER_FLOW)
@@ -94,12 +93,6 @@ class ChatServiceImpl(
         return ChatDto.toChatDto(aiChat)
     }
 
-    private fun validIsChatRoomArchived(chatRoom: ChatRoom) {
-        if (chatRoom.title != null) {
-            throw GeneralException(ErrorStatus.ALREADY_ARCHIVED_CHAT_ROOM)
-        }
-    }
-
     /**
      * Delete ChatRoom
      *
@@ -116,21 +109,47 @@ class ChatServiceImpl(
     }
 
     /**
-     * Archive ChatRoom with Title
+     * Analysis Chat Room
+     * Get Title And Comments For Each Chat From AI
      *
-     * @param id of chatRoom for archiving
-     * @param title of chatRoom
+     * @param id of chatroom
+     * @return ChatRoomDetailDto chatRoom info and chat content, chat author, chat comment list
      */
     @Transactional
-    override fun archiveChatRoom(chatRoomId: Long, request: ChatArchiveRequest) {
+    override fun analysisChatRoom(chatRoomId: Long): ChatRoomDetailDto {
         val user = getUser()
         val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
+        validIsChatRoomAlreadyAnalysis(chatRoom)
 
-        val title = request.title
-        validStringLength(title, TITLE_LENGTH, ErrorStatus.CHAT_ROOM_TITLE_OVER_FLOW)
+        // call AI for analysis chat room and get title
+        val chatList = chatRoom.chats
+        val chatDtoList = chatList.map { ChatDto.toChatDto(it) }
+        val chatAnalysisResponse = chatAiService.analysisChatRoom(chatDtoList)
 
-        chatRoom.archive(title)
+        // save chat room title
+        validStringLength(chatAnalysisResponse.title, TITLE_LENGTH, ErrorStatus.CHAT_ROOM_TITLE_OVER_FLOW)
+        chatRoom.saveTitle(chatAnalysisResponse.title)
+
+        // save analysis comments
+        chatList
+            .filter { it.author == ChatAuthor.HUMAN }
+            .forEach { chat ->
+                val comment = chatAnalysisResponse.chatList[chat.chatId.toString()]
+                if (comment != null) {
+                    validStringLength(comment, CONTENT_LENGTH, ErrorStatus.CHAT_CONTENT_OVER_FLOW)
+                    chat.updateComment(comment)
+                }
+        }
+
+        chatRoomRepository.save(chatRoom)
+        chatRepository.saveAll(chatList)
+
+        return ChatRoomDetailDto.toChatRoomDetailDto(chatRoom, chatList.sortedBy { it.chatId })
+    }
+
+    private fun validIsChatRoomAlreadyAnalysis(chatRoom: ChatRoom) {
+        require(chatRoom.title == null) { throw GeneralException(ErrorStatus.ALREADY_ANALYSIS_CHAT_ROOM) }
     }
 
     /**
@@ -156,20 +175,16 @@ class ChatServiceImpl(
         val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
 
-        val chatList = chatRepository.findByChatRoomId(chatRoomId)
+        val chatList = chatRoom.chats
         return ChatRoomDetailDto.toChatRoomDetailDto(chatRoom, chatList)
     }
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
-        if (content.length > length) {
-            throw GeneralException(errorStatus)
-        }
+        require(content.length <= length) { throw GeneralException(errorStatus) }
     }
 
     private fun validIsUserAuthorizedForChatRoom(userId: Long, chatRoom: ChatRoom) {
-        if (chatRoom.userId != userId) {
-            throw GeneralException(ErrorStatus.FORBIDDEN_FOR_CHAT_ROOM)
-        }
+        require(chatRoom.userId == userId) { throw GeneralException(ErrorStatus.FORBIDDEN_FOR_CHAT_ROOM) }
     }
 
     private fun getChatRoom(chatRoomId: Long): ChatRoom {

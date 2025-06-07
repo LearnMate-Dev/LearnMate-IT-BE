@@ -22,7 +22,7 @@ enum class SuccessStatus (
     START_TEXT_CHAT_SUCCESS(HttpStatus.OK, "200", "텍스트 채팅방 생성이 성공적으로 완료되었습니다."),
     CHAT_WITH_TEXT_SUCCESS(HttpStatus.OK, "200", "텍스트 채팅이 성공적으로 완료되었습니다."),
     DELETE_CHAT_ROOM_SUCCESS(HttpStatus.OK, "200", "채팅방 삭제가 성공적으로 완료되었습니다."),
-    ARCHIVE_CHAT_ROOM_SUCCESS(HttpStatus.OK, "200", "채팅방 저장이 성공적으로 완료되었습니다."),
+    ANALYSIS_CHAT_ROOM_SUCCESS(HttpStatus.OK, "200", "채팅방 분석 및 저장이 성공적으로 완료되었습니다."),
     GET_ARCHIVED_CHAT_ROOM_LIST_SUCCESS(HttpStatus.OK, "200", "저장된 채팅방 리스트 조회가 성공적으로 완료되었습니다."),
     GET_ARCHIVED_CHAT_ROOM_SUCCESS(HttpStatus.OK, "200", "채팅방 내역 조회가 성공적으로 완료되었습니다."),
 
