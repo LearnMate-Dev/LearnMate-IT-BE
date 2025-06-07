@@ -26,7 +26,7 @@ data class ChatRoom(
 
 ) : BaseEntity() {
 
-    fun archive(title: String) {
+    fun saveTitle(title: String) {
         this.title = title
     }
 }

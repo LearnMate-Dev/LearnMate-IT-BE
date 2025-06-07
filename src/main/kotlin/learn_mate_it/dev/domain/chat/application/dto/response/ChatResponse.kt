@@ -4,15 +4,17 @@ import learn_mate_it.dev.domain.chat.domain.model.Chat
 
 data class ChatDto(
     val chatId: Long,
+    val author: String,
     val content: String
 ) {
     companion object {
         fun toChatDto(
-            response: Chat
+            chat: Chat
         ): ChatDto {
             return ChatDto(
-                chatId = response.chatId,
-                content = response.content
+                chatId = chat.chatId,
+                author = chat.author.name,
+                content = chat.content
             )
         }
     }

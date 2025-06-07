@@ -40,6 +40,14 @@ class ChatController (
         return ApiResponse.success(SuccessStatus.DELETE_CHAT_ROOM_SUCCESS)
     }
 
+    @PostMapping("/{chatRoomId}/analysis")
+    fun analysisChatRoom(
+        @PathVariable chatRoomId: Long,
+    ): ResponseEntity<ApiResponse<ChatRoomDetailDto>> {
+        val response = chatService.analysisChatRoom(chatRoomId)
+        return ApiResponse.success(SuccessStatus.ANALYSIS_CHAT_ROOM_SUCCESS, response)
+    }
+
     @GetMapping
     fun getArchivedChatRoomList(
     ): ResponseEntity<ApiResponse<ChatRoomListDto>> {

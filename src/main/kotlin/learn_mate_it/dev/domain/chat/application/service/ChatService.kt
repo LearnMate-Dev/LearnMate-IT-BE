@@ -11,6 +11,7 @@ interface ChatService {
     fun startTextChat(): ChatRoomInitDto
     fun chatWithText(chatRoomId: Long, request: ChatRequest): ChatDto
     fun deleteChatRoom(chatRoomId: Long)
+    fun analysisChatRoom(chatRoomId: Long): ChatRoomDetailDto
 
     fun getArchivedChatRoomList(): ChatRoomListDto
     fun getChatRoomDetail(chatRoomId: Long): ChatRoomDetailDto

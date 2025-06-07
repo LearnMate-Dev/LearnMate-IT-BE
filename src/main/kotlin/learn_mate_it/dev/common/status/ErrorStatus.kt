@@ -40,11 +40,14 @@ enum class ErrorStatus (
     CHAT_CONTENT_OVER_FLOW(HttpStatus.BAD_REQUEST, "400", "채팅 글자수는 500자 이하여야 합니다."),
     CHAT_ROOM_TITLE_OVER_FLOW(HttpStatus.BAD_REQUEST, "400", "채팅방 제목은 30글자 이하여야 합니다."),
     ALREADY_ARCHIVED_CHAT_ROOM(HttpStatus.BAD_REQUEST, "400", "이미 저장된 채팅방은 사용할 수 없습니다."),
+    ALREADY_ANALYSIS_CHAT_ROOM(HttpStatus.BAD_REQUEST, "400", "이미 분석을 완료한 채팅방입니다."),
 
     FORBIDDEN_FOR_CHAT_ROOM(HttpStatus.FORBIDDEN, "403", "채팅방에 대한 접근 권한이 없습니다."),
 
     NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "404", "존재하지 않는 채팅방입니다."),
     CHAT_AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "채팅 기능 처리 중 AI 서버에서 오류가 발생했습니다."),
-    CHAT_AI_CONTENT_OVER_FLOW(HttpStatus.INTERNAL_SERVER_ERROR, "500", "채팅 응답 생성 중 오류가 발생했습니다.")
+    CHAT_AI_CONTENT_OVER_FLOW(HttpStatus.INTERNAL_SERVER_ERROR, "500", "채팅 응답 생성 중 오류가 발생했습니다."),
+    CHAT_AI_ANALYSIS_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "채팅 분석 처리 중 AI 서버에서 오류가 발생했습니다."),
+    CHAT_AI_PARSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "AI 결과 파싱 처리 중 오류가 발생했습니다.")
 
 }
