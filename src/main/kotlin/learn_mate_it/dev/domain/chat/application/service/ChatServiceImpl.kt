@@ -149,7 +149,7 @@ class ChatServiceImpl(
     }
 
     private fun validIsChatRoomAlreadyAnalysis(chatRoom: ChatRoom) {
-        require(chatRoom.title != null) { throw GeneralException(ErrorStatus.ALREADY_ANALYSIS_CHAT_ROOM) }
+        require(chatRoom.title == null) { throw GeneralException(ErrorStatus.ALREADY_ANALYSIS_CHAT_ROOM) }
     }
 
     /**
@@ -184,7 +184,7 @@ class ChatServiceImpl(
     }
 
     private fun validIsUserAuthorizedForChatRoom(userId: Long, chatRoom: ChatRoom) {
-        require(chatRoom.userId != userId) { throw GeneralException(ErrorStatus.FORBIDDEN_FOR_CHAT_ROOM) }
+        require(chatRoom.userId == userId) { throw GeneralException(ErrorStatus.FORBIDDEN_FOR_CHAT_ROOM) }
     }
 
     private fun getChatRoom(chatRoomId: Long): ChatRoom {

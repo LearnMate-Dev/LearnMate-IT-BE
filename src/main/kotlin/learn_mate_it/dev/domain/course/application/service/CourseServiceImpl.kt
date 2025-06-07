@@ -68,7 +68,7 @@ class CourseServiceImpl(
         val completedStepSet = getCompletedStepTypeSet(previousStepList, userId)
 
         val isAllCompleted = previousStepList.all { completedStepSet.contains(it) }
-        require(!isAllCompleted) { throw GeneralException(ErrorStatus.INVALID_STEP_ORDER) }
+        require(isAllCompleted) { throw GeneralException(ErrorStatus.INVALID_STEP_ORDER) }
     }
 
     private fun getCompletedStepTypeSet(stepTypeList: List<StepType>, userId: Long): Set<StepType> {
@@ -80,7 +80,7 @@ class CourseServiceImpl(
 
     private fun validIsStepAlreadyStarted(step: StepType, userId: Long) {
         val isStepAlreadyStarted = stepProgressRepository.existsByStepTypeAndUserIdAndCompletedAtIsNull(step, userId)
-        require(isStepAlreadyStarted) { throw GeneralException(ErrorStatus.ALREADY_ON_STEP) }
+        require(!isStepAlreadyStarted) { throw GeneralException(ErrorStatus.ALREADY_ON_STEP) }
     }
 
     /**
@@ -112,7 +112,7 @@ class CourseServiceImpl(
     }
 
     private fun validIsStepAlreadyCompleted(stepProgress: UserStepProgress) {
-        require(stepProgress.isCompleted()){ throw GeneralException(ErrorStatus.ALREADY_COMPLETED_STEP) }
+        require(!stepProgress.isCompleted()){ throw GeneralException(ErrorStatus.ALREADY_COMPLETED_STEP) }
     }
 
     /**
