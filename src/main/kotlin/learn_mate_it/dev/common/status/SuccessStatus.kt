@@ -26,4 +26,7 @@ enum class SuccessStatus (
     GET_ARCHIVED_CHAT_ROOM_LIST_SUCCESS(HttpStatus.OK, "200", "저장된 채팅방 리스트 조회가 성공적으로 완료되었습니다."),
     GET_ARCHIVED_CHAT_ROOM_SUCCESS(HttpStatus.OK, "200", "채팅방 내역 조회가 성공적으로 완료되었습니다."),
 
+    // diary
+    CREATE_AND_ANALYSIS_DIARY_SUCCESS(HttpStatus.OK, "200", "일기 작성 및 분석이 성공적으로 완료되었습니다."),
+
 }
