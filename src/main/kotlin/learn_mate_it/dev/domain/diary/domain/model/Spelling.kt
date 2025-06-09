@@ -10,11 +10,17 @@ data class Spelling(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var spellingId: Long = 0,
 
+    @Column(nullable = false)
+    var score: Int,
+
     @Column(columnDefinition = "text")
-    var content: String? = null,
+    var revisedContent: String? = null,
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id", nullable = false)
-    var diary: Diary
+    var diary: Diary,
+
+    @OneToMany(mappedBy = "spelling", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var revisions: MutableList<SpellingRevision>? = null
 
 ) : BaseEntity()
