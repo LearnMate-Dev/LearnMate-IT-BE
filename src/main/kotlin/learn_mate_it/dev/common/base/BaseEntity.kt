@@ -30,4 +30,9 @@ abstract class BaseEntity {
         val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")
         return createdAt!!.format(formatter)
     }
+
+    fun getCreatedAtKoreanFormatted(): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+        return createdAt!!.format(formatter)
+    }
 }

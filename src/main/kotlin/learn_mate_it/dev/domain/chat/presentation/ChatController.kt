@@ -18,7 +18,8 @@ class ChatController (
 ){
 
     @PostMapping("/text")
-    fun startTextChat(): ResponseEntity<ApiResponse<ChatRoomInitDto>> {
+    fun startTextChat(
+    ): ResponseEntity<ApiResponse<ChatRoomInitDto>> {
         val response = chatService.startTextChat()
         return ApiResponse.success(SuccessStatus.START_TEXT_CHAT_SUCCESS, response)
     }

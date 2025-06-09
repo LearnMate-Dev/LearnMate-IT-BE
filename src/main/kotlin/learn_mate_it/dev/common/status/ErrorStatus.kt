@@ -47,6 +47,15 @@ enum class ErrorStatus (
     CHAT_AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "채팅 기능 처리 중 AI 서버에서 오류가 발생했습니다."),
     CHAT_AI_CONTENT_OVER_FLOW(HttpStatus.INTERNAL_SERVER_ERROR, "500", "채팅 응답 생성 중 오류가 발생했습니다."),
     CHAT_AI_ANALYSIS_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "채팅 분석 처리 중 AI 서버에서 오류가 발생했습니다."),
-    CHAT_AI_PARSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "AI 결과 파싱 처리 중 오류가 발생했습니다.")
+    CHAT_AI_PARSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "AI 결과 파싱 처리 중 오류가 발생했습니다."),
+
+    /**
+     * Diary
+     */
+    DIARY_CONTENT_OVER_FLOW(HttpStatus.BAD_REQUEST, "400", "일기의 본문은 500자 이하여야 합니다."),
+    ALREADY_DIARY_WRITTEN(HttpStatus.BAD_REQUEST, "400", "일기는 하루에 한 개만 작성할 수 있습니다."),
+    ANALYSIS_SPELLING_CLIENT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "400", "일기 맞춤법 검사 중 클라이언트에서 오류가 발생했습니다."),
+    ANALYSIS_SPELLING_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "일기 맞춤법 검사 중 서버에서 오류가 발생했습니다.")
+
 
 }
