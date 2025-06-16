@@ -13,6 +13,7 @@ import learn_mate_it.dev.domain.course.domain.enums.StepStatus
 import learn_mate_it.dev.domain.course.domain.enums.StepType
 import learn_mate_it.dev.domain.course.domain.model.UserStepProgress
 import learn_mate_it.dev.domain.course.domain.repository.UserStepProgressRepository
+import learn_mate_it.dev.domain.user.domain.enums.PROVIDER
 import learn_mate_it.dev.domain.user.domain.model.User
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -192,7 +193,7 @@ class CourseServiceImpl(
 
     private fun getUser(): User {
         // TODO: get user info
-        return User(username = "username")
+        return User(username = "username", email = "", provider = PROVIDER.GOOGLE)
     }
 
 }

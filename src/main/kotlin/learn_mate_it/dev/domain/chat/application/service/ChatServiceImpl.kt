@@ -14,6 +14,7 @@ import learn_mate_it.dev.domain.chat.domain.model.Chat
 import learn_mate_it.dev.domain.chat.domain.model.ChatRoom
 import learn_mate_it.dev.domain.chat.domain.repository.ChatRepository
 import learn_mate_it.dev.domain.chat.domain.repository.ChatRoomRepository
+import learn_mate_it.dev.domain.user.domain.enums.PROVIDER
 import learn_mate_it.dev.domain.user.domain.model.User
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -194,7 +195,7 @@ class ChatServiceImpl(
 
     private fun getUser(): User {
         // TODO: get user info
-        return User(username = "username")
+        return User(username = "username", email = "", provider = PROVIDER.GOOGLE)
     }
 
 }

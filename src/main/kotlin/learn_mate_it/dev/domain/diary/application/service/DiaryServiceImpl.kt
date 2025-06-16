@@ -14,6 +14,7 @@ import learn_mate_it.dev.domain.diary.domain.repository.SpellingFeedbackReposito
 import learn_mate_it.dev.domain.diary.domain.repository.SpellingRepository
 import learn_mate_it.dev.domain.diary.domain.repository.SpellingRevisionRepository
 import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAnalysisResponse
+import learn_mate_it.dev.domain.user.domain.enums.PROVIDER
 import learn_mate_it.dev.domain.user.domain.model.User
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -104,7 +105,7 @@ class DiaryServiceImpl(
 
     private fun getUser(): User {
         // TODO: get user info
-        return User(username = "username")
+        return User(username = "username", email = "", provider = PROVIDER.GOOGLE)
     }
 
 }
