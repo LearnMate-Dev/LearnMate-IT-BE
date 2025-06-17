@@ -5,9 +5,9 @@ import learn_mate_it.dev.domain.course.application.dto.response.StepInitDto
 
 interface CourseService {
 
-    fun startStep(courseLv: Int, stepLv: Int): StepInitDto
-    fun endStep(stepProgressId: Long)
-    fun deleteStep(stepProgressId: Long)
-    fun getCourseInfo(): CourseListDto
+    fun startStep(userId: Long, courseLv: Int, stepLv: Int): StepInitDto
+    fun endStep(userId: Long, stepProgressId: Long)
+    fun deleteStep(userId: Long, stepProgressId: Long)
+    fun getCourseInfo(userId: Long): CourseListDto
 
 }

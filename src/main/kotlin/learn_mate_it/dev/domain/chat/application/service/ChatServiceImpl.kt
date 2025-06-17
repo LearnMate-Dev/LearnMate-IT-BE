@@ -16,6 +16,7 @@ import learn_mate_it.dev.domain.chat.domain.repository.ChatRepository
 import learn_mate_it.dev.domain.chat.domain.repository.ChatRoomRepository
 import learn_mate_it.dev.domain.user.domain.enums.PROVIDER
 import learn_mate_it.dev.domain.user.domain.model.User
+import learn_mate_it.dev.domain.user.domain.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -23,7 +24,8 @@ import org.springframework.stereotype.Service
 class ChatServiceImpl(
     private val chatAiService: ChatAiService,
     private val chatRoomRepository: ChatRoomRepository,
-    private val chatRepository: ChatRepository
+    private val chatRepository: ChatRepository,
+    private val userRepository: UserRepository
 ): ChatService {
 
     private final val CONTENT_LENGTH: Int = 500
@@ -36,8 +38,8 @@ class ChatServiceImpl(
      * @return ChatRoomDto chatRoomId and recommend subject list
      */
     @Transactional
-    override fun startTextChat(): ChatRoomInitDto {
-        val user = getUser()
+    override fun startTextChat(userId: Long): ChatRoomInitDto {
+        val user = getUser(userId)
 
         // save chat room
         val chatRoom = chatRoomRepository.save(
@@ -64,8 +66,8 @@ class ChatServiceImpl(
      * @return ChatDto id and content of Ai response
      */
     @Transactional
-    override fun chatWithText(chatRoomId: Long, request: ChatRequest): ChatDto {
-        val user = getUser()
+    override fun chatWithText(userId: Long, chatRoomId: Long, request: ChatRequest): ChatDto {
+        val user = getUser(userId)
         val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
         validIsChatRoomAlreadyAnalysis(chatRoom)
@@ -100,8 +102,8 @@ class ChatServiceImpl(
      * @param id of chatroom for delete
      */
     @Transactional
-    override fun deleteChatRoom(chatRoomId: Long) {
-        val user = getUser()
+    override fun deleteChatRoom(userId: Long, chatRoomId: Long) {
+        val user = getUser(userId)
         val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
 
@@ -117,8 +119,8 @@ class ChatServiceImpl(
      * @return ChatRoomDetailDto chatRoom info and chat content, chat author, chat comment list
      */
     @Transactional
-    override fun analysisChatRoom(chatRoomId: Long): ChatRoomDetailDto {
-        val user = getUser()
+    override fun analysisChatRoom(userId: Long, chatRoomId: Long): ChatRoomDetailDto {
+        val user = getUser(userId)
         val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
         validIsChatRoomAlreadyAnalysis(chatRoom)
@@ -158,8 +160,8 @@ class ChatServiceImpl(
      *
      * @return ChatRoomListDto id, title, created info of each chatRoom
      */
-    override fun getArchivedChatRoomList(): ChatRoomListDto {
-        val user = getUser()
+    override fun getArchivedChatRoomList(userId: Long): ChatRoomListDto {
+        val user = getUser(userId)
         val chatRoomList = chatRoomRepository.findArchivedChatRoomList(user.userId)
 
         return ChatRoomListDto.toChatRoomListDto(chatRoomList)
@@ -171,8 +173,8 @@ class ChatServiceImpl(
      * @param chatRoomId id of chatRoom
      * @return ChatRoomDetailDto chatRoom info and chat content, chat author, chat comment list
      */
-    override fun getChatRoomDetail(chatRoomId: Long): ChatRoomDetailDto {
-        val user = getUser()
+    override fun getChatRoomDetail(userId: Long, chatRoomId: Long): ChatRoomDetailDto {
+        val user = getUser(userId)
         val chatRoom = getChatRoom(chatRoomId)
         validIsUserAuthorizedForChatRoom(user.userId, chatRoom)
 
@@ -193,9 +195,9 @@ class ChatServiceImpl(
             ?: throw GeneralException(ErrorStatus.NOT_FOUND_CHAT_ROOM)
     }
 
-    private fun getUser(): User {
-        // TODO: get user info
-        return User(username = "username", email = "", provider = PROVIDER.GOOGLE)
+    private fun getUser(userId: Long): User {
+        return userRepository.findByUserId(userId)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_USER)
     }
 
 }

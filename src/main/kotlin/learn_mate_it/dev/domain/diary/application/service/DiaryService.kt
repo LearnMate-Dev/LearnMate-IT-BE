@@ -5,6 +5,6 @@ import learn_mate_it.dev.domain.diary.application.dto.response.DiaryAnalysisDto
 
 interface DiaryService {
 
-    fun postAndAnalysisDiary(diaryRequest: PostDiaryDto): DiaryAnalysisDto
+    fun postAndAnalysisDiary(userId: Long, diaryRequest: PostDiaryDto): DiaryAnalysisDto
 
 }

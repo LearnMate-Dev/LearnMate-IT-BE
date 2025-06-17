@@ -15,12 +15,14 @@ import learn_mate_it.dev.domain.course.domain.model.UserStepProgress
 import learn_mate_it.dev.domain.course.domain.repository.UserStepProgressRepository
 import learn_mate_it.dev.domain.user.domain.enums.PROVIDER
 import learn_mate_it.dev.domain.user.domain.model.User
+import learn_mate_it.dev.domain.user.domain.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class CourseServiceImpl(
     private val stepProgressRepository: UserStepProgressRepository,
+    private val userRepository: UserRepository
 ) : CourseService {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -33,8 +35,8 @@ class CourseServiceImpl(
      * @return StepInitDto id of step progress, info of step, info of all quizes
      */
     @Transactional
-    override fun startStep(courseLv: Int, stepLv: Int): StepInitDto {
-        val user = getUser()
+    override fun startStep(userId: Long, courseLv: Int, stepLv: Int): StepInitDto {
+        val user = getUser(userId)
 
         // valid step info and get step, course type
         val course = CourseType.from(courseLv)
@@ -90,8 +92,8 @@ class CourseServiceImpl(
      * @param stepProgressId id of step progress
      */
     @Transactional
-    override fun endStep(stepProgressId: Long) {
-        val user = getUser()
+    override fun endStep(userId: Long, stepProgressId: Long) {
+        val user = getUser(userId)
         val stepProgress = getStepProgress(stepProgressId, user.userId)
         validIsStepAlreadyCompleted(stepProgress)
 
@@ -104,8 +106,8 @@ class CourseServiceImpl(
      * @param stepProgressId id of step progress
      */
     @Transactional
-    override fun deleteStep(stepProgressId: Long) {
-        val user = getUser()
+    override fun deleteStep(userId: Long, stepProgressId: Long) {
+        val user = getUser(userId)
         val stepProgress = getStepProgress(stepProgressId, user.userId)
         validIsStepAlreadyCompleted(stepProgress)
 
@@ -123,8 +125,8 @@ class CourseServiceImpl(
      * @param courseLv level of course (1 ~ 3)
      * @return CourseDto Info of course, each step and status
      */
-    override fun getCourseInfo(): CourseListDto {
-        val user = getUser()
+    override fun getCourseInfo(userId: Long): CourseListDto {
+        val user = getUser(userId)
         val courseList = CourseType.getAllCourseList()
         val completedStepSet = getAllCompletedStepTypeSet(user.userId)
 
@@ -191,9 +193,9 @@ class CourseServiceImpl(
             .toSet()
     }
 
-    private fun getUser(): User {
-        // TODO: get user info
-        return User(username = "username", email = "", provider = PROVIDER.GOOGLE)
+    private fun getUser(userId: Long): User {
+        return userRepository.findByUserId(userId)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_USER)
     }
 
 }
