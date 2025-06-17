@@ -15,7 +15,7 @@ data class User(
     val username: String,
 
     @Column(nullable = false)
-    val email: String,
+    val providerId: String,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
