@@ -44,6 +44,12 @@ dependencies {
 	// security & oauth
 	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation ("org.springframework.boot:spring-boot-starter-security")
+	// jwt
+	implementation ("io.jsonwebtoken:jjwt-api:0.12.3")
+	implementation ("io.jsonwebtoken:jjwt-impl:0.12.3")
+	implementation ("io.jsonwebtoken:jjwt-jackson:0.12.3")
+	// redis
+	implementation ("org.springframework.boot:spring-boot-starter-data-redis")
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
