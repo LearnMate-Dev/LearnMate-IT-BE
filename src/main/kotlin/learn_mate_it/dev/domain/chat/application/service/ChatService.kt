@@ -16,4 +16,6 @@ interface ChatService {
     fun getArchivedChatRoomList(userId: Long): ChatRoomListDto
     fun getChatRoomDetail(userId: Long, chatRoomId: Long): ChatRoomDetailDto
 
+    fun deleteByUserId(userId: Long)
+
 }

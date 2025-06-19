@@ -3,12 +3,14 @@ package learn_mate_it.dev.domain.auth.application.service
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.auth.domain.enums.TokenType
+import learn_mate_it.dev.domain.auth.domain.repository.RefreshTokenRepository
 import learn_mate_it.dev.domain.auth.jwt.JwtUtil
 import org.springframework.stereotype.Service
 
 @Service
 class AuthServiceImpl(
-    private val jwtUtil: JwtUtil
+    private val jwtUtil: JwtUtil,
+    private val refreshTokenRepository: RefreshTokenRepository,
 ): AuthService {
 
     /**
@@ -20,6 +22,17 @@ class AuthServiceImpl(
 
         val userId = jwtUtil.getUserIdFromRefreshToken(cleanRefreshToken)
         return jwtUtil.createAccessToken(userId)
+    }
+
+    override fun deleteRefreshToken(userId: Long) {
+        refreshTokenRepository.deleteAll(refreshTokenRepository.findByUserId(userId))
+    }
+
+    override fun deleteRefreshToken(refreshToken: String) {
+        val cleanRefreshToken = getRefreshToken(refreshToken)
+        refreshTokenRepository.findByRefreshToken(cleanRefreshToken)?.apply {
+            refreshTokenRepository.delete(this)
+        }
     }
 
     private fun getRefreshToken(token: String): String {

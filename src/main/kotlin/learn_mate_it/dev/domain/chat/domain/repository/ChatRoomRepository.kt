@@ -27,4 +27,10 @@ interface ChatRoomRepository: JpaRepository<ChatRoom, Long> {
             "WHERE cr.chatRoomId IN :chatRoomId")
     fun deleteByChatRoomId(@Param(value = "chatRoomId") chatRoomId: Long)
 
+    @Modifying
+    @Query("DELETE " +
+                "FROM ChatRoom cr " +
+                "WHERE cr.userId IN :userId")
+    fun deleteByUserId(@Param(value = "userId") userId: Long)
+
 }

@@ -10,4 +10,6 @@ interface CourseService {
     fun deleteStep(userId: Long, stepProgressId: Long)
     fun getCourseInfo(userId: Long): CourseListDto
 
+    fun deleteByUserId(userId: Long)
+
 }

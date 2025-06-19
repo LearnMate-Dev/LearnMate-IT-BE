@@ -1,16 +1,21 @@
 package learn_mate_it.dev.domain.user.application.service
 
-import learn_mate_it.dev.common.exception.GeneralException
-import learn_mate_it.dev.common.status.ErrorStatus
-import learn_mate_it.dev.domain.auth.domain.repository.RefreshTokenRepository
+import jakarta.transaction.Transactional
+import learn_mate_it.dev.domain.auth.application.service.AuthService
+import learn_mate_it.dev.domain.chat.application.service.ChatService
+import learn_mate_it.dev.domain.course.application.service.CourseService
+import learn_mate_it.dev.domain.diary.application.service.DiaryService
 import learn_mate_it.dev.domain.user.domain.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class UserServiceImpl(
+    private val chatService: ChatService,
+    private val courseService: CourseService,
+    private val diaryService: DiaryService,
+    private val authService: AuthService,
     private val userRepository: UserRepository,
-    private val refreshTokenRepository: RefreshTokenRepository
 ): UserService {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -20,27 +25,21 @@ class UserServiceImpl(
      * @param refreshToken from Request Header
      */
     override fun logout(refreshToken: String) {
-        val cleanRefreshToken = getRefreshToken(refreshToken)
-        deleteRefreshToken(cleanRefreshToken)
+        authService.deleteRefreshToken(refreshToken)
     }
 
-    private fun deleteRefreshToken(refreshToken: String) {
-        refreshTokenRepository.findByRefreshToken(refreshToken)?.apply {
-            log.info(this.refreshToken)
-            refreshTokenRepository.delete(this)
-        }
-    }
 
-    override fun withDraw() {
-        TODO("Not yet implemented")
-    }
-
-    private fun getRefreshToken(token: String): String {
-        if (!token.startsWith("Bearer ")) {
-            throw GeneralException(ErrorStatus.INVALID_REFRESH_TOKEN)
-        } else {
-            return token.substring(7)
-        }
+    /**
+     * WithDraw And Delete All Data About User
+     * @param userId
+     */
+    @Transactional
+    override fun withDraw(userId: Long) {
+        chatService.deleteByUserId(userId)
+        courseService.deleteByUserId(userId)
+        diaryService.deleteByUserId(userId)
+        authService.deleteRefreshToken(userId)
+        userRepository.deleteByUserId(userId)
     }
 
 }

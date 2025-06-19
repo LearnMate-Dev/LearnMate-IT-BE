@@ -13,16 +13,12 @@ import learn_mate_it.dev.domain.course.domain.enums.StepStatus
 import learn_mate_it.dev.domain.course.domain.enums.StepType
 import learn_mate_it.dev.domain.course.domain.model.UserStepProgress
 import learn_mate_it.dev.domain.course.domain.repository.UserStepProgressRepository
-import learn_mate_it.dev.domain.user.domain.enums.PROVIDER
-import learn_mate_it.dev.domain.user.domain.model.User
-import learn_mate_it.dev.domain.user.domain.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class CourseServiceImpl(
     private val stepProgressRepository: UserStepProgressRepository,
-    private val userRepository: UserRepository
 ) : CourseService {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -36,18 +32,16 @@ class CourseServiceImpl(
      */
     @Transactional
     override fun startStep(userId: Long, courseLv: Int, stepLv: Int): StepInitDto {
-        val user = getUser(userId)
-
         // valid step info and get step, course type
         val course = CourseType.from(courseLv)
         val step = StepType.from(course, stepLv)
-        validIsStepInOrder(step, user.userId)
+        validIsStepInOrder(step, userId)
 
         // save step progress
         val stepProgress = stepProgressRepository.save(
             UserStepProgress(
                 stepType = step,
-                userId = user.userId
+                userId = userId
             )
         )
 
@@ -93,10 +87,8 @@ class CourseServiceImpl(
      */
     @Transactional
     override fun endStep(userId: Long, stepProgressId: Long) {
-        val user = getUser(userId)
-        val stepProgress = getStepProgress(stepProgressId, user.userId)
+        val stepProgress = getStepProgress(stepProgressId, userId)
         validIsStepAlreadyCompleted(stepProgress)
-
         stepProgress.completeStep()
     }
 
@@ -107,8 +99,7 @@ class CourseServiceImpl(
      */
     @Transactional
     override fun deleteStep(userId: Long, stepProgressId: Long) {
-        val user = getUser(userId)
-        val stepProgress = getStepProgress(stepProgressId, user.userId)
+        val stepProgress = getStepProgress(stepProgressId, userId)
         validIsStepAlreadyCompleted(stepProgress)
 
         stepProgressRepository.delete(stepProgress)
@@ -126,9 +117,8 @@ class CourseServiceImpl(
      * @return CourseDto Info of course, each step and status
      */
     override fun getCourseInfo(userId: Long): CourseListDto {
-        val user = getUser(userId)
         val courseList = CourseType.getAllCourseList()
-        val completedStepSet = getAllCompletedStepTypeSet(user.userId)
+        val completedStepSet = getAllCompletedStepTypeSet(userId)
 
         val courseDtoList = courseList.map {
 
@@ -145,6 +135,11 @@ class CourseServiceImpl(
         }
 
         return CourseListDto.toCourseListDto(courseDtoList)
+    }
+
+    @Transactional
+    override fun deleteByUserId(userId: Long) {
+        stepProgressRepository.deleteByUserId(userId)
     }
 
     private fun getCourseStatus(course: CourseType, completedStepSet: Set<StepType>): CourseStatus {
@@ -191,11 +186,6 @@ class CourseServiceImpl(
             .findByUserIdAndCompletedAtIsNotNull(userId)
             .map { it.stepType }
             .toSet()
-    }
-
-    private fun getUser(userId: Long): User {
-        return userRepository.findByUserId(userId)
-            ?: throw GeneralException(ErrorStatus.NOT_FOUND_USER)
     }
 
 }

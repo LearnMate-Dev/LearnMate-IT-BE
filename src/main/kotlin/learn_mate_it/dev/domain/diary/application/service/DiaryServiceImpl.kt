@@ -13,8 +13,6 @@ import learn_mate_it.dev.domain.diary.domain.repository.SpellingFeedbackReposito
 import learn_mate_it.dev.domain.diary.domain.repository.SpellingRepository
 import learn_mate_it.dev.domain.diary.domain.repository.SpellingRevisionRepository
 import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAnalysisResponse
-import learn_mate_it.dev.domain.user.domain.model.User
-import learn_mate_it.dev.domain.user.domain.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -25,7 +23,6 @@ class DiaryServiceImpl(
     private val spellingRevisionRepository: SpellingRevisionRepository,
     private val spellingFeedbackRepository: SpellingFeedbackRepository,
     private val spellingService: SpellingService,
-    private val userRepository: UserRepository
 ) : DiaryService {
 
     private final val CONTENT_LENGTH: Int = 500
@@ -39,16 +36,14 @@ class DiaryServiceImpl(
      */
     @Transactional
     override fun postAndAnalysisDiary(userId: Long, diaryRequest: PostDiaryDto): DiaryAnalysisDto {
-        val user = getUser(userId)
-
-        validNotWrittenToday(user.userId)
+        validNotWrittenToday(userId)
         validStringLength(diaryRequest.content, CONTENT_LENGTH, ErrorStatus.DIARY_CONTENT_OVER_FLOW)
 
         // save diary
         val diary = diaryRepository.save(
             Diary(
                 content = diaryRequest.content,
-                userId = user.userId,
+                userId = userId,
             )
         )
 
@@ -85,6 +80,14 @@ class DiaryServiceImpl(
         return DiaryAnalysisDto.toDiaryAnalysisDto(diary, spelling, revisions)
     }
 
+    @Transactional
+    override fun deleteByUserId(userId: Long) {
+        spellingRevisionRepository.deleteByUserId(userId)
+        spellingFeedbackRepository.deleteByUserId(userId)
+        spellingRepository.deleteByUserId(userId)
+        diaryRepository.deleteByUserId(userId)
+    }
+
     private fun getSpellingScore(analysisResponse: SpellingAnalysisResponse): Int {
         val sentences = analysisResponse.revisedSentences ?: return 100
         // TODO: feature score
@@ -101,11 +104,6 @@ class DiaryServiceImpl(
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
         require(content.length <= length) { throw GeneralException(errorStatus) }
-    }
-
-    private fun getUser(userId: Long): User {
-        return userRepository.findByUserId(userId)
-            ?: throw GeneralException(ErrorStatus.NOT_FOUND_USER)
     }
 
 }
