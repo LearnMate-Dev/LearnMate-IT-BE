@@ -11,6 +11,9 @@ enum class SuccessStatus (
 
     OK(HttpStatus.OK, "200", "요청이 성공적으로 처리되었습니다."),
 
+    // auth
+    SIGN_UP_SUCCESS(HttpStatus.CREATED, "201", "회원가입이 성공적으로 완료되었습니다."),
+
     // course
     START_STEP_SUCCESS(HttpStatus.OK, "200", "스텝 시작하기가 성공적으로 완료되었습니다."),
     END_STEP_SUCCESS(HttpStatus.OK, "200", "스텝 끝내기가 성공적으로 완료되었습니다."),

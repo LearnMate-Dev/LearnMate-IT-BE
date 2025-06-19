@@ -40,7 +40,7 @@ class ChatController (
     fun deleteChatRoom(
         @AuthenticationPrincipal userId: Long,
         @PathVariable chatRoomId: Long
-    ): ResponseEntity<ApiResponse<String>> {
+    ): ResponseEntity<ApiResponse<Nothing>> {
         chatService.deleteChatRoom(userId, chatRoomId)
         return ApiResponse.success(SuccessStatus.DELETE_CHAT_ROOM_SUCCESS)
     }

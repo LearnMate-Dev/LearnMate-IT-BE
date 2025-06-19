@@ -1,10 +1,16 @@
 package learn_mate_it.dev.domain.auth.jwt
 
+import ApiResponse
+import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import learn_mate_it.dev.common.base.BaseErrorStatus
+import learn_mate_it.dev.common.exception.GeneralException
+import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.auth.domain.enums.TokenType
 import org.slf4j.LoggerFactory
+import org.springframework.http.MediaType
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
@@ -14,6 +20,7 @@ class JwtFilter(
 ) : OncePerRequestFilter() {
 
     private val log = LoggerFactory.getLogger(this::class.java)
+    private val mapper = ObjectMapper()
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -30,9 +37,14 @@ class JwtFilter(
 
                 SecurityContextHolder.getContext().authentication = authentication
             }
-        } catch (e: Exception) {
+        } catch(e: GeneralException) {
+            handleGeneralJwtError(e.errorStatus, response)
+            return
+        }
+        catch (e: Exception) {
             log.warn("[*] JWT filter error : ${e.message}")
-            // TODO:
+            handleJwtError(e.message, response)
+            return
         }
 
         filterChain.doFilter(request, response)
@@ -40,11 +52,29 @@ class JwtFilter(
 
     private fun getAccessToken(request: HttpServletRequest): String? {
         val bearerToken = request.getHeader("Authorization")
-        if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
-            return null
+        return if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+            null
         } else {
-            return bearerToken.substring(7)
+            bearerToken.substring(7)
         }
+    }
+
+    private fun handleGeneralJwtError(errorStatus: BaseErrorStatus, response: HttpServletResponse) {
+        val errorResponse = ApiResponse.error(errorStatus).body!!
+        setHttpServletResponse(errorStatus.httpStatus.value(), errorResponse, response)
+    }
+
+    private fun handleJwtError(msg: String?, response: HttpServletResponse) {
+        val errorStatus = ErrorStatus.INTERNAL_SERVER_ERROR
+        val errorResponse = ApiResponse.error(errorStatus, msg ?: errorStatus.message).body!!
+        setHttpServletResponse(errorStatus.httpStatus.value(), errorResponse, response)
+    }
+
+    private fun setHttpServletResponse(status: Int, errorResponse: ApiResponse<*>, response: HttpServletResponse) {
+        response.contentType = MediaType.APPLICATION_JSON_VALUE
+        response.characterEncoding = "UTF-8"
+        response.status = status
+        response.writer.write(mapper.writeValueAsString(errorResponse))
     }
 
 }

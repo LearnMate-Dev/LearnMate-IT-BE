@@ -16,7 +16,7 @@ data class ApiResponse<T>(
     val data: T? = null
 ) {
     companion object {
-        fun <T> success(successStatus: BaseSuccessStatus): ResponseEntity<ApiResponse<T>> {
+        fun success(successStatus: BaseSuccessStatus): ResponseEntity<ApiResponse<Nothing>> {
             return ResponseEntity
                 .status(successStatus.httpStatus)
                 .body(ApiResponse(true, successStatus.code, successStatus.message, null))
@@ -28,7 +28,7 @@ data class ApiResponse<T>(
                 .body(ApiResponse(true, successStatus.code, successStatus.message, data))
         }
 
-        fun <T> error(errorStatus: BaseErrorStatus): ResponseEntity<ApiResponse<T>> {
+        fun error(errorStatus: BaseErrorStatus): ResponseEntity<ApiResponse<Nothing>> {
             return ResponseEntity
                 .status(errorStatus.httpStatus)
                 .body(ApiResponse(false, errorStatus.code, errorStatus.message, null))

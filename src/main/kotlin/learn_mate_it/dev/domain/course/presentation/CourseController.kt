@@ -29,7 +29,7 @@ class CourseController (
     fun endStep(
         @AuthenticationPrincipal userId: Long,
         @PathVariable stepProgressId: Long
-    ): ResponseEntity<ApiResponse<String>> {
+    ): ResponseEntity<ApiResponse<Nothing>> {
         courseService.endStep(userId, stepProgressId)
         return ApiResponse.success(SuccessStatus.END_STEP_SUCCESS)
     }
@@ -38,7 +38,7 @@ class CourseController (
     fun deleteStep(
         @AuthenticationPrincipal userId: Long,
         @PathVariable stepProgressId: Long
-    ): ResponseEntity<ApiResponse<String>> {
+    ): ResponseEntity<ApiResponse<Nothing>> {
         courseService.deleteStep(userId, stepProgressId)
         return ApiResponse.success(SuccessStatus.DELETE_STEP_SUCCESS)
     }
