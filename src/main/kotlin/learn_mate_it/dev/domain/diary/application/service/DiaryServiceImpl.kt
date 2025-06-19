@@ -7,14 +7,12 @@ import learn_mate_it.dev.domain.diary.application.dto.request.PostDiaryDto
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryAnalysisDto
 import learn_mate_it.dev.domain.diary.domain.model.Diary
 import learn_mate_it.dev.domain.diary.domain.model.Spelling
-import learn_mate_it.dev.domain.diary.domain.model.SpellingFeedback
 import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision
 import learn_mate_it.dev.domain.diary.domain.repository.DiaryRepository
 import learn_mate_it.dev.domain.diary.domain.repository.SpellingFeedbackRepository
 import learn_mate_it.dev.domain.diary.domain.repository.SpellingRepository
 import learn_mate_it.dev.domain.diary.domain.repository.SpellingRevisionRepository
 import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAnalysisResponse
-import learn_mate_it.dev.domain.user.domain.model.User
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -24,7 +22,7 @@ class DiaryServiceImpl(
     private val spellingRepository: SpellingRepository,
     private val spellingRevisionRepository: SpellingRevisionRepository,
     private val spellingFeedbackRepository: SpellingFeedbackRepository,
-    private val spellingService: SpellingService
+    private val spellingService: SpellingService,
 ) : DiaryService {
 
     private final val CONTENT_LENGTH: Int = 500
@@ -37,17 +35,15 @@ class DiaryServiceImpl(
      * @return DiaryAnalysisDto content of diary and analysis about diary (score, spelling comment, examples)
      */
     @Transactional
-    override fun postAndAnalysisDiary(diaryRequest: PostDiaryDto): DiaryAnalysisDto {
-        val user = getUser()
-
-        validNotWrittenToday(user.userId)
+    override fun postAndAnalysisDiary(userId: Long, diaryRequest: PostDiaryDto): DiaryAnalysisDto {
+        validNotWrittenToday(userId)
         validStringLength(diaryRequest.content, CONTENT_LENGTH, ErrorStatus.DIARY_CONTENT_OVER_FLOW)
 
         // save diary
         val diary = diaryRepository.save(
             Diary(
                 content = diaryRequest.content,
-                userId = user.userId,
+                userId = userId,
             )
         )
 
@@ -84,6 +80,14 @@ class DiaryServiceImpl(
         return DiaryAnalysisDto.toDiaryAnalysisDto(diary, spelling, revisions)
     }
 
+    @Transactional
+    override fun deleteByUserId(userId: Long) {
+        spellingRevisionRepository.deleteByUserId(userId)
+        spellingFeedbackRepository.deleteByUserId(userId)
+        spellingRepository.deleteByUserId(userId)
+        diaryRepository.deleteByUserId(userId)
+    }
+
     private fun getSpellingScore(analysisResponse: SpellingAnalysisResponse): Int {
         val sentences = analysisResponse.revisedSentences ?: return 100
         // TODO: feature score
@@ -100,11 +104,6 @@ class DiaryServiceImpl(
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
         require(content.length <= length) { throw GeneralException(errorStatus) }
-    }
-
-    private fun getUser(): User {
-        // TODO: get user info
-        return User(username = "username")
     }
 
 }

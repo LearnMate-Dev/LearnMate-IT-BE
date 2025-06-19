@@ -8,12 +8,14 @@ import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomListDto
 
 interface ChatService {
 
-    fun startTextChat(): ChatRoomInitDto
-    fun chatWithText(chatRoomId: Long, request: ChatRequest): ChatDto
-    fun deleteChatRoom(chatRoomId: Long)
-    fun analysisChatRoom(chatRoomId: Long): ChatRoomDetailDto
+    fun startTextChat(userId: Long): ChatRoomInitDto
+    fun chatWithText(userId: Long, chatRoomId: Long, request: ChatRequest): ChatDto
+    fun deleteChatRoom(userId: Long, chatRoomId: Long)
+    fun analysisChatRoom(userId: Long, chatRoomId: Long): ChatRoomDetailDto
 
-    fun getArchivedChatRoomList(): ChatRoomListDto
-    fun getChatRoomDetail(chatRoomId: Long): ChatRoomDetailDto
+    fun getArchivedChatRoomList(userId: Long): ChatRoomListDto
+    fun getChatRoomDetail(userId: Long, chatRoomId: Long): ChatRoomDetailDto
+
+    fun deleteByUserId(userId: Long)
 
 }

@@ -37,12 +37,19 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-
 	// db
 	implementation("org.postgresql:postgresql")
-
 	// ai
 	implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
+	// security & oauth
+	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
+	implementation ("org.springframework.boot:spring-boot-starter-security")
+	// jwt
+	implementation ("io.jsonwebtoken:jjwt-api:0.12.3")
+	implementation ("io.jsonwebtoken:jjwt-impl:0.12.3")
+	implementation ("io.jsonwebtoken:jjwt-jackson:0.12.3")
+	// redis
+	implementation ("org.springframework.boot:spring-boot-starter-data-redis")
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")

@@ -6,6 +6,7 @@ import learn_mate_it.dev.domain.diary.application.dto.request.PostDiaryDto
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryAnalysisDto
 import learn_mate_it.dev.domain.diary.application.service.DiaryService
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,9 +20,10 @@ class DiaryController(
 
     @PostMapping
     fun postAndAnalysisDiary(
+        @AuthenticationPrincipal userId: Long,
         @RequestBody diaryRequest: PostDiaryDto
     ): ResponseEntity<ApiResponse<DiaryAnalysisDto>> {
-        val response = diaryService.postAndAnalysisDiary(diaryRequest)
+        val response = diaryService.postAndAnalysisDiary(userId, diaryRequest)
         return ApiResponse.success(SuccessStatus.CREATE_AND_ANALYSIS_DIARY_SUCCESS, response)
     }
 }
