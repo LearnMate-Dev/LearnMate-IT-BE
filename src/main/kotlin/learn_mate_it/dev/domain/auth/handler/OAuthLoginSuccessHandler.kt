@@ -46,6 +46,11 @@ class OAuthLoginSuccessHandler(
                 )
             )
 
+        // delete existing refresh token
+        refreshTokenRepository.findByUserId(user.userId).firstOrNull()?.let {
+            refreshTokenRepository.delete(it)
+        }
+
         // make new token
         val accessToken = jwtUtil.createAccessToken(user.userId)
         val refreshToken = jwtUtil.createRefreshToken(user.userId)

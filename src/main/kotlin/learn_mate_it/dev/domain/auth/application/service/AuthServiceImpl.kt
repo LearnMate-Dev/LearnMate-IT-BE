@@ -15,10 +15,10 @@ class AuthServiceImpl(
      * Reissue AccessToken
      */
     override fun reissueToken(refreshToken: String): String {
-        val newRefreshToken = getRefreshToken(refreshToken)
-        validRefreshToken(newRefreshToken)
+        val cleanRefreshToken = getRefreshToken(refreshToken)
+        validRefreshToken(cleanRefreshToken)
 
-        val userId = jwtUtil.getUserIdFromRefreshToken(newRefreshToken)
+        val userId = jwtUtil.getUserIdFromRefreshToken(cleanRefreshToken)
         return jwtUtil.createAccessToken(userId)
     }
 
