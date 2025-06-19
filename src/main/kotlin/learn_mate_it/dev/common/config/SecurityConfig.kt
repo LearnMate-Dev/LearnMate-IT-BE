@@ -25,7 +25,7 @@ class SecurityConfig(
     private val accessDeniedHandler: AccessDeniedHandler
 ) {
 
-    private val allowedUrls = arrayOf("/v3/**", "/swagger-ui/**", "/", "/login/**", "/oauth2/**")
+    private val allowedUrls = arrayOf("/v3/**", "/swagger-ui/**", "/", "/login/**", "/oauth2/**", "/api/auth/**")
 
     @Bean
     fun filterChain(httpSecurity: HttpSecurity): SecurityFilterChain {

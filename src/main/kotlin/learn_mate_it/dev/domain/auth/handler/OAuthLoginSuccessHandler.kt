@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletResponse
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.common.status.SuccessStatus
-import learn_mate_it.dev.domain.auth.application.dto.GoogleUserInfo
-import learn_mate_it.dev.domain.auth.application.dto.OAuth2UserInfo
+import learn_mate_it.dev.domain.auth.domain.dto.GoogleUserInfo
+import learn_mate_it.dev.domain.auth.domain.dto.OAuth2UserInfo
 import learn_mate_it.dev.domain.auth.domain.model.RefreshToken
 import learn_mate_it.dev.domain.auth.domain.repository.RefreshTokenRepository
 import learn_mate_it.dev.domain.auth.jwt.JwtUtil
@@ -52,8 +52,7 @@ class OAuthLoginSuccessHandler(
         saveRefreshToken(refreshToken, user.userId)
 
         // set response
-        response!!.setHeader("Authorization", "Bearer $accessToken")
-        response.setHeader("Access-Control-Expose-Headers", "Authorization")
+        response!!.setHeader("accessToken", accessToken)
         setHttpResponse(response)
     }
 

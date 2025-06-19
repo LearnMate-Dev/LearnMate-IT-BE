@@ -26,6 +26,7 @@ enum class ErrorStatus (
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "401", "유효하지 않은 액세스 토큰입니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "401", "유효하지 않은 리프레시 토큰입니다."),
     EXPIRED_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "401", "토큰이 만료되었습니다."),
+    NOT_FOUND_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "404", "존재하지 않는 리프레시 토큰입니다."),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "존재하지 않는 유저입니다."),
 
     /**

@@ -1,4 +1,4 @@
-package learn_mate_it.dev.domain.auth.application.dto
+package learn_mate_it.dev.domain.auth.domain.dto
 
 import learn_mate_it.dev.domain.user.domain.enums.PROVIDER
 

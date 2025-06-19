@@ -11,17 +11,24 @@ enum class SuccessStatus (
 
     OK(HttpStatus.OK, "200", "요청이 성공적으로 처리되었습니다."),
 
-    // auth
-    SIGN_UP_SUCCESS(HttpStatus.CREATED, "201", "회원가입이 성공적으로 완료되었습니다."),
+    /**
+     * Auth
+     */
+    SIGN_UP_SUCCESS(HttpStatus.CREATED, "201", "회원 인증이 성공적으로 완료되었습니다."),
+    REISSUE_TOKEN_SUCCESS(HttpStatus.OK, "200", "토큰 재발행이 성공적으로 완료되었습니다."),
 
-    // course
+    /**
+     * Course
+     */
     START_STEP_SUCCESS(HttpStatus.OK, "200", "스텝 시작하기가 성공적으로 완료되었습니다."),
     END_STEP_SUCCESS(HttpStatus.OK, "200", "스텝 끝내기가 성공적으로 완료되었습니다."),
     DELETE_STEP_SUCCESS(HttpStatus.OK, "200", "스텝 풀이 삭제가 성공적으로 완료되었습니다."),
     SOLVE_QUIZ_SUCCESS(HttpStatus.OK, "200", "퀴즈 풀이가 성공적으로 완료되었습니다."),
     GET_COURSE_INFO_SUCCESS(HttpStatus.OK, "200", "코스별 정보 조회가 성공적으로 완료되었습니다."),
 
-    // chat
+    /**
+     * Chat
+     */
     START_TEXT_CHAT_SUCCESS(HttpStatus.OK, "200", "텍스트 채팅방 생성이 성공적으로 완료되었습니다."),
     CHAT_WITH_TEXT_SUCCESS(HttpStatus.OK, "200", "텍스트 채팅이 성공적으로 완료되었습니다."),
     DELETE_CHAT_ROOM_SUCCESS(HttpStatus.OK, "200", "채팅방 삭제가 성공적으로 완료되었습니다."),
@@ -29,7 +36,9 @@ enum class SuccessStatus (
     GET_ARCHIVED_CHAT_ROOM_LIST_SUCCESS(HttpStatus.OK, "200", "저장된 채팅방 리스트 조회가 성공적으로 완료되었습니다."),
     GET_ARCHIVED_CHAT_ROOM_SUCCESS(HttpStatus.OK, "200", "채팅방 내역 조회가 성공적으로 완료되었습니다."),
 
-    // diary
+    /**
+     * Diary
+     */
     CREATE_AND_ANALYSIS_DIARY_SUCCESS(HttpStatus.OK, "200", "일기 작성 및 분석이 성공적으로 완료되었습니다."),
 
 }
