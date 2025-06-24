@@ -3,8 +3,6 @@ name: Development-CICD
 on:
   push:
     branches: [ "cicd/#26" ]
-  pull_request:
-    branches: [ "develop" ]
 
 jobs:
   deploy-ci:
@@ -49,7 +47,8 @@ jobs:
         shell: bash
 
       - name: build with gradle
-        run: chmod +x gradlew
+        run: | 
+          chmod +x gradlew
           ./gradlew build -x test
       
       - name: set env for docker build 
