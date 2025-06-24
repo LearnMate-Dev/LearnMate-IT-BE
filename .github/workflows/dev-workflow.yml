@@ -22,26 +22,30 @@ jobs:
 
       - name: make application-secret.yml
         run: |
-          touch ./src/main/resources/application-secret.yml
-          echo "${{ secrets.DEV_APPLICATION_SECRET_YML }}" > ./src/main/resources/application-secret.yml
+          cat <<EOF > ./src/main/resources/application-secret.yml
+          ${{ secrets.DEV_APPLICATION_SECRET_YML }}
+          EOF
         shell: bash
 
       - name: make analysis-chat-prompt.txt
         run: |
-          touch ./src/main/resources/analysis-chat-prompt.txt
-          echo "${{ secrets.ANALYSIS_CHAT_PROMPT }}" > ./src/main/resources/analysis-chat-prompt.txt
+          cat <<EOF > ./src/main/resources/analysis-chat-prompt.txt
+          ${{ secrets.ANALYSIS_CHAT_PROMPT }}
+          EOF
         shell: bash
 
       - name: make chat-prompt.txt
         run: |
-          touch ./src/main/resources/chat-prompt.txt
-          echo "${{ secrets.CHAT_PROMPT }}" > ./src/main/resources/chat-prompt.txt
+          cat <<EOF > ./src/main/resources/chat-prompt.txt
+          ${{ secrets.CHAT_PROMPT }}
+          EOF
         shell: bash
 
       - name: make recommend-subject-prompt.txt
         run: |
-          touch ./src/main/resources/recommend-subject-prompt.txt
-          echo "${{ secrets.RECOMMEND_SUBJECT_PROMPT }}" > ./src/main/resources/recommend-subject-prompt.txt
+          cat <<EOF > ./src/main/resources/recommend-subject-prompt.txt
+          ${{ secrets.RECOMMEND_SUBJECT_PROMPT }}
+          EOF
         shell: bash
 
       - name: build with gradle
