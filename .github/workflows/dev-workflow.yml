@@ -2,7 +2,7 @@ name: Development-CICD
 
 on:
   push:
-    branches: [ "cicd/#26" ]
+    branches: [ "develop" ]
 
 jobs:
   deploy-ci:
