@@ -62,8 +62,7 @@ jobs:
 
       - name: Docker 이미지 빌드 및 푸시
         env:
-          TAG: dev
-          IMAGE: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:$TAG
+          IMAGE: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:dev
         run: |
           docker build --platform linux/amd64 -t $IMAGE .
           docker push $IMAGE
@@ -75,8 +74,7 @@ jobs:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.0
         env:
-          TAG: dev
-          IMAGE: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:$TAG
+          IMAGE: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:dev
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
