@@ -7,10 +7,7 @@ import learn_mate_it.dev.domain.diary.application.dto.response.DiaryAnalysisDto
 import learn_mate_it.dev.domain.diary.application.service.DiaryService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/diaries")
@@ -26,4 +23,14 @@ class DiaryController(
         val response = diaryService.postAndAnalysisDiary(userId, diaryRequest)
         return ApiResponse.success(SuccessStatus.CREATE_AND_ANALYSIS_DIARY_SUCCESS, response)
     }
+
+    @DeleteMapping("/{diaryId}")
+    fun deleteDiary(
+        @AuthenticationPrincipal userId: Long,
+        @PathVariable("diaryId") diaryId: Long,
+    ): ResponseEntity<ApiResponse<Nothing>> {
+        diaryService.deleteDiary(userId, diaryId)
+        return ApiResponse.success(SuccessStatus.DELETE_DIARY_SUCCESS)
+    }
+
 }

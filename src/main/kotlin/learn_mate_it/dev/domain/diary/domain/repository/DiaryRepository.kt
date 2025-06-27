@@ -12,12 +12,32 @@ interface DiaryRepository : JpaRepository<Diary, Long> {
     @Query("SELECT COUNT(d) > 0 " +
             "FROM Diary d " +
             "WHERE d.userId = :userId " +
-            "AND d.createdAt >= :startDay " +
-            "AND d.createdAt < :endDay")
+                "AND d.createdAt >= :startDay " +
+                "AND d.createdAt < :endDay")
     fun existsByUserIdAndCreatedAt(
         @Param("userId") userId: Long,
         @Param("startDay") startDay: LocalDateTime,
-        @Param("endDay") endDay : LocalDateTime): Boolean
+        @Param("endDay") endDay : LocalDateTime
+    ): Boolean
+
+    @Query("SELECT d " +
+            "FROM Diary d " +
+            "WHERE d.diaryId = :diaryId")
+    fun findByDiaryId(
+        @Param("diaryId") diaryId: Long
+    ): Diary?
+
+    @Query("SELECT d " +
+            "FROM Diary d " +
+                "LEFT JOIN FETCH d.spelling s " +
+                "LEFT JOIN FETCH s.revisions sr " +
+                "LEFT JOIN FETCH d.spellingFeedback sf " +
+            "WHERE d.userId = :userId " +
+                "AND d.diaryId = :diaryId")
+    fun findByUserIdAndDiaryId(
+        @Param("userId") userId: Long,
+        @Param("diaryId") diaryId: Long
+    ): Diary?
 
     @Modifying
     @Query("DELETE " +

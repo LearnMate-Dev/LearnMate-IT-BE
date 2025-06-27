@@ -7,5 +7,6 @@ interface DiaryService {
 
     fun postAndAnalysisDiary(userId: Long, diaryRequest: PostDiaryDto): DiaryAnalysisDto
     fun deleteByUserId(userId: Long)
+    fun deleteDiary(userId: Long, diaryId: Long)
 
 }

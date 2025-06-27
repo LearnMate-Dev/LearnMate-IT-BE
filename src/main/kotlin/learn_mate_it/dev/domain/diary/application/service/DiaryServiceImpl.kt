@@ -80,6 +80,28 @@ class DiaryServiceImpl(
         return DiaryAnalysisDto.toDiaryAnalysisDto(diary, spelling, revisions)
     }
 
+    /**
+     * Delete Diary By DiaryId
+     *
+     * @param diaryId
+     */
+    @Transactional
+    override fun deleteDiary(userId: Long, diaryId: Long) {
+        val diary = getDiary(diaryId)
+        validIsUserAuthorizedForDiary(userId, diary)
+
+        spellingRevisionRepository.deleteByDiaryId(diaryId)
+        spellingFeedbackRepository.deleteByDiaryId(diaryId)
+        spellingRepository.deleteByDiaryId(diaryId)
+        diaryRepository.delete(diary)
+    }
+
+    fun validIsUserAuthorizedForDiary(userId: Long, diary: Diary) {
+        if (diary.userId != userId) {
+            throw GeneralException(ErrorStatus.FORBIDDEN_FOR_DIARY)
+        }
+    }
+
     @Transactional
     override fun deleteByUserId(userId: Long) {
         spellingRevisionRepository.deleteByUserId(userId)
@@ -104,6 +126,16 @@ class DiaryServiceImpl(
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
         require(content.length <= length) { throw GeneralException(errorStatus) }
+    }
+
+    private fun getDiaryFetchSpelling(userId: Long, diaryId: Long): Diary {
+        return diaryRepository.findByUserIdAndDiaryId(userId, diaryId)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_DIARY)
+    }
+
+    private fun getDiary(diaryId: Long): Diary {
+        return diaryRepository.findByDiaryId(diaryId)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_DIARY)
     }
 
 }
