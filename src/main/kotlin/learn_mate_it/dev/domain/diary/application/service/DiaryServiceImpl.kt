@@ -93,7 +93,7 @@ class DiaryServiceImpl(
         spellingRevisionRepository.deleteByDiaryId(diaryId)
         spellingFeedbackRepository.deleteByDiaryId(diaryId)
         spellingRepository.deleteByDiaryId(diaryId)
-        diaryRepository.delete(diary)
+        diaryRepository.deleteByDiaryId(diaryId)
     }
 
     fun validIsUserAuthorizedForDiary(userId: Long, diary: Diary) {

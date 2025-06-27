@@ -45,4 +45,10 @@ interface DiaryRepository : JpaRepository<Diary, Long> {
                 "WHERE d.userId IN :userId")
     fun deleteByUserId(@Param(value = "userId") userId: Long)
 
+    @Modifying
+    @Query("DELETE " +
+            "FROM Diary d " +
+            "WHERE d.diaryId = :diaryId")
+    fun deleteByDiaryId(@Param("diaryId") diaryId: Long)
+
 }
