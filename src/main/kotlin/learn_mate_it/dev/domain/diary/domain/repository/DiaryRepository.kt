@@ -32,10 +32,8 @@ interface DiaryRepository : JpaRepository<Diary, Long> {
                 "LEFT JOIN FETCH d.spelling s " +
                 "LEFT JOIN FETCH s.revisions sr " +
                 "LEFT JOIN FETCH d.spellingFeedback sf " +
-            "WHERE d.userId = :userId " +
-                "AND d.diaryId = :diaryId")
-    fun findByUserIdAndDiaryId(
-        @Param("userId") userId: Long,
+            "WHERE d.diaryId = :diaryId")
+    fun findByDiaryIdFetchSpelling(
         @Param("diaryId") diaryId: Long
     ): Diary?
 

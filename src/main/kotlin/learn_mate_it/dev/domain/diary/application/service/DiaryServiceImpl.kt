@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.diary.application.dto.request.PostDiaryDto
-import learn_mate_it.dev.domain.diary.application.dto.response.DiaryAnalysisDto
+import learn_mate_it.dev.domain.diary.application.dto.response.DiaryDto
 import learn_mate_it.dev.domain.diary.domain.model.Diary
 import learn_mate_it.dev.domain.diary.domain.model.Spelling
 import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision
@@ -35,7 +35,7 @@ class DiaryServiceImpl(
      * @return DiaryAnalysisDto content of diary and analysis about diary (score, spelling comment, examples)
      */
     @Transactional
-    override fun postAndAnalysisDiary(userId: Long, diaryRequest: PostDiaryDto): DiaryAnalysisDto {
+    override fun postAndAnalysisDiary(userId: Long, diaryRequest: PostDiaryDto): DiaryDto {
         validNotWrittenToday(userId)
         validStringLength(diaryRequest.content, CONTENT_LENGTH, ErrorStatus.DIARY_CONTENT_OVER_FLOW)
 
@@ -77,7 +77,34 @@ class DiaryServiceImpl(
             }.orEmpty()
         spellingRevisionRepository.saveAll(revisions)
 
-        return DiaryAnalysisDto.toDiaryAnalysisDto(diary, spelling, revisions)
+        return DiaryDto.toDiaryDto(diary, spelling, revisions, null)
+    }
+
+    private fun validNotWrittenToday(userId: Long) {
+        val startDay = LocalDate.now().atStartOfDay()
+        val endDay = startDay.plusDays(1)
+
+        val isWrittenToday = diaryRepository.existsByUserIdAndCreatedAt(userId, startDay, endDay)
+        require(!isWrittenToday) { throw GeneralException(ErrorStatus.ALREADY_DIARY_WRITTEN)}
+    }
+
+    private fun getSpellingScore(analysisResponse: SpellingAnalysisResponse): Int {
+        val sentences = analysisResponse.revisedSentences ?: return 100
+        // TODO: feature score
+        return 0
+    }
+
+    /**
+     * Get Diary's Detail And Spelling Info
+     *
+     * @param diaryId
+     * @return
+     */
+    override fun getDiaryDetail(userId: Long, diaryId: Long): DiaryDto {
+        val diary = getDiaryFetchSpelling(diaryId)
+        validIsUserAuthorizedForDiary(userId, diary)
+
+        return DiaryDto.toDiaryDto(diary, diary.spelling, diary.spelling?.revisions, diary.spellingFeedback)
     }
 
     /**
@@ -110,26 +137,12 @@ class DiaryServiceImpl(
         diaryRepository.deleteByUserId(userId)
     }
 
-    private fun getSpellingScore(analysisResponse: SpellingAnalysisResponse): Int {
-        val sentences = analysisResponse.revisedSentences ?: return 100
-        // TODO: feature score
-        return 0
-    }
-
-    private fun validNotWrittenToday(userId: Long) {
-        val startDay = LocalDate.now().atStartOfDay()
-        val endDay = startDay.plusDays(1)
-
-        val isWrittenToday = diaryRepository.existsByUserIdAndCreatedAt(userId, startDay, endDay)
-        require(!isWrittenToday) { throw GeneralException(ErrorStatus.ALREADY_DIARY_WRITTEN)}
-    }
-
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
         require(content.length <= length) { throw GeneralException(errorStatus) }
     }
 
-    private fun getDiaryFetchSpelling(userId: Long, diaryId: Long): Diary {
-        return diaryRepository.findByUserIdAndDiaryId(userId, diaryId)
+    private fun getDiaryFetchSpelling(diaryId: Long): Diary {
+        return diaryRepository.findByDiaryIdFetchSpelling(diaryId)
             ?: throw GeneralException(ErrorStatus.NOT_FOUND_DIARY)
     }
 
