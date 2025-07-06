@@ -5,9 +5,12 @@ import learn_mate_it.dev.common.status.SuccessStatus
 import learn_mate_it.dev.domain.diary.application.dto.request.PostDiaryDto
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryDto
 import learn_mate_it.dev.domain.diary.application.service.DiaryService
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/diaries")
@@ -39,6 +42,15 @@ class DiaryController(
        @PathVariable("diaryId") diaryId: Long
     ): ResponseEntity<ApiResponse<DiaryDto>> {
         val response = diaryService.getDiaryDetail(userId, diaryId)
+        return ApiResponse.success(SuccessStatus.GET_DIARY_DETAIL_SUCCESS, response)
+    }
+
+    @GetMapping
+    fun getDiaryDetailByDate(
+        @AuthenticationPrincipal userId: Long,
+        @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate
+    ): ResponseEntity<ApiResponse<DiaryDto>> {
+        val response = diaryService.getDiaryDetailByDate(userId, date)
         return ApiResponse.success(SuccessStatus.GET_DIARY_DETAIL_SUCCESS, response)
     }
 

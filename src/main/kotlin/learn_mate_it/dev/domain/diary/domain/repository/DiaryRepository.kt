@@ -37,6 +37,20 @@ interface DiaryRepository : JpaRepository<Diary, Long> {
         @Param("diaryId") diaryId: Long
     ): Diary?
 
+    @Query("SELECT d " +
+            "FROM Diary d " +
+                "LEFT JOIN FETCH d.spelling s " +
+                "LEFT JOIN FETCH s.revisions sr " +
+                "LEFT JOIN FETCH d.spellingFeedback sf " +
+            "WHERE d.userId = :userId " +
+                "AND d.createdAt >= :startDay " +
+                "AND d.createdAt < :endDay")
+    fun findByUserIdAndCreatedAtFetchSpelling(
+        @Param("userId") userId: Long,
+        @Param("startDay") startDay: LocalDateTime,
+        @Param("endDay") endDay : LocalDateTime
+    ): Diary?
+
     @Modifying
     @Query("DELETE " +
                 "FROM Diary d " +

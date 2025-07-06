@@ -8,7 +8,6 @@ import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision
 data class DiaryDto(
     val diaryId: Long,
     val createdAt: String,
-    val title: String,
     val originContent: String,
     val spellingDto: SpellingDto,
     val feedback: String?
@@ -23,10 +22,21 @@ data class DiaryDto(
             return DiaryDto(
                 diaryId = diary.diaryId,
                 createdAt = diary.getCreatedAtKoreanFormatted(),
-                title = diary.getCreatedAtKoreanFormatted(),
                 originContent = diary.content,
                 spellingDto = SpellingDto.toSpellingDto(spelling, revisions),
                 feedback = feedback?.content
+            )
+        }
+
+        fun toDiaryDto(
+            diary: Diary
+        ): DiaryDto {
+            return DiaryDto(
+                diaryId = diary.diaryId,
+                createdAt = diary.getCreatedAtKoreanFormatted(),
+                originContent = diary.content,
+                spellingDto = SpellingDto.toSpellingDto(diary.spelling, diary.spelling?.revisions),
+                feedback = diary.spellingFeedback?.content
             )
         }
     }

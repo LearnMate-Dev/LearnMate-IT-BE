@@ -77,6 +77,7 @@ class DiaryServiceImpl(
             }.orEmpty()
         spellingRevisionRepository.saveAll(revisions)
 
+        // TODO: feedback entity
         return DiaryDto.toDiaryDto(diary, spelling, revisions, null)
     }
 
@@ -104,7 +105,32 @@ class DiaryServiceImpl(
         val diary = getDiaryFetchSpelling(diaryId)
         validIsUserAuthorizedForDiary(userId, diary)
 
-        return DiaryDto.toDiaryDto(diary, diary.spelling, diary.spelling?.revisions, diary.spellingFeedback)
+        return DiaryDto.toDiaryDto(diary)
+    }
+
+    private fun getDiaryFetchSpelling(diaryId: Long): Diary {
+        return diaryRepository.findByDiaryIdFetchSpelling(diaryId)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_DIARY)
+    }
+
+    /**
+     * Get Diary's Detail And Spelling Info By CreatedAt DateTime
+     *
+     * @param date LocalDate Value
+     * @return
+     */
+    override fun getDiaryDetailByDate(userId: Long, date: LocalDate): DiaryDto {
+        val diary = getDiaryByUserIdAndDateFetchSpelling(userId, date)
+
+        return DiaryDto.toDiaryDto(diary)
+    }
+
+    private fun getDiaryByUserIdAndDateFetchSpelling(userId: Long, date: LocalDate): Diary {
+        val startDay = date.atStartOfDay()
+        val endDay = startDay.plusDays(1)
+
+        return diaryRepository.findByUserIdAndCreatedAtFetchSpelling(userId, startDay, endDay)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_DIARY)
     }
 
     /**
@@ -139,11 +165,6 @@ class DiaryServiceImpl(
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
         require(content.length <= length) { throw GeneralException(errorStatus) }
-    }
-
-    private fun getDiaryFetchSpelling(diaryId: Long): Diary {
-        return diaryRepository.findByDiaryIdFetchSpelling(diaryId)
-            ?: throw GeneralException(ErrorStatus.NOT_FOUND_DIARY)
     }
 
     private fun getDiary(diaryId: Long): Diary {
