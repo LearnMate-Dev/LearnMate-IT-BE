@@ -12,12 +12,12 @@ interface SpellingRevisionRepository : JpaRepository<SpellingRevision, Long> {
     @Query("DELETE " +
             "FROM SpellingRevision sr " +
             "WHERE sr.spelling.diary.userId IN :userId")
-    fun deleteByUserId(@Param(value = "userId") userId: Long?)
+    fun deleteByUserId(@Param(value = "userId") userId: Long)
 
     @Modifying
     @Query("DELETE " +
             "FROM SpellingRevision sr " +
             "WHERE sr.spelling.diary.diaryId IN :diaryId")
-    fun deleteByDiaryId(@Param(value = "diaryId") diaryId: Long?)
+    fun deleteByDiaryId(@Param(value = "diaryId") diaryId: Long)
 
 }
