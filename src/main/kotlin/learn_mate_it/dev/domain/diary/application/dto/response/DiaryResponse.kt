@@ -4,6 +4,8 @@ import learn_mate_it.dev.domain.diary.domain.model.Diary
 import learn_mate_it.dev.domain.diary.domain.model.Spelling
 import learn_mate_it.dev.domain.diary.domain.model.SpellingFeedback
 import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 data class DiaryDto(
     val diaryId: Long,
@@ -41,3 +43,19 @@ data class DiaryDto(
         }
     }
 }
+
+class SimpleDiaryDto(
+    val diaryId: Long,
+    val createdAt: String,
+    val score: Int
+) {
+    constructor(diaryId: Long, createdAt: LocalDateTime, score: Int) : this(
+        diaryId, createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")), score
+    )
+}
+
+data class DiaryCalendarDto(
+    val year: Int,
+    val month: Int,
+    val diaryList: List<SimpleDiaryDto>
+)

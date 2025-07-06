@@ -43,6 +43,7 @@ enum class SuccessStatus (
      */
     CREATE_AND_ANALYSIS_DIARY_SUCCESS(HttpStatus.OK, "200", "일기 작성 및 분석이 성공적으로 완료되었습니다."),
     DELETE_DIARY_SUCCESS(HttpStatus.OK, "200", "일기 삭제가 성공적으로 완료되었습니다."),
-    GET_DIARY_DETAIL_SUCCESS(HttpStatus.OK, "200", "일기 상세 조회가 성공적으로 완료되었습니다.")
+    GET_DIARY_DETAIL_SUCCESS(HttpStatus.OK, "200", "일기 상세 조회가 성공적으로 완료되었습니다."),
+    GET_DIARY_CALENDAR_SUCCESS(HttpStatus.OK, "200", "일기 캘린더 조회가 성공적으로 완료되었습니다.")
 
 }

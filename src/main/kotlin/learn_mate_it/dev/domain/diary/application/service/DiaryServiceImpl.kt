@@ -4,7 +4,9 @@ import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.diary.application.dto.request.PostDiaryDto
+import learn_mate_it.dev.domain.diary.application.dto.response.DiaryCalendarDto
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryDto
+import learn_mate_it.dev.domain.diary.application.dto.response.SimpleDiaryDto
 import learn_mate_it.dev.domain.diary.domain.model.Diary
 import learn_mate_it.dev.domain.diary.domain.model.Spelling
 import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision
@@ -130,8 +132,35 @@ class DiaryServiceImpl(
         val endDay = startDay.plusDays(1)
 
         return diaryRepository.findByUserIdAndCreatedAtFetchSpelling(userId, startDay, endDay)
-            ?: throw GeneralException(ErrorStatus.NOT_FOUND_DIARY)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_DATE_DIARY)
     }
+
+    /**
+     * Get Diary List Per Year & Month
+     *
+     * @param year
+     * @param month
+     * @return DiaryCalendar Each DiaryId And Score Of Spelling
+     */
+    override fun getDiaryCalendar(userId: Long, year: Int, month: Int): DiaryCalendarDto {
+        validateDateParam(year, month)
+        val diaryCalendar = getDiaryByUserIdAndYearAndMonth(userId, year, month)
+
+        return DiaryCalendarDto(year, month, diaryCalendar)
+    }
+
+    private fun validateDateParam(year: Int, month: Int) {
+        require(0 < year) { throw GeneralException(ErrorStatus.INVALID_YEAR_PARAM)}
+        require(month in 1..12) { throw GeneralException(ErrorStatus.INVALID_MONTH_PARAM)}
+    }
+
+    private fun getDiaryByUserIdAndYearAndMonth(userId: Long, year: Int, month: Int): List<SimpleDiaryDto> {
+        val date = LocalDate.of(year, month, 1)
+        val startOfMonth = date.withDayOfMonth(1).atStartOfDay()
+        val startOfNextMonth = date.plusMonths(1).withDayOfMonth(1).atStartOfDay()
+        return diaryRepository.findByUserIdAndYearAndMonth(userId, startOfMonth, startOfNextMonth)
+    }
+
 
     /**
      * Delete Diary By DiaryId

@@ -1,5 +1,6 @@
 package learn_mate_it.dev.domain.diary.domain.repository
 
+import learn_mate_it.dev.domain.diary.application.dto.response.SimpleDiaryDto
 import learn_mate_it.dev.domain.diary.domain.model.Diary
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
@@ -50,6 +51,22 @@ interface DiaryRepository : JpaRepository<Diary, Long> {
         @Param("startDay") startDay: LocalDateTime,
         @Param("endDay") endDay : LocalDateTime
     ): Diary?
+
+    @Query("""SELECT new learn_mate_it.dev.domain.diary.application.dto.response.SimpleDiaryDto(
+            d.diaryId, d.createdAt, s.score
+            )
+            FROM Diary d 
+            JOIN d.spelling s 
+            WHERE d.userId = :userId
+                AND d.createdAt >= :startDayOfMonth 
+                AND d.createdAt < :endDayOfMonth
+            ORDER BY d.createdAt
+            """)
+    fun findByUserIdAndYearAndMonth(
+        @Param("userId") userId: Long,
+        @Param("startDayOfMonth") startDayOfMonth: LocalDateTime,
+        @Param("endDayOfMonth") endDayOfMonth: LocalDateTime
+    ): List<SimpleDiaryDto>
 
     @Modifying
     @Query("DELETE " +

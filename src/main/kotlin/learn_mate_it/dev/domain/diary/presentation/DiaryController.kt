@@ -3,6 +3,7 @@ package learn_mate_it.dev.domain.diary.presentation
 import ApiResponse
 import learn_mate_it.dev.common.status.SuccessStatus
 import learn_mate_it.dev.domain.diary.application.dto.request.PostDiaryDto
+import learn_mate_it.dev.domain.diary.application.dto.response.DiaryCalendarDto
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryDto
 import learn_mate_it.dev.domain.diary.application.service.DiaryService
 import org.springframework.format.annotation.DateTimeFormat
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/diaries")
@@ -52,6 +52,16 @@ class DiaryController(
     ): ResponseEntity<ApiResponse<DiaryDto>> {
         val response = diaryService.getDiaryDetailByDate(userId, date)
         return ApiResponse.success(SuccessStatus.GET_DIARY_DETAIL_SUCCESS, response)
+    }
+
+    @GetMapping("/calendar")
+    fun getDiaryCalendar(
+        @AuthenticationPrincipal userId: Long,
+        @RequestParam("year") year: Int,
+        @RequestParam("month") month: Int,
+    ): ResponseEntity<ApiResponse<DiaryCalendarDto>> {
+        val response = diaryService.getDiaryCalendar(userId, year, month)
+        return ApiResponse.success(SuccessStatus.GET_DIARY_CALENDAR_SUCCESS, response)
     }
 
 }
