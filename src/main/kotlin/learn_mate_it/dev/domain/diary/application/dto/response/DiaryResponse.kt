@@ -2,26 +2,60 @@ package learn_mate_it.dev.domain.diary.application.dto.response
 
 import learn_mate_it.dev.domain.diary.domain.model.Diary
 import learn_mate_it.dev.domain.diary.domain.model.Spelling
+import learn_mate_it.dev.domain.diary.domain.model.SpellingFeedback
 import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-data class DiaryAnalysisDto(
+data class DiaryDto(
     val diaryId: Long,
-    val title: String,
+    val createdAt: String,
     val originContent: String,
-    val spellingDto: SpellingDto
+    val spellingDto: SpellingDto,
+    val feedback: String?
 ) {
     companion object {
-        fun toDiaryAnalysisDto(
+        fun toDiaryDto(
             diary: Diary,
-            spelling: Spelling,
-            revisions: List<SpellingRevision>?
-        ): DiaryAnalysisDto {
-            return DiaryAnalysisDto(
+            spelling: Spelling?,
+            revisions: List<SpellingRevision>?,
+            feedback: SpellingFeedback?
+        ): DiaryDto {
+            return DiaryDto(
                 diaryId = diary.diaryId,
-                title = diary.getCreatedAtKoreanFormatted(),
+                createdAt = diary.getCreatedAtKoreanFormatted(),
                 originContent = diary.content,
-                spellingDto = SpellingDto.toSpellingDto(spelling, revisions)
+                spellingDto = SpellingDto.toSpellingDto(spelling, revisions),
+                feedback = feedback?.content
+            )
+        }
+
+        fun toDiaryDto(
+            diary: Diary
+        ): DiaryDto {
+            return DiaryDto(
+                diaryId = diary.diaryId,
+                createdAt = diary.getCreatedAtKoreanFormatted(),
+                originContent = diary.content,
+                spellingDto = SpellingDto.toSpellingDto(diary.spelling, diary.spelling?.revisions),
+                feedback = diary.spellingFeedback?.content
             )
         }
     }
 }
+
+class SimpleDiaryDto(
+    val diaryId: Long,
+    val createdAt: String,
+    val score: Int
+) {
+    constructor(diaryId: Long, createdAt: LocalDateTime, score: Int) : this(
+        diaryId, createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")), score
+    )
+}
+
+data class DiaryCalendarDto(
+    val year: Int,
+    val month: Int,
+    val diaryList: List<SimpleDiaryDto>
+)

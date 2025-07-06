@@ -10,12 +10,12 @@ data class SpellingDto(
 ) {
     companion object {
         fun toSpellingDto(
-            spelling: Spelling,
+            spelling: Spelling?,
             revisions: List<SpellingRevision>?
         ): SpellingDto {
             return SpellingDto(
-                revisedContent = spelling.revisedContent,
-                score = spelling.score,
+                revisedContent = spelling?.revisedContent,
+                score = spelling?.score ?: 100,
                 revisions = revisions?.map { SpellingRevisionDto.toSpellingRevisionDto(it) }
             )
         }
