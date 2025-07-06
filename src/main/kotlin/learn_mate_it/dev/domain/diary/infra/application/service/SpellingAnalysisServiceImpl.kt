@@ -2,7 +2,7 @@ package learn_mate_it.dev.domain.diary.infra.application.service
 
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
-import learn_mate_it.dev.domain.diary.application.service.SpellingService
+import learn_mate_it.dev.domain.diary.application.service.SpellingAnalysisService
 import learn_mate_it.dev.domain.diary.infra.application.dto.request.Document
 import learn_mate_it.dev.domain.diary.infra.application.dto.request.SpellingAnalysisRequest
 import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAnalysisResponse
@@ -14,15 +14,15 @@ import reactor.core.publisher.Mono
 
 
 @Service
-class SpellingServiceImpl(
+class SpellingAnalysisServiceImpl(
     @Value("\${spelling.host}") private val spellingAnalysisHost: String,
     @Value("\${spelling.api-key}") private val spellingApiKey: String
-): SpellingService {
+): SpellingAnalysisService {
 
     private val log = LoggerFactory.getLogger(this::class.java)
     private val webClient = WebClient.create()
 
-    override fun analysisSpelling(content: String): SpellingAnalysisResponse {
+    override fun postAnalysisSpelling(content: String): SpellingAnalysisResponse {
         val request = SpellingAnalysisRequest(document = Document(content = content))
 
         val response = webClient.post()

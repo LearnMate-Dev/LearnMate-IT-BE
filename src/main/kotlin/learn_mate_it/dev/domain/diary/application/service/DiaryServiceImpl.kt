@@ -8,23 +8,15 @@ import learn_mate_it.dev.domain.diary.application.dto.response.DiaryCalendarDto
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryDto
 import learn_mate_it.dev.domain.diary.application.dto.response.SimpleDiaryDto
 import learn_mate_it.dev.domain.diary.domain.model.Diary
-import learn_mate_it.dev.domain.diary.domain.model.Spelling
-import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision
 import learn_mate_it.dev.domain.diary.domain.repository.DiaryRepository
-import learn_mate_it.dev.domain.diary.domain.repository.SpellingFeedbackRepository
-import learn_mate_it.dev.domain.diary.domain.repository.SpellingRepository
-import learn_mate_it.dev.domain.diary.domain.repository.SpellingRevisionRepository
-import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAnalysisResponse
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
 class DiaryServiceImpl(
     private val diaryRepository: DiaryRepository,
-    private val spellingRepository: SpellingRepository,
-    private val spellingRevisionRepository: SpellingRevisionRepository,
-    private val spellingFeedbackRepository: SpellingFeedbackRepository,
     private val spellingService: SpellingService,
+    private val feedbackService: FeedbackService,
 ) : DiaryService {
 
     private final val CONTENT_LENGTH: Int = 500
@@ -49,38 +41,10 @@ class DiaryServiceImpl(
             )
         )
 
-        // get spelling analysis from api
-        val spellingAnalysisResponse = spellingService.analysisSpelling(diary.content)
-        val score = getSpellingScore(spellingAnalysisResponse)
+        val spelling = spellingService.analysisSpellingAndRevisions(diary)
+        val feedback = feedbackService.analysisFeedback(diary, diary.content)
 
-        // save spelling entity
-        val spelling = spellingRepository.save(
-            Spelling(
-                revisedContent = spellingAnalysisResponse.revised,
-                score = score,
-                diary = diary
-            )
-        )
-
-        // save separate spelling analysis
-        val revisions = spellingAnalysisResponse.revisedSentences
-            ?.flatMap { it.revisedBlocks.orEmpty() }
-            ?.flatMap { block ->
-                block.revisions.map { revision ->
-                    SpellingRevision(
-                        originContent = block.origin.content,
-                        beginOffset = block.origin.beginOffset,
-                        revisedContent = revision.revised,
-                        examples = revision.examples.toTypedArray(),
-                        comment = revision.comment,
-                        spelling = spelling
-                    )
-                }
-            }.orEmpty()
-        spellingRevisionRepository.saveAll(revisions)
-
-        // TODO: feedback entity
-        return DiaryDto.toDiaryDto(diary, spelling, revisions, null)
+        return DiaryDto.toDiaryDto(diary, spelling, spelling.revisions, feedback)
     }
 
     private fun validNotWrittenToday(userId: Long) {
@@ -89,12 +53,6 @@ class DiaryServiceImpl(
 
         val isWrittenToday = diaryRepository.existsByUserIdAndCreatedAt(userId, startDay, endDay)
         require(!isWrittenToday) { throw GeneralException(ErrorStatus.ALREADY_DIARY_WRITTEN)}
-    }
-
-    private fun getSpellingScore(analysisResponse: SpellingAnalysisResponse): Int {
-        val sentences = analysisResponse.revisedSentences ?: return 100
-        // TODO: feature score
-        return 0
     }
 
     /**
@@ -172,9 +130,8 @@ class DiaryServiceImpl(
         val diary = getDiary(diaryId)
         validIsUserAuthorizedForDiary(userId, diary)
 
-        spellingRevisionRepository.deleteByDiaryId(diaryId)
-        spellingFeedbackRepository.deleteByDiaryId(diaryId)
-        spellingRepository.deleteByDiaryId(diaryId)
+        spellingService.deleteByDiaryId(diaryId)
+        feedbackService.deleteByDiaryId(diaryId)
         diaryRepository.deleteByDiaryId(diaryId)
     }
 
@@ -186,9 +143,8 @@ class DiaryServiceImpl(
 
     @Transactional
     override fun deleteByUserId(userId: Long) {
-        spellingRevisionRepository.deleteByUserId(userId)
-        spellingFeedbackRepository.deleteByUserId(userId)
-        spellingRepository.deleteByUserId(userId)
+        spellingService.deleteByUserId(userId)
+        feedbackService.deleteByUserId(userId)
         diaryRepository.deleteByUserId(userId)
     }
 

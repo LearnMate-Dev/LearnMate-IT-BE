@@ -69,8 +69,15 @@ enum class ErrorStatus (
     FORBIDDEN_FOR_DIARY(HttpStatus.FORBIDDEN, "403", "일기에 대한 접근 권한이 없습니다."),
     NOT_FOUND_DIARY(HttpStatus.NOT_FOUND, "404", "존재하지 않는 일기입니다."),
     NOT_FOUND_DATE_DIARY(HttpStatus.NOT_FOUND, "404", "해당 날짜에 작성한 일기가 존재하지 않습니다."),
+
+
+    /**
+     * Spelling
+     */
     ANALYSIS_SPELLING_CLIENT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "400", "일기 맞춤법 검사 중 클라이언트에서 오류가 발생했습니다."),
-    ANALYSIS_SPELLING_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "일기 맞춤법 검사 중 서버에서 오류가 발생했습니다.")
+    ANALYSIS_SPELLING_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "일기 맞춤법 검사 중 서버에서 오류가 발생했습니다."),
+    ANALYSIS_FEEDBACK_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "일기 맞춤법 피드백 분석 처리 중 AI 서버에서 오류가 발생했습니다."),
+    SPELLING_FEEDBACK_OVER_FLOW(HttpStatus.INTERNAL_SERVER_ERROR, "500", "맞춤법 피드백 생성 결과가 제한 글자수를 초과했습니다.")
 
 
 }

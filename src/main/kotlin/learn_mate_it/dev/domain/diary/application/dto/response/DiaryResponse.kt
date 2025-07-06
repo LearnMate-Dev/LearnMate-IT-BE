@@ -2,7 +2,6 @@ package learn_mate_it.dev.domain.diary.application.dto.response
 
 import learn_mate_it.dev.domain.diary.domain.model.Diary
 import learn_mate_it.dev.domain.diary.domain.model.Spelling
-import learn_mate_it.dev.domain.diary.domain.model.SpellingFeedback
 import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -19,14 +18,14 @@ data class DiaryDto(
             diary: Diary,
             spelling: Spelling?,
             revisions: List<SpellingRevision>?,
-            feedback: SpellingFeedback?
+            feedback: String
         ): DiaryDto {
             return DiaryDto(
                 diaryId = diary.diaryId,
                 createdAt = diary.getCreatedAtKoreanFormatted(),
                 originContent = diary.content,
                 spellingDto = SpellingDto.toSpellingDto(spelling, revisions),
-                feedback = feedback?.content
+                feedback = feedback
             )
         }
 
