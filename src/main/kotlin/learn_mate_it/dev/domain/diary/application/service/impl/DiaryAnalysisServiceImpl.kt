@@ -1,0 +1,79 @@
+package learn_mate_it.dev.domain.diary.application.service.impl
+
+import kotlinx.coroutines.*
+import learn_mate_it.dev.common.exception.GeneralException
+import learn_mate_it.dev.common.status.ErrorStatus
+import learn_mate_it.dev.domain.diary.application.dto.response.DiaryDto
+import learn_mate_it.dev.domain.diary.application.service.*
+import learn_mate_it.dev.domain.diary.domain.model.Spelling
+import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision
+import learn_mate_it.dev.domain.diary.domain.repository.DiaryRepository
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
+import java.time.LocalDate
+
+@Service
+class DiaryAnalysisServiceImpl(
+    private val diaryRepository: DiaryRepository,
+    private val diaryService: DiaryService,
+    private val spellingService: SpellingService,
+    private val feedbackService: FeedbackService,
+    private val spellingAnalysisService: SpellingAnalysisService,
+    private val feedbackAIService: FeedbackAIService
+): DiaryAnalysisService {
+
+    private val log = LoggerFactory.getLogger(this::class.java)
+    private final val CONTENT_LENGTH: Int = 500
+
+    /**
+     * Analysis Diary's Spelling And Get Feedback From AI About Spelling
+     * Diary's Title will be the date
+     *
+     * @param content content of diary
+     * @return DiaryAnalysisDto content of diary and analysis about diary (score, spelling comment, examples)
+     */
+    override fun analysisDiary(userId: Long, content: String): DiaryDto {
+        validNotWrittenToday(userId)
+        validStringLength(content, CONTENT_LENGTH, ErrorStatus.DIARY_CONTENT_OVER_FLOW)
+
+        val diary = diaryService.saveDiary(userId, content)
+        var spelling: Spelling? = null
+        var revisions: List<SpellingRevision>? = null
+        var feedback: String? = null
+
+        runBlocking {
+            coroutineScope {
+                val spellingJob = async {
+                    val spellingAnalysisResponse = spellingAnalysisService.postAnalysisSpelling(content)
+                    val result = spellingService.saveSpellingAndRevisions(diary, spellingAnalysisResponse)
+
+                    spelling = result.first
+                    revisions = result.second
+                }
+
+                val feedbackJob = async {
+                    val feedbackResponse = feedbackAIService.postAnalysisFeedback(content)
+                    feedback = feedbackService.saveFeedback(diary, feedbackResponse).content
+                }
+
+                spellingJob.await()
+                feedbackJob.await()
+            }
+        }
+
+        return DiaryDto.toDiaryDto(diary, spelling, revisions, feedback)
+    }
+
+    private fun validNotWrittenToday(userId: Long) {
+        val startDay = LocalDate.now().atStartOfDay()
+        val endDay = startDay.plusDays(1)
+
+        val isWrittenToday = diaryRepository.existsByUserIdAndCreatedAt(userId, startDay, endDay)
+        require(!isWrittenToday) { throw GeneralException(ErrorStatus.ALREADY_DIARY_WRITTEN) }
+    }
+
+    private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
+        require(content.length <= length) { throw GeneralException(errorStatus) }
+    }
+
+}

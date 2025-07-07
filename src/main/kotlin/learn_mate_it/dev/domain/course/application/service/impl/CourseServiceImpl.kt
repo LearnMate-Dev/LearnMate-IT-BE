@@ -1,4 +1,4 @@
-package learn_mate_it.dev.domain.course.application.service
+package learn_mate_it.dev.domain.course.application.service.impl
 
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
@@ -7,6 +7,7 @@ import learn_mate_it.dev.domain.course.application.dto.response.CourseDto
 import learn_mate_it.dev.domain.course.application.dto.response.CourseListDto
 import learn_mate_it.dev.domain.course.application.dto.response.StepDto
 import learn_mate_it.dev.domain.course.application.dto.response.StepInitDto
+import learn_mate_it.dev.domain.course.application.service.CourseService
 import learn_mate_it.dev.domain.course.domain.enums.CourseStatus
 import learn_mate_it.dev.domain.course.domain.enums.CourseType
 import learn_mate_it.dev.domain.course.domain.enums.StepStatus

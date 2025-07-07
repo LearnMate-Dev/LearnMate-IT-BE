@@ -1,7 +1,8 @@
-package learn_mate_it.dev.domain.auth.application.service
+package learn_mate_it.dev.domain.auth.application.service.impl
 
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
+import learn_mate_it.dev.domain.auth.application.service.AuthService
 import learn_mate_it.dev.domain.auth.domain.enums.TokenType
 import learn_mate_it.dev.domain.auth.domain.repository.RefreshTokenRepository
 import learn_mate_it.dev.domain.auth.jwt.JwtUtil

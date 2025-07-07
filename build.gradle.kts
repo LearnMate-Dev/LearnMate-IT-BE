@@ -51,6 +51,9 @@ dependencies {
 	implementation ("io.jsonwebtoken:jjwt-jackson:0.12.3")
 	// redis
 	implementation ("org.springframework.boot:spring-boot-starter-data-redis")
+	// coroutine
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
