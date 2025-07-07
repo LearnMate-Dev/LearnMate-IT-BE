@@ -4,7 +4,7 @@ import learn_mate_it.dev.domain.diary.domain.model.Diary
 
 interface FeedbackService {
 
-    fun analysisFeedback(diary: Diary, content: String): String
+    fun saveFeedback(diary: Diary, content: String)
 
     fun deleteByUserId(userId: Long)
     fun deleteByDiaryId(diaryId: Long)

@@ -5,7 +5,9 @@ import learn_mate_it.dev.common.status.SuccessStatus
 import learn_mate_it.dev.domain.diary.application.dto.request.PostDiaryDto
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryCalendarDto
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryDto
+import learn_mate_it.dev.domain.diary.application.service.DiaryAnalysisService
 import learn_mate_it.dev.domain.diary.application.service.DiaryService
+import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -15,15 +17,19 @@ import java.time.LocalDate
 @RestController
 @RequestMapping("/api/diaries")
 class DiaryController(
-    private val diaryService: DiaryService
+    private val diaryService: DiaryService,
+    private val diaryAnalysisService: DiaryAnalysisService
 ) {
+    private val log = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping
-    fun postAndAnalysisDiary(
+    suspend fun postAndAnalysisDiary(
         @AuthenticationPrincipal userId: Long,
         @RequestBody diaryRequest: PostDiaryDto
     ): ResponseEntity<ApiResponse<DiaryDto>> {
-        val response = diaryService.postAndAnalysisDiary(userId, diaryRequest)
+
+        val response = diaryAnalysisService.analysisDiary(userId, diaryRequest.content)
+        log.info(response.toString())
         return ApiResponse.success(SuccessStatus.CREATE_AND_ANALYSIS_DIARY_SUCCESS, response)
     }
 

@@ -4,6 +4,6 @@ import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAna
 
 interface SpellingAnalysisService {
 
-    fun postAnalysisSpelling(content: String): SpellingAnalysisResponse
+    suspend fun postAnalysisSpelling(content: String): SpellingAnalysisResponse
 
 }
