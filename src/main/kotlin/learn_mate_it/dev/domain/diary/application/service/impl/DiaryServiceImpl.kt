@@ -1,4 +1,4 @@
-package learn_mate_it.dev.domain.diary.application.service
+package learn_mate_it.dev.domain.diary.application.service.impl
 
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
@@ -7,6 +7,9 @@ import learn_mate_it.dev.domain.diary.application.dto.request.PostDiaryDto
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryCalendarDto
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryDto
 import learn_mate_it.dev.domain.diary.application.dto.response.SimpleDiaryDto
+import learn_mate_it.dev.domain.diary.application.service.DiaryService
+import learn_mate_it.dev.domain.diary.application.service.FeedbackService
+import learn_mate_it.dev.domain.diary.application.service.SpellingService
 import learn_mate_it.dev.domain.diary.domain.model.Diary
 import learn_mate_it.dev.domain.diary.domain.repository.DiaryRepository
 import org.springframework.stereotype.Service
@@ -33,7 +36,7 @@ class DiaryServiceImpl(
         validNotWrittenToday(userId)
         validStringLength(diaryRequest.content, CONTENT_LENGTH, ErrorStatus.DIARY_CONTENT_OVER_FLOW)
 
-        // save diary
+        // save diary entity
         val diary = diaryRepository.save(
             Diary(
                 content = diaryRequest.content,
@@ -41,6 +44,7 @@ class DiaryServiceImpl(
             )
         )
 
+        // TODO: 비동기 추가
         val spelling = spellingService.analysisSpellingAndRevisions(diary)
         val feedback = feedbackService.analysisFeedback(diary, diary.content)
 
@@ -64,7 +68,6 @@ class DiaryServiceImpl(
     override fun getDiaryDetail(userId: Long, diaryId: Long): DiaryDto {
         val diary = getDiaryFetchSpelling(diaryId)
         validIsUserAuthorizedForDiary(userId, diary)
-
         return DiaryDto.toDiaryDto(diary)
     }
 
@@ -81,7 +84,6 @@ class DiaryServiceImpl(
      */
     override fun getDiaryDetailByDate(userId: Long, date: LocalDate): DiaryDto {
         val diary = getDiaryByUserIdAndDateFetchSpelling(userId, date)
-
         return DiaryDto.toDiaryDto(diary)
     }
 

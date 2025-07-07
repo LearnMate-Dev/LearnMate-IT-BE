@@ -1,6 +1,8 @@
-package learn_mate_it.dev.domain.diary.application.service
+package learn_mate_it.dev.domain.diary.application.service.impl
 
 import jakarta.transaction.Transactional
+import learn_mate_it.dev.domain.diary.application.service.SpellingAnalysisService
+import learn_mate_it.dev.domain.diary.application.service.SpellingService
 import learn_mate_it.dev.domain.diary.domain.model.Diary
 import learn_mate_it.dev.domain.diary.domain.model.Spelling
 import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision

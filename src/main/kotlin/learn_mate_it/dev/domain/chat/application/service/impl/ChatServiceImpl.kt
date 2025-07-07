@@ -1,4 +1,4 @@
-package learn_mate_it.dev.domain.chat.application.service
+package learn_mate_it.dev.domain.chat.application.service.impl
 
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
@@ -8,6 +8,8 @@ import learn_mate_it.dev.domain.chat.application.dto.response.ChatDto
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomDetailDto
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomInitDto
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatRoomListDto
+import learn_mate_it.dev.domain.chat.application.service.ChatAiService
+import learn_mate_it.dev.domain.chat.application.service.ChatService
 import learn_mate_it.dev.domain.chat.domain.enums.ChatAuthor
 import learn_mate_it.dev.domain.chat.domain.enums.ChatRoomType
 import learn_mate_it.dev.domain.chat.domain.model.Chat

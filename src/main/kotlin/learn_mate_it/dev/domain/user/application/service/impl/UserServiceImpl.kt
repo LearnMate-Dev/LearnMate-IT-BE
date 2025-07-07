@@ -1,10 +1,11 @@
-package learn_mate_it.dev.domain.user.application.service
+package learn_mate_it.dev.domain.user.application.service.impl
 
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.domain.auth.application.service.AuthService
 import learn_mate_it.dev.domain.chat.application.service.ChatService
 import learn_mate_it.dev.domain.course.application.service.CourseService
 import learn_mate_it.dev.domain.diary.application.service.DiaryService
+import learn_mate_it.dev.domain.user.application.service.UserService
 import learn_mate_it.dev.domain.user.domain.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
