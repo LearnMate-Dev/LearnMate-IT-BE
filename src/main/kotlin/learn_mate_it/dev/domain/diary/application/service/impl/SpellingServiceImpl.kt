@@ -1,6 +1,5 @@
 package learn_mate_it.dev.domain.diary.application.service.impl
 
-import jakarta.persistence.EntityManager
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.domain.diary.application.service.SpellingService
 import learn_mate_it.dev.domain.diary.domain.model.Diary
@@ -15,11 +14,10 @@ import org.springframework.stereotype.Service
 class SpellingServiceImpl(
     private val spellingRepository: SpellingRepository,
     private val spellingRevisionRepository: SpellingRevisionRepository,
-    private val entityManager: EntityManager
 ) : SpellingService {
 
     @Transactional
-    override fun saveSpellingAndRevisions(diary: Diary, spellingAnalysisResponse: SpellingAnalysisResponse): Spelling {
+    override fun saveSpellingAndRevisions(diary: Diary, spellingAnalysisResponse: SpellingAnalysisResponse): Pair<Spelling, List<SpellingRevision>> {
         // get score of spelling
         val score = getSpellingScore(spellingAnalysisResponse)
 
@@ -48,9 +46,8 @@ class SpellingServiceImpl(
                 }
             }.orEmpty()
         spellingRevisionRepository.saveAll(revisions)
-        entityManager.flush()
 
-        return spelling
+        return Pair(spelling, revisions)
     }
 
     private fun getSpellingScore(analysisResponse: SpellingAnalysisResponse): Int {

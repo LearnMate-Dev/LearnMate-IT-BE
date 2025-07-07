@@ -15,9 +15,9 @@ class FeedbackServiceImpl(
 ): FeedbackService {
 
     @Transactional
-    override fun saveFeedback(diary: Diary, content: String) {
+    override fun saveFeedback(diary: Diary, content: String): SpellingFeedback {
         // save feedback entity
-        feedbackRepository.save(
+        return feedbackRepository.save(
             SpellingFeedback(
                 content = content,
                 diary = diary

@@ -18,7 +18,7 @@ data class DiaryDto(
             diary: Diary,
             spelling: Spelling?,
             revisions: List<SpellingRevision>?,
-            feedback: String
+            feedback: String?
         ): DiaryDto {
             return DiaryDto(
                 diaryId = diary.diaryId,
