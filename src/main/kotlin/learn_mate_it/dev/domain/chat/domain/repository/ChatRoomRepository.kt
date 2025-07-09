@@ -10,9 +10,14 @@ interface ChatRoomRepository: JpaRepository<ChatRoom, Long> {
 
     @Query(value = "SELECT cr " +
             "FROM ChatRoom cr " +
-            "LEFT JOIN FETCH cr.chats " +
             "WHERE cr.chatRoomId = :chatRoomId")
     fun findByChatRoomId(@Param(value = "chatRoomId") chatRoomId: Long): ChatRoom?
+
+    @Query(value = "SELECT cr " +
+            "FROM ChatRoom cr " +
+            "JOIN FETCH cr.chats " +
+            "WHERE cr.chatRoomId = :chatRoomId")
+    fun findByChatRoomIdFetchChats(@Param(value = "chatRoomId") chatRoomId: Long): ChatRoom?
 
     @Query(value = "SELECT cr " +
             "FROM ChatRoom cr " +
@@ -29,8 +34,8 @@ interface ChatRoomRepository: JpaRepository<ChatRoom, Long> {
 
     @Modifying
     @Query("DELETE " +
-                "FROM ChatRoom cr " +
-                "WHERE cr.userId IN :userId")
+            "FROM ChatRoom cr " +
+            "WHERE cr.userId IN :userId")
     fun deleteByUserId(@Param(value = "userId") userId: Long)
 
 }

@@ -105,6 +105,11 @@ class ChatServiceImpl(
         chatRoomRepository.deleteByChatRoomId(chatRoomId)
     }
 
+    private fun getChatRoom(chatRoomId: Long): ChatRoom {
+        return chatRoomRepository.findByChatRoomId(chatRoomId)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_CHAT_ROOM)
+    }
+
     /**
      * Analysis Chat Room
      * Get Title And Comments For Each Chat From AI
@@ -114,7 +119,7 @@ class ChatServiceImpl(
      */
     @Transactional
     override fun analysisChatRoom(userId: Long, chatRoomId: Long): ChatRoomDetailDto {
-        val chatRoom = getChatRoom(chatRoomId)
+        val chatRoom = getChatRoomFetchChats(chatRoomId)
         validIsUserAuthorizedForChatRoom(userId, chatRoom)
         validIsChatRoomAlreadyAnalysis(chatRoom)
 
@@ -136,7 +141,7 @@ class ChatServiceImpl(
                     validStringLength(comment, CONTENT_LENGTH, ErrorStatus.CHAT_CONTENT_OVER_FLOW)
                     chat.updateComment(comment)
                 }
-        }
+            }
 
         chatRoomRepository.save(chatRoom)
         chatRepository.saveAll(chatList)
@@ -165,11 +170,16 @@ class ChatServiceImpl(
      * @return ChatRoomDetailDto chatRoom info and chat content, chat author, chat comment list
      */
     override fun getChatRoomDetail(userId: Long, chatRoomId: Long): ChatRoomDetailDto {
-        val chatRoom = getChatRoom(chatRoomId)
+        val chatRoom = getChatRoomFetchChats(chatRoomId)
         validIsUserAuthorizedForChatRoom(userId, chatRoom)
 
         val chatList = chatRoom.chats.sortedBy { it.chatId }
         return ChatRoomDetailDto.toChatRoomDetailDto(chatRoom, chatList)
+    }
+
+    private fun getChatRoomFetchChats(chatRoomId: Long): ChatRoom {
+        return chatRoomRepository.findByChatRoomIdFetchChats(chatRoomId)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_CHAT_ROOM)
     }
 
     @Transactional
@@ -184,11 +194,6 @@ class ChatServiceImpl(
 
     private fun validIsUserAuthorizedForChatRoom(userId: Long, chatRoom: ChatRoom) {
         require(chatRoom.userId == userId) { throw GeneralException(ErrorStatus.FORBIDDEN_FOR_CHAT_ROOM) }
-    }
-
-    private fun getChatRoom(chatRoomId: Long): ChatRoom {
-        return chatRoomRepository.findByChatRoomId(chatRoomId)
-            ?: throw GeneralException(ErrorStatus.NOT_FOUND_CHAT_ROOM)
     }
 
 }
