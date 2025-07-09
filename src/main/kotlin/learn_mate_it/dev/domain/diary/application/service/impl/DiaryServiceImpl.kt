@@ -9,6 +9,7 @@ import learn_mate_it.dev.domain.diary.application.dto.response.SimpleDiaryDto
 import learn_mate_it.dev.domain.diary.application.service.*
 import learn_mate_it.dev.domain.diary.domain.model.Diary
 import learn_mate_it.dev.domain.diary.domain.repository.DiaryRepository
+import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAnalysisResponse
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -19,6 +20,20 @@ class DiaryServiceImpl(
     private val feedbackService: FeedbackService,
 
 ) : DiaryService {
+
+    @Transactional
+    override fun saveDiaryAndSpelling(
+        userId: Long,
+        content: String,
+        spellingAnalysisResponse: SpellingAnalysisResponse,
+        feedbackResponse: String
+    ): DiaryDto {
+        val diary = saveDiary(userId, content)
+        val (spelling, revisions) = spellingService.saveSpellingAndRevisions(diary, spellingAnalysisResponse)
+        val feedback = feedbackService.saveFeedback(diary, feedbackResponse)
+
+        return DiaryDto.toDiaryDto(diary, spelling, revisions, feedback.content)
+    }
 
     @Transactional
     override fun saveDiary(userId: Long, content: String): Diary {
