@@ -7,16 +7,17 @@ import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
 
 @Component
-class ResourceLoader(
-) {
+class ResourceLoader {
+    private val resourceCache = mutableMapOf<String, String>()
 
     fun getResourceContent(resourcePath: String): String {
-        try {
-            val resource = ClassPathResource(resourcePath)
-            return String(resource.inputStream.readAllBytes(), StandardCharsets.UTF_8)
-        } catch (e: Exception) {
-            throw GeneralException(ErrorStatus.NOT_FOUND)
+        return resourceCache.getOrPut(resourcePath) {
+            try {
+                val resource = ClassPathResource(resourcePath)
+                String(resource.inputStream.readAllBytes(), StandardCharsets.UTF_8)
+            } catch (e: Exception) {
+                throw GeneralException(ErrorStatus.NOT_FOUND)
+            }
         }
     }
-
 }

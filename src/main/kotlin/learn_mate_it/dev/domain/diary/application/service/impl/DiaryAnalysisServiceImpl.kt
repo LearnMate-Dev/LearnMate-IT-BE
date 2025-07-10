@@ -7,8 +7,6 @@ import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.diary.application.dto.response.DiaryDto
 import learn_mate_it.dev.domain.diary.application.service.*
 import learn_mate_it.dev.domain.diary.domain.repository.DiaryRepository
-import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAnalysisResponse
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -20,7 +18,6 @@ class DiaryAnalysisServiceImpl(
     private val feedbackAIService: FeedbackAIService
 ) : DiaryAnalysisService {
 
-    private val log = LoggerFactory.getLogger(this::class.java)
     private final val CONTENT_LENGTH: Int = 500
 
     /**
