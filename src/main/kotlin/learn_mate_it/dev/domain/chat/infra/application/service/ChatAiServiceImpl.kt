@@ -8,7 +8,6 @@ import learn_mate_it.dev.common.util.ResourceLoader
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatDto
 import learn_mate_it.dev.domain.chat.application.service.ChatAiService
 import learn_mate_it.dev.domain.chat.infra.application.dto.response.ChatRoomAnalysisDto
-import org.slf4j.LoggerFactory
 import org.springframework.ai.openai.OpenAiChatModel
 import org.springframework.stereotype.Service
 
@@ -18,10 +17,11 @@ class ChatAiServiceImpl(
     private val resourceLoader: ResourceLoader
 ) : ChatAiService {
 
-    private val log = LoggerFactory.getLogger(this::class.java)
+    private val RECOMMEND_SUBJECT_PROMPT: String = resourceLoader.getResourceContent("recommend-subject-prompt.txt")
+    private val CHAT_PROMPT = resourceLoader.getResourceContent("chat-prompt.txt")
+    private val ANALYSIS_CHAT_PROMPT = resourceLoader.getResourceContent("analysis-chat-prompt.txt")
 
     override fun getRecommendSubjects(): List<String> {
-        val RECOMMEND_SUBJECT_PROMPT: String = resourceLoader.getResourceContent("recommend-subject-prompt.txt")
         try {
             val response = chatModel.call(RECOMMEND_SUBJECT_PROMPT)
             return response.split("\n").map { it.trim() }.filter { it.isNotEmpty() }
@@ -31,7 +31,6 @@ class ChatAiServiceImpl(
     }
 
     override fun getChatResponse(content: String): String {
-        val CHAT_PROMPT = resourceLoader.getResourceContent("chat-prompt.txt")
         try {
             val response = chatModel.call(CHAT_PROMPT + content)
             return response.trim()
@@ -41,10 +40,8 @@ class ChatAiServiceImpl(
     }
 
     override fun analysisChatRoom(chatList: List<ChatDto>): ChatRoomAnalysisDto {
-        val ANALYSIS_CHAT_PROMPT = resourceLoader.getResourceContent("analysis-chat-prompt.txt")
         try {
             val response = chatModel.call(ANALYSIS_CHAT_PROMPT + chatList.toString())
-            log.info("[ChatAnalysis] Response: {}", response.trim())
             return parseAiResponse<ChatRoomAnalysisDto>(response)
         } catch (e: Exception) {
             throw GeneralException(ErrorStatus.CHAT_AI_ANALYSIS_ERROR)

@@ -15,8 +15,9 @@ class FeedbackAIServiceImpl(
     private val resourceLoader: ResourceLoader
 ): FeedbackAIService {
 
+    private val ANALYSIS_FEEDBACK_PROMPT = resourceLoader.getResourceContent("analysis-feedback-prompt.txt")
+
     override suspend fun postAnalysisFeedback(content: String): String = withContext(Dispatchers.IO) {
-        val ANALYSIS_FEEDBACK_PROMPT = resourceLoader.getResourceContent("analysis-feedback-prompt.txt")
         try {
             val response = chatModel.call(ANALYSIS_FEEDBACK_PROMPT + content)
             response.trim()
@@ -24,5 +25,4 @@ class FeedbackAIServiceImpl(
             throw GeneralException(ErrorStatus.ANALYSIS_FEEDBACK_SERVER_ERROR)
         }
     }
-
 }
