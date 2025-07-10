@@ -1,6 +1,8 @@
 package learn_mate_it.dev.domain.diary.infra.application.service
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.withContext
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.diary.application.service.SpellingAnalysisService
@@ -23,10 +25,10 @@ class SpellingAnalysisServiceImpl(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    override suspend fun postAnalysisSpelling(content: String): SpellingAnalysisResponse {
+    override suspend fun postAnalysisSpelling(content: String): SpellingAnalysisResponse = withContext(Dispatchers.IO) {
         val request = SpellingAnalysisRequest(document = Document(content = content))
 
-        val response = webClient.post()
+        webClient.post()
             .uri(spellingAnalysisHost)
             .header("api-key", spellingApiKey)
             .bodyValue(request)
@@ -47,8 +49,5 @@ class SpellingAnalysisServiceImpl(
             }
             .bodyToMono(SpellingAnalysisResponse::class.java)
             .awaitSingle()
-
-        log.info(response.toString())
-        return response
     }
 }
