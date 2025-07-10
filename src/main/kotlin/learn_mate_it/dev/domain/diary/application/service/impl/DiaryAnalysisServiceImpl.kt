@@ -1,7 +1,6 @@
 package learn_mate_it.dev.domain.diary.application.service.impl
 
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
@@ -19,7 +18,7 @@ class DiaryAnalysisServiceImpl(
     private val diaryService: DiaryService,
     private val spellingAnalysisService: SpellingAnalysisService,
     private val feedbackAIService: FeedbackAIService
-): DiaryAnalysisService {
+) : DiaryAnalysisService {
 
     private val log = LoggerFactory.getLogger(this::class.java)
     private final val CONTENT_LENGTH: Int = 500
@@ -35,29 +34,14 @@ class DiaryAnalysisServiceImpl(
         validNotWrittenToday(userId)
         validStringLength(content, CONTENT_LENGTH, ErrorStatus.DIARY_CONTENT_OVER_FLOW)
 
-        var spellingAnalysisResponse: SpellingAnalysisResponse? = null
-        var feedbackResponse: String? = null
+        val (spellingAnalysis, feedback) = runBlocking {
+            val spellingDeferred = async { spellingAnalysisService.postAnalysisSpelling(content) }
+            val feedbackDeferred = async { feedbackAIService.postAnalysisFeedback(content) }
 
-        runBlocking {
-            coroutineScope {
-                val spellingJob = async {
-                    spellingAnalysisResponse = spellingAnalysisService.postAnalysisSpelling(content)
-                }
-
-                val feedbackJob = async {
-                    feedbackResponse = feedbackAIService.postAnalysisFeedback(content)
-                }
-
-                spellingJob.await()
-                feedbackJob.await()
-            }
+            spellingDeferred.await() to feedbackDeferred.await()
         }
 
-        if (spellingAnalysisResponse == null || feedbackResponse == null) {
-            throw GeneralException(ErrorStatus.DIARY_INTERNAL_SERVER_ERROR)
-        }
-
-        return diaryService.saveDiaryAndSpelling(userId, content, spellingAnalysisResponse!!, feedbackResponse!!)
+        return diaryService.saveDiaryAndSpelling(userId, content, spellingAnalysis, feedback)
     }
 
     private fun validNotWrittenToday(userId: Long) {
