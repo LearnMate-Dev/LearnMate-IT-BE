@@ -45,6 +45,13 @@ jobs:
           ${{ secrets.RECOMMEND_SUBJECT_PROMPT }}
           EOF
         shell: bash
+        
+      - name: make analysis-feedback-prompt.txt
+        run: |
+          cat <<EOF > ./src/main/resources/analysis-feedback-prompt.txt
+          ${{ secrets.ANALYSIS_FEEDBACK_PROMPT }}
+          EOF
+        shell: bash
 
       - name: build with gradle
         run: | 
