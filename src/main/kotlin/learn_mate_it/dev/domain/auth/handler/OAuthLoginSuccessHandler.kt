@@ -1,5 +1,6 @@
 package learn_mate_it.dev.domain.auth.handler
 
+import ApiResponse
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -57,8 +58,8 @@ class OAuthLoginSuccessHandler(
         saveRefreshToken(refreshToken, user.userId)
 
         // set response
-        response!!.setHeader("accessToken", accessToken)
-        setHttpResponse(response)
+        val redirectUri = "com.learnmate.app://oauth2/callback?accessToken=$accessToken"
+        response?.sendRedirect(redirectUri)
     }
 
     private fun getOAuth2UserInfo(oAuthToken: OAuth2AuthenticationToken) : OAuth2UserInfo {
