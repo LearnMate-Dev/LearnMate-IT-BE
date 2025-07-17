@@ -30,49 +30,49 @@ enum class QuizType (
     )),
 
     Quiz1_1_2(StepType.Step1_1, 2,
-        "",
+        "Quiz1-1-2 Situation",
         "quiz1_1_2",
         0, listOf(
-        QuizOption("A. ", ""),
-        QuizOption("B. ", ""),
-        QuizOption("C. ", "")
+        QuizOption("A. Quiz1-1-2", "Quiz1-1-2 A Description"),
+        QuizOption("B. Quiz1-1-2", "Quiz1-1-2 B Description"),
+        QuizOption("C. Quiz1-1-2", "Quiz1-1-2 C Description"),
     )),
 
     Quiz1_1_3(StepType.Step1_1, 3,
-        "",
+        "Quiz1-1-3 Situation",
         "quiz1_1_3",
         0, listOf(
-        QuizOption("A. ", ""),
-        QuizOption("B. ", ""),
-        QuizOption("C. ", "")
+        QuizOption("A. Quiz1-1-3", "Quiz1-1-3 A Description"),
+        QuizOption("B. Quiz1-1-3", "Quiz1-1-3 B Description"),
+        QuizOption("C. Quiz1-1-3", "Quiz1-1-3 C Description"),
     )),
 
     // step 2
     Quiz1_2_1(StepType.Step1_2, 1,
-        "",
+        "Quiz1-2-1 Situation",
         "quiz1_2_1",
         0, listOf(
-        QuizOption("A. ", ""),
-        QuizOption("B. ", ""),
-        QuizOption("C. ", "")
+        QuizOption("A. Quiz1-2-1", "Quiz1-2-1 A Description"),
+        QuizOption("B. Quiz1-2-1", "Quiz1-2-1 B Description"),
+        QuizOption("C. Quiz1-2-1", "Quiz1-1-2 C Description"),
     )),
 
     Quiz1_2_2(StepType.Step1_2, 2,
-        "",
+        "Quiz1-2-2 Situation",
         "quiz1_2_2",
         0, listOf(
-        QuizOption("A. ", ""),
-        QuizOption("B. ", ""),
-        QuizOption("C. ", "")
+        QuizOption("A. Quiz1-2-2", "Quiz1-2-2 A Description"),
+        QuizOption("B. Quiz1-2-2", "Quiz1-2-2 B Description"),
+        QuizOption("C. Quiz1-2-2", "Quiz1-2-2 C Description"),
     )),
 
     Quiz1_2_3(StepType.Step1_2, 3,
-        "",
+        "Quiz1-2-3 Situation",
         "quiz1_2_3",
         0, listOf(
-        QuizOption("A. ", ""),
-        QuizOption("B. ", ""),
-        QuizOption("C. ", "")
+        QuizOption("A. Quiz1-2-3", "Quiz1-2-3 A Description"),
+        QuizOption("B. Quiz1-2-3", "Quiz1-2-3 B Description"),
+        QuizOption("C. Quiz1-2-3", "Quiz1-2-3 C Description"),
     )),
 
     // step 3
