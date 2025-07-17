@@ -30,21 +30,21 @@ enum class QuizType (
     )),
 
     Quiz1_1_2(StepType.Step1_1, 2,
-        "Quiz1-1-2 Situation",
-        "quiz1_1_2",
-        0, listOf(
-        QuizOption("A. Quiz1-1-2", "Quiz1-1-2 A Description"),
-        QuizOption("B. Quiz1-1-2", "Quiz1-1-2 B Description"),
-        QuizOption("C. Quiz1-1-2", "Quiz1-1-2 C Description"),
+        "당신은 체험 가는 길에 지하철역에서 길을 헤매고 있어요.\n 어른 한 분이 다가와서 길을 묻습니다.",
+        "혹시 여기서 시청역 가려면 어디로 가야 할까요?",
+        1, listOf(
+        QuizOption("A. \"아 몰라요. 저도 몰라요.\"", "예의 없는 표현이에요. 정중하게 말하거나 죄송하다는 표현이 더 적절해요."),
+        QuizOption("B. \"죄송해요. 저도 잘 모르겠어요.\"", "좋은 표현이에요! 정중하게 모른다고 말하는 것은 예의 있는 태도예요."),
+        QuizOption("C. \"네비 찍으세요.\"", "무례하게 들릴 수 있는 말이에요. 처음 만난 어른에게는 친절하고 공손하게 말하는 게 좋아요."),
     )),
 
     Quiz1_1_3(StepType.Step1_1, 3,
-        "Quiz1-1-3 Situation",
-        "quiz1_1_3",
-        0, listOf(
-        QuizOption("A. Quiz1-1-3", "Quiz1-1-3 A Description"),
-        QuizOption("B. Quiz1-1-3", "Quiz1-1-3 B Description"),
-        QuizOption("C. Quiz1-1-3", "Quiz1-1-3 C Description"),
+        "체험 첫날, 잠시 안내 데스크를 맡게 되었어요.\n 전화벨이 울리고 전화를 받자 낯선 목소리가 들립니다.",
+        "안녕하세요. 혹시 인사팀 연결 가능할까요?",
+        2, listOf(
+        QuizOption("A. \"누구세요? 왜요?\"", "무례하게 들릴 수 있어요. 처음 듣는 목소리라도 예의 있게 응대해야 해요."),
+        QuizOption("B. \"저 실습생이라 몰라요.\"", "솔직하지만 무책임한 응대처럼 들릴 수 있어요. 가능하면 도와주려는 태도가 필요해요."),
+        QuizOption("C. \"네, 잠시만 기다려 주세요. 인사팀 연결해 드리겠습니다.\"", "좋은 응대예요! 공손하고 명확한 표현으로 상대를 존중하고 있어요."),
     )),
 
     // step 2
