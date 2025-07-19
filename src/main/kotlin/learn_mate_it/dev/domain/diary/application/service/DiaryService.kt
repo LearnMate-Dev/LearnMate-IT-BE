@@ -9,7 +9,7 @@ import java.time.LocalDate
 interface DiaryService {
 
     fun saveDiary(userId: Long, content: String): Diary
-    fun saveDiaryAndSpelling(userId: Long, content: String, spellingAnalysisResponse: SpellingAnalysisResponse, feedbackResponse: String): DiaryDto
+    fun saveDiaryAndSpelling(userId: Long, content: String, spellingAnalysisResponse: SpellingAnalysisResponse?, feedbackResponse: String): DiaryDto
 
     fun getDiaryDetail(userId: Long, diaryId: Long): DiaryDto
     fun getDiaryDetailByDate(userId: Long, date: LocalDate): DiaryDto

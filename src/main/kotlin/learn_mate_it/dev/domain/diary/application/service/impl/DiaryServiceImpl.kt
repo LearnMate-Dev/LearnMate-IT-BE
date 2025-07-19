@@ -25,14 +25,14 @@ class DiaryServiceImpl(
     override fun saveDiaryAndSpelling(
         userId: Long,
         content: String,
-        spellingAnalysisResponse: SpellingAnalysisResponse,
+        spellingAnalysisResponse: SpellingAnalysisResponse?,
         feedbackResponse: String
     ): DiaryDto {
         val diary = saveDiary(userId, content)
-        val (spelling, revisions) = spellingService.saveSpellingAndRevisions(diary, spellingAnalysisResponse)
+//        val (spelling, revisions) = spellingService.saveSpellingAndRevisions(diary, spellingAnalysisResponse)
         val feedback = feedbackService.saveFeedback(diary, feedbackResponse)
 
-        return DiaryDto.toDiaryDto(diary, spelling, revisions, feedback.content)
+        return DiaryDto.toDiaryDto(diary, null, null, feedback.content)
     }
 
     @Transactional
