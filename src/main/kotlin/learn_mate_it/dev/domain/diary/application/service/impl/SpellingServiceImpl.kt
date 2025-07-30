@@ -17,21 +17,21 @@ class SpellingServiceImpl(
 ) : SpellingService {
 
     @Transactional
-    override fun saveSpellingAndRevisions(diary: Diary, spellingAnalysisResponse: SpellingAnalysisResponse): Pair<Spelling, List<SpellingRevision>> {
+    override fun saveSpellingAndRevisions(diary: Diary, spellingAnalysisResponse: SpellingAnalysisResponse?): Pair<Spelling?, List<SpellingRevision>?> {
         // get score of spelling
         val score = getSpellingScore(spellingAnalysisResponse)
 
         // save spelling entity
         val spelling = spellingRepository.save(
             Spelling(
-                revisedContent = spellingAnalysisResponse.revised,
+                revisedContent = spellingAnalysisResponse?.revised,
                 score = score,
                 diary = diary
             )
         )
 
         // save separate spelling analysis
-        val revisions = spellingAnalysisResponse.revisedSentences
+        val revisions = spellingAnalysisResponse?.revisedSentences
             ?.flatMap { it.revisedBlocks.orEmpty() }
             ?.flatMap { block ->
                 block.revisions.map { revision ->
@@ -50,8 +50,8 @@ class SpellingServiceImpl(
         return Pair(spelling, revisions)
     }
 
-    private fun getSpellingScore(analysisResponse: SpellingAnalysisResponse): Int {
-        val sentences = analysisResponse.revisedSentences ?: return 100
+    private fun getSpellingScore(analysisResponse: SpellingAnalysisResponse?): Int {
+        val sentences = analysisResponse?.revisedSentences ?: return 100
         // TODO: feature score
         return 0
     }

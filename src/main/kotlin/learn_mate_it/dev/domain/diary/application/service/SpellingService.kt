@@ -8,7 +8,7 @@ import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAna
 
 interface SpellingService {
 
-    fun saveSpellingAndRevisions(diary: Diary, spellingAnalysisResponse: SpellingAnalysisResponse): Pair<Spelling, List<SpellingRevision>>
+    fun saveSpellingAndRevisions(diary: Diary, spellingAnalysisResponse: SpellingAnalysisResponse?): Pair<Spelling?, List<SpellingRevision>?>
 
     fun deleteByUserId(userId: Long)
     fun deleteByDiaryId(diaryId: Long)

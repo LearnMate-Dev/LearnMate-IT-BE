@@ -29,10 +29,10 @@ class DiaryServiceImpl(
         feedbackResponse: String
     ): DiaryDto {
         val diary = saveDiary(userId, content)
-//        val (spelling, revisions) = spellingService.saveSpellingAndRevisions(diary, spellingAnalysisResponse)
+        val (spelling, revisions) = spellingService.saveSpellingAndRevisions(diary, spellingAnalysisResponse)
         val feedback = feedbackService.saveFeedback(diary, feedbackResponse)
 
-        return DiaryDto.toDiaryDto(diary, null, null, feedback.content)
+        return DiaryDto.toDiaryDto(diary, spelling, revisions, feedback.content)
     }
 
     @Transactional

@@ -28,20 +28,17 @@ class DiaryAnalysisServiceImpl(
      * @return DiaryAnalysisDto content of diary and analysis about diary (score, spelling comment, examples)
      */
     override fun analysisDiary(userId: Long, content: String): DiaryDto {
-//        validNotWrittenToday(userId)
+        validNotWrittenToday(userId)
         validStringLength(content, CONTENT_LENGTH, ErrorStatus.DIARY_CONTENT_OVER_FLOW)
 
-//        val (spellingAnalysis, feedback) = runBlocking {
-//            val spellingDeferred = async { spellingAnalysisService.postAnalysisSpelling(content) }
-//            val feedbackDeferred = async { feedbackAIService.postAnalysisFeedback(content) }
-//
-//            spellingDeferred.await() to feedbackDeferred.await()
-//        }
-        val feedback = runBlocking {
-            async { feedbackAIService.postAnalysisFeedback(content) }.await()
+        val (spellingAnalysis, feedback) = runBlocking {
+            val spellingDeferred = async { spellingAnalysisService.postAnalysisSpelling(content) }
+            val feedbackDeferred = async { feedbackAIService.postAnalysisFeedback(content) }
+
+            spellingDeferred.await() to feedbackDeferred.await()
         }
 
-        return diaryService.saveDiaryAndSpelling(userId, content, null, feedback)
+        return diaryService.saveDiaryAndSpelling(userId, content, spellingAnalysis, feedback)
     }
 
     private fun validNotWrittenToday(userId: Long) {
