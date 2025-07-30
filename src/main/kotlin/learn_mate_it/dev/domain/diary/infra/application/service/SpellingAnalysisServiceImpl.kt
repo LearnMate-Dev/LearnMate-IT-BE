@@ -6,7 +6,7 @@ import kotlinx.coroutines.withContext
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.diary.application.service.SpellingAnalysisService
-import learn_mate_it.dev.domain.diary.infra.application.dto.request.Document
+import learn_mate_it.dev.domain.diary.infra.application.dto.request.Argument
 import learn_mate_it.dev.domain.diary.infra.application.dto.request.SpellingAnalysisRequest
 import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAnalysisResponse
 import org.slf4j.LoggerFactory
@@ -18,19 +18,19 @@ import reactor.core.publisher.Mono
 
 @Service
 class SpellingAnalysisServiceImpl(
-    @Value("\${spelling.host}") private val spellingAnalysisHost: String,
-    @Value("\${spelling.api-key}") private val spellingApiKey: String,
+    @Value("\${lang-analysis.host}") private val spellingAnalysisHost: String,
+    @Value("\${lang-analysis.api-key}") private val spellingApiKey: String,
     private val webClient: WebClient
 ): SpellingAnalysisService {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     override suspend fun postAnalysisSpelling(content: String): SpellingAnalysisResponse = withContext(Dispatchers.IO) {
-        val request = SpellingAnalysisRequest(document = Document(content = content))
+        val request = SpellingAnalysisRequest(argument = Argument(text = content))
 
         webClient.post()
             .uri(spellingAnalysisHost)
-            .header("api-key", spellingApiKey)
+            .header("Authorization", spellingApiKey)
             .bodyValue(request)
             .retrieve()
             .onStatus({ it.is4xxClientError }) { response ->
