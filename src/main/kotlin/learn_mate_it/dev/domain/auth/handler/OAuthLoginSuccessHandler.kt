@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.common.status.SuccessStatus
+import learn_mate_it.dev.domain.auth.domain.dto.AppleUserInfo
 import learn_mate_it.dev.domain.auth.domain.dto.GoogleUserInfo
 import learn_mate_it.dev.domain.auth.domain.dto.OAuth2UserInfo
 import learn_mate_it.dev.domain.auth.domain.model.RefreshToken
@@ -66,8 +67,9 @@ class OAuthLoginSuccessHandler(
         val provider = oAuthToken.authorizedClientRegistrationId
         val principal = oAuthToken.principal
 
-        when(provider) {
-            "google" -> return GoogleUserInfo(principal.attributes)
+        return when(provider) {
+            "google" -> GoogleUserInfo(principal.attributes)
+            "apple" -> AppleUserInfo(principal.attributes)
             else -> throw GeneralException(ErrorStatus.INVALID_OAUTH_PROVIDER)
         }
     }
