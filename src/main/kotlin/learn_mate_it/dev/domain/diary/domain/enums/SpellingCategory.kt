@@ -13,7 +13,7 @@ enum class SpellingCategory(
 
     companion object {
         fun from(category: String): SpellingCategory {
-            return entries.find { it.title == category }
+            return entries.find { it.name == category }
             ?: throw GeneralException(ErrorStatus.INVALID_SPELLING_CATEGORY)
         }
     }

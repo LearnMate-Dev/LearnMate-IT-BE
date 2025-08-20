@@ -42,7 +42,7 @@ class SpellingServiceImpl(
                         revisedContent = revision.revised,
                         examples = revision.examples.toTypedArray(),
                         comment = revision.comment,
-                        category = SpellingCategory.valueOf(revision.category),
+                        category = SpellingCategory.from(revision.category),
                         spelling = spelling
                     )
                 }
