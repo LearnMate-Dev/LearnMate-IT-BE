@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service
 @Service
 class ChatAiServiceImpl(
     private val chatModel: OpenAiChatModel,
-    private val resourceLoader: ResourceLoader
+    private val resourceLoader: ResourceLoader,
+    private val objectMapper: ObjectMapper
 ) : ChatAiService {
 
     private val RECOMMEND_SUBJECT_PROMPT: String = resourceLoader.getResourceContent("recommend-subject-prompt.txt")
@@ -51,7 +52,7 @@ class ChatAiServiceImpl(
     private inline fun <reified T> parseAiResponse(aiResponse: String): T {
         return try {
             val cleanResponse = aiResponse.replace("```json\\s*".toRegex(), "").replace("```".toRegex(), "");
-            ObjectMapper().readValue(cleanResponse, T::class.java)
+            objectMapper.readValue(cleanResponse, T::class.java)
         } catch (e: JsonProcessingException) {
             throw GeneralException(ErrorStatus.CHAT_AI_PARSING_ERROR)
         }

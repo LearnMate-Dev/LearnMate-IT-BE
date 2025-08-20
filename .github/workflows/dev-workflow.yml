@@ -53,6 +53,13 @@ jobs:
           EOF
         shell: bash
 
+      - name: make analysis-spelling-prompt.txt
+        run: |
+          cat <<EOF > ./src/main/resources/analysis-spelling-prompt.txt
+          ${{ secrets.ANALYSIS_SPELLING_PROMPT }}
+          EOF
+        shell: bash
+
       - name: build with gradle
         run: | 
           chmod +x gradlew
