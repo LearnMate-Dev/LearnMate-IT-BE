@@ -64,8 +64,8 @@ class ChatServiceImpl(
     @Transactional
     override fun chatWithText(userId: Long, chatRoomId: Long, request: ChatRequest): ChatDto {
         val chatRoom = getChatRoom(chatRoomId)
-        validIsUserAuthorizedForChatRoom(userId, chatRoom)
-        validIsChatRoomAlreadyAnalysis(chatRoom)
+        chatRoom.validIsUserAuthorized(userId)
+        chatRoom.ensureNotAnalysed()
 
         // save user's chat
         validStringLength(request.content, CONTENT_LENGTH, ErrorStatus.CHAT_CONTENT_OVER_FLOW)
@@ -99,7 +99,7 @@ class ChatServiceImpl(
     @Transactional
     override fun deleteChatRoom(userId: Long, chatRoomId: Long) {
         val chatRoom = getChatRoom(chatRoomId)
-        validIsUserAuthorizedForChatRoom(userId, chatRoom)
+        chatRoom.validIsUserAuthorized(userId)
 
         chatRepository.deleteByChatRoomId(chatRoomId)
         chatRoomRepository.deleteByChatRoomId(chatRoomId)
@@ -120,8 +120,8 @@ class ChatServiceImpl(
     @Transactional
     override fun analysisChatRoom(userId: Long, chatRoomId: Long): ChatRoomDetailDto {
         val chatRoom = getChatRoomFetchChats(chatRoomId)
-        validIsUserAuthorizedForChatRoom(userId, chatRoom)
-        validIsChatRoomAlreadyAnalysis(chatRoom)
+        chatRoom.validIsUserAuthorized(userId)
+        chatRoom.ensureNotAnalysed()
 
         // call AI for analysis chat room and get title
         val chatList = chatRoom.chats
@@ -149,10 +149,6 @@ class ChatServiceImpl(
         return ChatRoomDetailDto.toChatRoomDetailDto(chatRoom, chatList.sortedBy { it.chatId })
     }
 
-    private fun validIsChatRoomAlreadyAnalysis(chatRoom: ChatRoom) {
-        require(chatRoom.title == null) { throw GeneralException(ErrorStatus.ALREADY_ANALYSIS_CHAT_ROOM) }
-    }
-
     /**
      * Get User's Archived Chat Room List
      *
@@ -171,7 +167,7 @@ class ChatServiceImpl(
      */
     override fun getChatRoomDetail(userId: Long, chatRoomId: Long): ChatRoomDetailDto {
         val chatRoom = getChatRoomFetchChats(chatRoomId)
-        validIsUserAuthorizedForChatRoom(userId, chatRoom)
+        chatRoom.validIsUserAuthorized(userId)
 
         val chatList = chatRoom.chats.sortedBy { it.chatId }
         return ChatRoomDetailDto.toChatRoomDetailDto(chatRoom, chatList)
@@ -190,10 +186,6 @@ class ChatServiceImpl(
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
         require(content.length <= length) { throw GeneralException(errorStatus) }
-    }
-
-    private fun validIsUserAuthorizedForChatRoom(userId: Long, chatRoom: ChatRoom) {
-        require(chatRoom.userId == userId) { throw GeneralException(ErrorStatus.FORBIDDEN_FOR_CHAT_ROOM) }
     }
 
 }

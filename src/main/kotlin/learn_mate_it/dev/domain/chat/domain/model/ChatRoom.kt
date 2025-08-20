@@ -2,6 +2,8 @@ package learn_mate_it.dev.domain.chat.domain.model
 
 import jakarta.persistence.*
 import learn_mate_it.dev.common.base.BaseEntity
+import learn_mate_it.dev.common.exception.GeneralException
+import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.chat.domain.enums.ChatRoomType
 
 @Entity
@@ -28,5 +30,17 @@ data class ChatRoom(
 
     fun saveTitle(title: String) {
         this.title = title
+    }
+
+    fun validIsUserAuthorized(userId: Long) {
+        if (this.userId != userId) {
+            throw GeneralException(ErrorStatus.FORBIDDEN_FOR_CHAT_ROOM)
+        }
+    }
+
+    fun ensureNotAnalysed() {
+        if (this.title != null) {
+            throw GeneralException(ErrorStatus.ALREADY_ANALYSIS_CHAT_ROOM)
+        }
     }
 }
