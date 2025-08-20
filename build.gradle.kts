@@ -54,6 +54,8 @@ dependencies {
 	// coroutine
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
+	// logstash
+	implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
