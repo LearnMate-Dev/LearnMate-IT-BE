@@ -53,9 +53,21 @@ class SpellingServiceImpl(
     }
 
     private fun getSpellingScore(analysisResponse: SpellingAnalysisResponse?): Int {
-        val sentences = analysisResponse?.revisedSentences ?: return 100
-        // TODO: feature score
-        return 0
+        if (analysisResponse?.revisedSentences!!.isEmpty()) return 100
+
+        var totalWeight = 0.0
+        analysisResponse.revisedSentences.forEach { sentence ->
+            sentence.revisedBlocks.orEmpty().forEach { block ->
+                block.revisions.forEach { revision ->
+                    val weight = SpellingCategory.from(revision.category).weight
+                    totalWeight += weight
+                }
+            }
+        }
+
+        val deductionPerRevision = 5.0
+        val rawScore = 100.0 - totalWeight * deductionPerRevision
+        return rawScore.coerceIn(0.0, 100.0).toInt()
     }
 
     @Transactional
