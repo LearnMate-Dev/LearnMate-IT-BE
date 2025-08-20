@@ -46,11 +46,11 @@ class DiaryAnalysisServiceImpl(
         val endDay = startDay.plusDays(1)
 
         val isWrittenToday = diaryRepository.existsByUserIdAndCreatedAt(userId, startDay, endDay)
-        require(!isWrittenToday) { throw GeneralException(ErrorStatus.ALREADY_DIARY_WRITTEN) }
+        if (isWrittenToday) throw GeneralException(ErrorStatus.ALREADY_DIARY_WRITTEN)
     }
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
-        require(content.length <= length) { throw GeneralException(errorStatus) }
+        if (content.length > length) throw GeneralException(errorStatus)
     }
 
 }

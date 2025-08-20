@@ -53,7 +53,7 @@ class DiaryServiceImpl(
      */
     override fun getDiaryDetail(userId: Long, diaryId: Long): DiaryDto {
         val diary = getDiaryFetchSpelling(diaryId)
-        validIsUserAuthorizedForDiary(userId, diary)
+        diary.validIsUserAuthorized(userId)
         return DiaryDto.toDiaryDto(diary)
     }
 
@@ -70,6 +70,7 @@ class DiaryServiceImpl(
      */
     override fun getDiaryDetailByDate(userId: Long, date: LocalDate): DiaryDto {
         val diary = getDiaryByUserIdAndDateFetchSpelling(userId, date)
+        diary.validIsUserAuthorized(userId)
         return DiaryDto.toDiaryDto(diary)
     }
 
@@ -91,7 +92,6 @@ class DiaryServiceImpl(
     override fun getDiaryCalendar(userId: Long, year: Int, month: Int): DiaryCalendarDto {
         validateDateParam(year, month)
         val diaryCalendar = getDiaryByUserIdAndYearAndMonth(userId, year, month)
-
         return DiaryCalendarDto(year, month, diaryCalendar)
     }
 
@@ -116,17 +116,11 @@ class DiaryServiceImpl(
     @Transactional
     override fun deleteDiary(userId: Long, diaryId: Long) {
         val diary = getDiary(diaryId)
-        validIsUserAuthorizedForDiary(userId, diary)
+        diary.validIsUserAuthorized(userId)
 
         spellingService.deleteByDiaryId(diaryId)
         feedbackService.deleteByDiaryId(diaryId)
         diaryRepository.deleteByDiaryId(diaryId)
-    }
-
-    fun validIsUserAuthorizedForDiary(userId: Long, diary: Diary) {
-        if (diary.userId != userId) {
-            throw GeneralException(ErrorStatus.FORBIDDEN_FOR_DIARY)
-        }
     }
 
     @Transactional

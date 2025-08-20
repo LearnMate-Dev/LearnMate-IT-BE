@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class CourseServiceImpl(
-    private val stepProgressRepository: UserStepProgressRepository,
+    private val stepProgressRepository: UserStepProgressRepository
 ) : CourseService {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -66,7 +66,7 @@ class CourseServiceImpl(
         val completedStepSet = getCompletedStepTypeSet(previousStepList, userId)
 
         val isAllCompleted = previousStepList.all { completedStepSet.contains(it) }
-        require(isAllCompleted) { throw GeneralException(ErrorStatus.INVALID_STEP_ORDER) }
+        if (!isAllCompleted) throw GeneralException(ErrorStatus.INVALID_STEP_ORDER)
     }
 
     private fun getCompletedStepTypeSet(stepTypeList: List<StepType>, userId: Long): Set<StepType> {
@@ -78,7 +78,7 @@ class CourseServiceImpl(
 
     private fun validIsStepAlreadyStarted(step: StepType, userId: Long) {
         val isStepAlreadyStarted = stepProgressRepository.existsByStepTypeAndUserIdAndCompletedAtIsNull(step, userId)
-        require(!isStepAlreadyStarted) { throw GeneralException(ErrorStatus.ALREADY_ON_STEP) }
+        if (isStepAlreadyStarted) throw GeneralException(ErrorStatus.ALREADY_ON_STEP)
     }
 
     /**
@@ -89,7 +89,7 @@ class CourseServiceImpl(
     @Transactional
     override fun endStep(userId: Long, stepProgressId: Long) {
         val stepProgress = getStepProgress(stepProgressId, userId)
-        validIsStepAlreadyCompleted(stepProgress)
+        stepProgress.ensureNotCompleted()
         stepProgress.completeStep()
     }
 
@@ -101,13 +101,8 @@ class CourseServiceImpl(
     @Transactional
     override fun deleteStep(userId: Long, stepProgressId: Long) {
         val stepProgress = getStepProgress(stepProgressId, userId)
-        validIsStepAlreadyCompleted(stepProgress)
-
+        stepProgress.ensureNotCompleted()
         stepProgressRepository.delete(stepProgress)
-    }
-
-    private fun validIsStepAlreadyCompleted(stepProgress: UserStepProgress) {
-        require(!stepProgress.isCompleted()){ throw GeneralException(ErrorStatus.ALREADY_COMPLETED_STEP) }
     }
 
     /**

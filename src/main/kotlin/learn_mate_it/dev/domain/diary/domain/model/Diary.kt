@@ -2,6 +2,8 @@ package learn_mate_it.dev.domain.diary.domain.model
 
 import jakarta.persistence.*
 import learn_mate_it.dev.common.base.BaseEntity
+import learn_mate_it.dev.common.exception.GeneralException
+import learn_mate_it.dev.common.status.ErrorStatus
 
 @Entity
 @Table(name = "diary")
@@ -22,4 +24,12 @@ data class Diary(
     @OneToOne(mappedBy = "diary", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var spellingFeedback : SpellingFeedback? = null
 
-) : BaseEntity()
+) : BaseEntity() {
+
+    fun validIsUserAuthorized(userId: Long) {
+        if (this.userId != userId) {
+            throw GeneralException(ErrorStatus.FORBIDDEN_FOR_DIARY)
+        }
+    }
+
+}
