@@ -1,53 +1,41 @@
 package learn_mate_it.dev.domain.diary.infra.application.service
 
+import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.withContext
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
+import learn_mate_it.dev.common.util.ResourceLoader
 import learn_mate_it.dev.domain.diary.application.service.SpellingAnalysisService
-import learn_mate_it.dev.domain.diary.infra.application.dto.request.Argument
-import learn_mate_it.dev.domain.diary.infra.application.dto.request.SpellingAnalysisRequest
 import learn_mate_it.dev.domain.diary.infra.application.dto.response.SpellingAnalysisResponse
-import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.ai.openai.OpenAiChatModel
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.WebClient
-import reactor.core.publisher.Mono
-
 
 @Service
 class SpellingAnalysisServiceImpl(
-    @Value("\${lang-analysis.host}") private val spellingAnalysisHost: String,
-    @Value("\${lang-analysis.api-key}") private val spellingApiKey: String,
-    private val webClient: WebClient
+    private val chatModel: OpenAiChatModel,
+    private val resourceLoader: ResourceLoader,
+    private val objectMapper: ObjectMapper
 ): SpellingAnalysisService {
 
-    private val log = LoggerFactory.getLogger(this::class.java)
+    private val ANALYSIS_SPELLING_PROMPT = resourceLoader.getResourceContent("analysis-spelling-prompt.txt")
 
     override suspend fun postAnalysisSpelling(content: String): SpellingAnalysisResponse = withContext(Dispatchers.IO) {
-        val request = SpellingAnalysisRequest(argument = Argument(text = content))
+        try {
+            val response = chatModel.call(ANALYSIS_SPELLING_PROMPT + content)
+            parseAiResponse(response)
+        } catch (e: Exception) {
+            throw GeneralException(ErrorStatus.ANALYSIS_SPELLING_SERVER_ERROR)
+        }
+    }
 
-        webClient.post()
-            .uri(spellingAnalysisHost)
-            .header("Authorization", spellingApiKey)
-            .bodyValue(request)
-            .retrieve()
-            .onStatus({ it.is4xxClientError }) { response ->
-                response.bodyToMono(String::class.java)
-                    .flatMap {
-                        log.error("Client error body: {}", it)
-                        Mono.error(GeneralException(ErrorStatus.ANALYSIS_SPELLING_CLIENT_ERROR))
-                    }
-            }
-            .onStatus({ it.is5xxServerError }) { response ->
-                response.bodyToMono(String::class.java)
-                    .flatMap {
-                        log.error("Server error body: {}", it)
-                        Mono.error(GeneralException(ErrorStatus.ANALYSIS_SPELLING_SERVER_ERROR))
-                    }
-            }
-            .bodyToMono(SpellingAnalysisResponse::class.java)
-            .awaitSingle()
+    private inline fun <reified T> parseAiResponse(aiResponse: String): T {
+        return try {
+            val cleanResponse = aiResponse.replace("```json\\s*".toRegex(), "").replace("```".toRegex(), "");
+            objectMapper.readValue(cleanResponse, T::class.java)
+        } catch (e: JsonProcessingException) {
+            throw GeneralException(ErrorStatus.ANALYSIS_SPELLING_AI_PARSING_ERROR)
+        }
     }
 }

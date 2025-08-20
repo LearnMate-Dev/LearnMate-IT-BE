@@ -1,4 +1,4 @@
-package learn_mate_it.dev.domain.diary.infra.application.config
+package learn_mate_it.dev.common.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

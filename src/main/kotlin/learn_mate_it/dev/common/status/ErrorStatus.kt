@@ -76,9 +76,10 @@ enum class ErrorStatus (
      * Spelling
      */
     ANALYSIS_SPELLING_CLIENT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "400", "일기 맞춤법 검사 중 클라이언트에서 오류가 발생했습니다."),
-    ANALYSIS_SPELLING_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "일기 맞춤법 검사 중 서버에서 오류가 발생했습니다."),
+    ANALYSIS_SPELLING_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "일기 맞춤법 검사 중 AI 서버에서 오류가 발생했습니다."),
     ANALYSIS_FEEDBACK_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "일기 맞춤법 피드백 분석 처리 중 AI 서버에서 오류가 발생했습니다."),
-    SPELLING_FEEDBACK_OVER_FLOW(HttpStatus.INTERNAL_SERVER_ERROR, "500", "맞춤법 피드백 생성 결과가 제한 글자수를 초과했습니다.")
+    SPELLING_FEEDBACK_OVER_FLOW(HttpStatus.INTERNAL_SERVER_ERROR, "500", "맞춤법 피드백 생성 결과가 제한 글자수를 초과했습니다."),
+    ANALYSIS_SPELLING_AI_PARSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "일기 맞춤법 검사 AI 결과 파싱 처리 중 오류가 발생했습니다."),
 
 
 }
