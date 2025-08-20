@@ -185,7 +185,7 @@ class ChatServiceImpl(
     }
 
     private fun validStringLength(content: String, length: Int, errorStatus: ErrorStatus) {
-        require(content.length <= length) { throw GeneralException(errorStatus) }
+        if(content.length > length) throw GeneralException(errorStatus)
     }
 
 }

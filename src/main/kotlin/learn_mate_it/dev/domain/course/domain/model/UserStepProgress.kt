@@ -2,6 +2,8 @@ package learn_mate_it.dev.domain.course.domain.model
 
 import jakarta.persistence.*
 import learn_mate_it.dev.common.base.BaseEntity
+import learn_mate_it.dev.common.exception.GeneralException
+import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.course.domain.enums.StepType
 import java.time.Duration
 import java.time.LocalDateTime
@@ -34,5 +36,11 @@ data class UserStepProgress(
     }
 
     fun isCompleted() = this.completedAt != null
+
+    fun ensureNotCompleted() {
+        if (isCompleted()) {
+            throw GeneralException(ErrorStatus.ALREADY_COMPLETED_STEP)
+        }
+    }
 
 }
