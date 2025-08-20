@@ -2,6 +2,7 @@ package learn_mate_it.dev.domain.diary.domain.model
 
 import jakarta.persistence.*
 import learn_mate_it.dev.common.base.BaseEntity
+import learn_mate_it.dev.domain.diary.domain.enums.SpellingCategory
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 
@@ -28,6 +29,10 @@ data class SpellingRevision(
 
     @Column(nullable = false)
     var beginOffset: Int,
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    var category: SpellingCategory = SpellingCategory.ETC,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "spelling_id", nullable = false)

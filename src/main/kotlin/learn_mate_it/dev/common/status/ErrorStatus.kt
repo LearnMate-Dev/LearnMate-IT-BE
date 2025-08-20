@@ -69,6 +69,7 @@ enum class ErrorStatus (
     FORBIDDEN_FOR_DIARY(HttpStatus.FORBIDDEN, "403", "일기에 대한 접근 권한이 없습니다."),
     NOT_FOUND_DIARY(HttpStatus.NOT_FOUND, "404", "존재하지 않는 일기입니다."),
     NOT_FOUND_DATE_DIARY(HttpStatus.NOT_FOUND, "404", "해당 날짜에 작성한 일기가 존재하지 않습니다."),
+    INVALID_SPELLING_CATEGORY(HttpStatus.INTERNAL_SERVER_ERROR, "500", "일기 맞춤법 분석 중 올바르지 않은 카테고리가 파싱되었습니다."),
     DIARY_INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "일기 작성 중 예상치 못한 예외가 발생했습니다."),
 
 

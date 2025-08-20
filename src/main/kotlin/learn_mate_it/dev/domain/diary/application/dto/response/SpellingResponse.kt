@@ -27,6 +27,7 @@ data class SpellingRevisionDto(
     val revisedContent: String,
     val beginOffset: Int,
     val comment: String,
+    val category: String,
     val examples: List<String>?
 ) {
     companion object {
@@ -38,6 +39,7 @@ data class SpellingRevisionDto(
                 revisedContent = revision.revisedContent,
                 beginOffset = revision.beginOffset,
                 comment = revision.comment,
+                category = revision.category.title,
                 examples = revision.examples?.toList()
             )
         }

@@ -2,6 +2,7 @@ package learn_mate_it.dev.domain.diary.application.service.impl
 
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.domain.diary.application.service.SpellingService
+import learn_mate_it.dev.domain.diary.domain.enums.SpellingCategory
 import learn_mate_it.dev.domain.diary.domain.model.Diary
 import learn_mate_it.dev.domain.diary.domain.model.Spelling
 import learn_mate_it.dev.domain.diary.domain.model.SpellingRevision
@@ -41,6 +42,7 @@ class SpellingServiceImpl(
                         revisedContent = revision.revised,
                         examples = revision.examples.toTypedArray(),
                         comment = revision.comment,
+                        category = SpellingCategory.valueOf(revision.category),
                         spelling = spelling
                     )
                 }
