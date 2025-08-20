@@ -7,7 +7,7 @@ enum class SpellingCategory(
     val title: String
 ) {
 
-    GRAMMER("문법 오류"), WORD("단어 규칙 위반"), SPACING("띄어쓰기"),
+    GRAMMAR("문법 오류"), WORD("단어 규칙 위반"), SPACING("띄어쓰기"),
     STANDARD("표준어 위반"), TYPO("오탈자"), FOREIGN_WORD("외래어 표기법"),
     SENTENCE("문장 오류"), ETC("기타");
 
