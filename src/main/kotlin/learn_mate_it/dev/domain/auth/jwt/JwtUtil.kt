@@ -1,5 +1,7 @@
 package learn_mate_it.dev.domain.auth.jwt
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
@@ -10,6 +12,7 @@ import learn_mate_it.dev.domain.auth.domain.enums.TokenType
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.security.PublicKey
 import java.util.*
 
 @Component
@@ -20,6 +23,7 @@ class JwtUtil(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private fun getSigningKey() = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret))
+    private val objectMapper = ObjectMapper()
 
     /**
      * Generate Token
@@ -73,6 +77,37 @@ class JwtUtil(
         } catch (e: Exception) {
             log.warn("[*] JWT token error : ${e.message}")
             throw GeneralException(tokenType.errorStatus)
+        }
+    }
+
+    fun getKidFromToken(identityToken: String): String {
+        val tokenParts = identityToken.split(".")
+        if (tokenParts.size < 3) {
+            throw GeneralException(ErrorStatus.INVALID_IDENTITY_TOKEN_FORMAT)
+        }
+
+        val encodedHeader = tokenParts[0]
+        val decodedHeader = String(Base64.getUrlDecoder().decode(encodedHeader))
+
+        val headerNode = objectMapper.readTree(decodedHeader)
+        val kid = headerNode.get("kid")?.asText()
+
+        return kid ?: throw GeneralException(ErrorStatus.APPLE_LOGIN_KID_DECODE_SERVER_ERROR)
+    }
+
+    fun getClaimFromIdentityTokenWithPubKey(identityToken: String, pubKey: PublicKey): Claims {
+        try {
+            return Jwts.parser()
+                .verifyWith(pubKey)
+                .build()
+                .parseSignedClaims(identityToken)
+                .payload
+        } catch (e: ExpiredJwtException) {
+          log.warn("[*] JWT APPLE Identity Token Expiration error : ${e.message}")
+          throw GeneralException(ErrorStatus.EXPIRED_TOKEN_ERROR)
+        } catch (e: Exception) {
+            log.warn("[*] JWT APPLE Identity Token error : ${e.message}")
+            throw GeneralException(ErrorStatus.APPLE_LOGIN_VERIFY_IDENTITY_TOKEN_SERVER_ERROR)
         }
     }
 

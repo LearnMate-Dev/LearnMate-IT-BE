@@ -23,11 +23,17 @@ enum class ErrorStatus (
      * Auth
      */
     INVALID_OAUTH_PROVIDER(HttpStatus.BAD_REQUEST, "400","유효하지 않은 OAuth2 제공자입니다."),
+    INVALID_IDENTITY_TOKEN_FORMAT(HttpStatus.BAD_REQUEST, "400", "애플 로그인 토큰의 형식이 유효하지 않습니다."),
+    APPLE_LOGIN_PUB_KEY_CLIENT_ERROR(HttpStatus.BAD_REQUEST, "400", "애플 로그인을 위한 공개키 조회 중 클라이언트 오류가 발생했습니다."),
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "401", "유효하지 않은 액세스 토큰입니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "401", "유효하지 않은 리프레시 토큰입니다."),
     EXPIRED_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "401", "토큰이 만료되었습니다."),
+    APPLE_LOGIN_NO_MATCHING_PUB_KEY(HttpStatus.NOT_FOUND, "404", "애플 로그인을 위한 일치하는 공개키가 존재하지 않습니다."),
     NOT_FOUND_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "404", "존재하지 않는 리프레시 토큰입니다."),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "존재하지 않는 유저입니다."),
+    APPLE_LOGIN_PUB_KEY_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "애플 로그인을 위한 공개키 조회 중 서버 오류가 발생했습니다."),
+    APPLE_LOGIN_KID_DECODE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "애플 로그인을 위한 Key ID 추출 과정에서 서버 오류가 발생했습니다."),
+    APPLE_LOGIN_VERIFY_IDENTITY_TOKEN_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "애플 로그인을 위한 Identity Token 검증 과정에서 오류가 발생했습니다."),
 
     /**
      * Course
