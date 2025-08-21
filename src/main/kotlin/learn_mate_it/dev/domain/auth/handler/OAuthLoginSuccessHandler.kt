@@ -59,7 +59,7 @@ class OAuthLoginSuccessHandler(
         saveRefreshToken(refreshToken, user.userId)
 
         // set response
-        val redirectUri = "com.learnmate.app://oauth2/callback?accessToken=$accessToken"
+        val redirectUri = "com.learnmate.app://oauth2/callback?accessToken=$accessToken?username=${user.username}"
         response?.sendRedirect(redirectUri)
     }
 
