@@ -11,7 +11,12 @@ class AppleUserInfo(
     }
 
     override fun getName(): String {
-        return attributes.get("email") as? String ?: "Apple"
+        val username = attributes["username"] as? String
+        if (username != null) {
+            return username
+        }
+
+        return (attributes["email"] as? String)?.substringBefore("@") ?: "Apple"
     }
 
     override fun getProvider(): String {

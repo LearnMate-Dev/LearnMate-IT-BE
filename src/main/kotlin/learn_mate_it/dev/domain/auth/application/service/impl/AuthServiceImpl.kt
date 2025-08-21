@@ -3,6 +3,7 @@ package learn_mate_it.dev.domain.auth.application.service.impl
 import io.jsonwebtoken.Claims
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
+import learn_mate_it.dev.domain.auth.application.dto.request.AppleLoginRequest
 import learn_mate_it.dev.domain.auth.application.service.AppleClient
 import learn_mate_it.dev.domain.auth.application.service.AuthService
 import learn_mate_it.dev.domain.auth.domain.enums.TokenType
@@ -27,10 +28,16 @@ class AuthServiceImpl(
     private val appleClient: AppleClient
 ): AuthService {
 
-    override fun authenticateWithApple(identityToken: String): Authentication {
-        val claims = validateAppleToken(identityToken)
+    override fun authenticateWithApple(request: AppleLoginRequest): Authentication {
+        val claims = validateAppleToken(request.identityToken)
+
+        val attributes = claims.toMutableMap()
+        request.username?.let {
+            attributes["username"] = it
+        }
+
         val authorities = listOf(SimpleGrantedAuthority("ROLE_USER"))
-        val principal = DefaultOAuth2User(authorities, claims, "sub")
+        val principal = DefaultOAuth2User(authorities, attributes, "sub")
 
         return OAuth2AuthenticationToken(
             principal,

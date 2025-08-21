@@ -27,7 +27,7 @@ class AuthController(
         httpRequest: HttpServletRequest,
         httpResponse: HttpServletResponse
     ) {
-        val authentication = authService.authenticateWithApple(request.identityToken)
+        val authentication = authService.authenticateWithApple(request)
         oAuthLoginSuccessHandler.onAuthenticationSuccess(httpRequest, httpResponse, authentication)
     }
 
