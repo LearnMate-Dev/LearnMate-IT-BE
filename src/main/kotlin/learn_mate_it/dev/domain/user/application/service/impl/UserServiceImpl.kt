@@ -1,11 +1,15 @@
 package learn_mate_it.dev.domain.user.application.service.impl
 
 import jakarta.transaction.Transactional
+import learn_mate_it.dev.common.exception.GeneralException
+import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.auth.application.service.AuthService
 import learn_mate_it.dev.domain.chat.application.service.ChatService
 import learn_mate_it.dev.domain.course.application.service.CourseService
 import learn_mate_it.dev.domain.diary.application.service.DiaryService
+import learn_mate_it.dev.domain.user.application.dto.response.UserProfileDto
 import learn_mate_it.dev.domain.user.application.service.UserService
+import learn_mate_it.dev.domain.user.domain.model.User
 import learn_mate_it.dev.domain.user.domain.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -41,6 +45,20 @@ class UserServiceImpl(
         diaryService.deleteByUserId(userId)
         authService.deleteRefreshToken(userId)
         userRepository.deleteByUserId(userId)
+    }
+
+    /**
+     * Get User Id And Name
+     * @param userId
+     */
+    override fun getUserProfile(userId: Long): UserProfileDto {
+        val user = getUser(userId)
+        return UserProfileDto.toUserProfileDto(user)
+    }
+
+    private fun getUser(userId: Long): User {
+        return userRepository.findByUserId(userId)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_USER)
     }
 
 }

@@ -17,7 +17,8 @@ enum class SuccessStatus (
     SIGN_UP_SUCCESS(HttpStatus.CREATED, "201", "회원 인증이 성공적으로 완료되었습니다."),
     REISSUE_TOKEN_SUCCESS(HttpStatus.OK, "200", "토큰 재발행이 성공적으로 완료되었습니다."),
     USER_LOGOUT_SUCCESS(HttpStatus.OK, "200", "로그아웃이 성공적으로 완료되었습니다."),
-    USER_DELETE_SUCCESS(HttpStatus.OK, "200", "회원탈퇴가 성공적으로 완료되었습니다."),
+    DELETE_USER_SUCCESS(HttpStatus.OK, "200", "회원탈퇴가 성공적으로 완료되었습니다."),
+    GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "200", "유저 프로필 조회가 성공적으로 완료되었습니다."),
 
     /**
      * Course
