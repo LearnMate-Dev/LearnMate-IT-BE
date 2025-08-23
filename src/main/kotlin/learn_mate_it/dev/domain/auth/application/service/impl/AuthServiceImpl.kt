@@ -60,8 +60,8 @@ class AuthServiceImpl(
     }
 
     private fun checkPwdPatternIsValid(pwd: String) {
-        val regex = Regex("^(?=.*[a-z])(?=.*\\d)(?=.*[!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,}\$")
-        if (pwd.matches(regex)) {
+        val regex = Regex("^(?=.*[a-z])(?=.*\\d)(?=.*[!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>?]).{8,}\$")
+        if (!pwd.matches(regex)) {
             throw GeneralException(ErrorStatus.INVALID_PASSWORD_FORMAT)
         }
     }
