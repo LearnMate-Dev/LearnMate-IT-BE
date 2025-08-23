@@ -38,6 +38,8 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+
 	// db
 	implementation("org.postgresql:postgresql")
 	// ai
