@@ -2,6 +2,8 @@ package learn_mate_it.dev.domain.auth.domain.model
 
 import jakarta.persistence.*
 import learn_mate_it.dev.common.base.BaseEntity
+import learn_mate_it.dev.common.exception.GeneralException
+import learn_mate_it.dev.common.status.ErrorStatus
 import java.time.LocalDateTime
 
 @Entity
@@ -33,6 +35,12 @@ data class EmailVerification(
     fun isExpired(): Boolean {
         val expirationTime = this.createdAt!!.plusMinutes(5L)
         return LocalDateTime.now().isAfter(expirationTime)
+    }
+
+    fun ensureIsNotVerified() {
+        if (!this.isVerified) {
+            throw GeneralException(ErrorStatus.EMAIL_IS_NOT_VERIFIED)
+        }
     }
 
 }

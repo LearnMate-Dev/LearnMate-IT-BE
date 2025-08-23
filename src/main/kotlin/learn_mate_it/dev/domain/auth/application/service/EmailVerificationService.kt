@@ -4,5 +4,6 @@ interface EmailVerificationService {
 
     fun sendVerificationCodeToEmail(email: String)
     fun confirmEmailVerificationCode(email: String, code: String)
+    fun validateIsEmailVerified(email: String)
 
 }

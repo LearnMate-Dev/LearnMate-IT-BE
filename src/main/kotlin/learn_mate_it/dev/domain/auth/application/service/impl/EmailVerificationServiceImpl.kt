@@ -38,8 +38,7 @@ class EmailVerificationServiceImpl(
      */
     @Transactional
     override fun confirmEmailVerificationCode(email: String, code: String) {
-        val verification = emailVerificationRepository.findByEmail(email)
-            ?: throw GeneralException(ErrorStatus.NOT_FOUND_EMAIL_TO_VERIFICATION)
+        val verification = getEmailVerificationByEmail(email)
 
         if (verification.isExpired()) {
             throw GeneralException(ErrorStatus.EXPIRED_EMAIL_VERIFICATION_CODE)
@@ -49,7 +48,20 @@ class EmailVerificationServiceImpl(
             throw GeneralException(ErrorStatus.INVALID_EMAIL_VERIFICATION_CODE)
         }
 
-        verification.isVerified
+        verification.verify()
+    }
+
+    @Transactional
+    override fun validateIsEmailVerified(email: String) {
+        val verification = getEmailVerificationByEmail(email)
+        verification.ensureIsNotVerified()
+
+        emailVerificationRepository.delete(verification)
+    }
+
+    private fun getEmailVerificationByEmail(email: String): EmailVerification {
+        return emailVerificationRepository.findByEmail(email)
+            ?: throw GeneralException(ErrorStatus.NOT_FOUND_EMAIL_TO_VERIFICATION)
     }
 
 }

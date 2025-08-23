@@ -28,6 +28,7 @@ enum class ErrorStatus (
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "400", "비밀번호가 일치하지 않습니다."),
     INVALID_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "400", "비밀번호 형식이 올바르지 않습니다. 8자 이상 영소문자, 숫자, 특수문자를 1개 이상 포함해주세요."),
     INVALID_EMAIL_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "400", "잘못된 이메일 인증 번호입니다."),
+    EMAIL_IS_NOT_VERIFIED(HttpStatus.BAD_REQUEST, "400", "인증이 완료되지 않은 이메일 주소입니다."),
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "401", "유효하지 않은 액세스 토큰입니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "401", "유효하지 않은 리프레시 토큰입니다."),
     EXPIRED_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "401", "토큰이 만료되었습니다."),
