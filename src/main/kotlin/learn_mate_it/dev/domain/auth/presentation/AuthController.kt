@@ -63,4 +63,13 @@ class AuthController(
         return ApiResponse.success(SuccessStatus.SIGN_IN_SUCCESS, response)
     }
 
+    @PostMapping("/logout")
+    fun logout(
+        @RequestHeader("Authorization") refreshToken: String,
+        response: HttpServletResponse
+    ): ResponseEntity<ApiResponse<Nothing>> {
+        authService.logout(refreshToken)
+        return ApiResponse.success(SuccessStatus.USER_LOGOUT_SUCCESS)
+    }
+
 }

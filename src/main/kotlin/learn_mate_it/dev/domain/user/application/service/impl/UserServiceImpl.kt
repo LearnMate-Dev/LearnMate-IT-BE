@@ -26,15 +26,6 @@ class UserServiceImpl(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     /**
-     * Logout And Delete Refresh Token
-     * @param refreshToken from Request Header
-     */
-    override fun logout(refreshToken: String) {
-        tokenService.deleteRefreshToken(refreshToken)
-    }
-
-
-    /**
      * WithDraw And Delete All Data About User
      * @param userId
      */

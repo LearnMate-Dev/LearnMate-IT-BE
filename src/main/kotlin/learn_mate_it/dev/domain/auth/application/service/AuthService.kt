@@ -12,5 +12,6 @@ interface AuthService {
     fun signUp(request: SignUpRequest)
     fun signIn(request: SignInRequest): TokenResponse
     fun authenticateWithApple(request: AppleLoginRequest): Authentication
+    fun logout(refreshToken: String)
 
 }

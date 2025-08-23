@@ -29,7 +29,7 @@ class SecurityConfig(
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
-    private val allowedUrls = arrayOf("/v3/**", "/swagger-ui/**", "/", "/login/**", "/oauth2/**", "/api/auth/**")
+    private val allowedUrls = arrayOf("/v3/**", "/swagger-ui/**", "/", "/oauth2/**", "/api/auth/**")
 
     @Bean
     fun filterChain(httpSecurity: HttpSecurity): SecurityFilterChain {

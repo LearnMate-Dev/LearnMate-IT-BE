@@ -141,4 +141,12 @@ class AuthServiceImpl(
         return keyFactory.generatePublic(keySpec)
     }
 
+    /**
+     * Logout And Delete Refresh Token
+     * @param refreshToken from Request Header
+     */
+    override fun logout(refreshToken: String) {
+        tokenService.deleteRefreshToken(refreshToken)
+    }
+
 }
