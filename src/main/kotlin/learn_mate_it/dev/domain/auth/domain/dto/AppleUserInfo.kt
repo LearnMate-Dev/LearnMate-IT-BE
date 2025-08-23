@@ -7,7 +7,7 @@ class AppleUserInfo(
 ) : OAuth2UserInfo {
 
     override fun getProviderId(): String {
-        return attributes.get("sub").toString()
+        return attributes["sub"].toString()
     }
 
     override fun getName(): String {
@@ -17,6 +17,10 @@ class AppleUserInfo(
         }
 
         return (attributes["email"] as? String)?.substringBefore("@") ?: "Apple"
+    }
+
+    override fun getEmail(): String {
+        return attributes["email"].toString()
     }
 
     override fun getProvider(): String {

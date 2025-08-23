@@ -4,7 +4,7 @@ import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 
 enum class PROVIDER {
-    GOOGLE, APPLE;
+    GOOGLE, APPLE, LOCAL;
 
     companion object {
         fun from(name: String) : PROVIDER {
