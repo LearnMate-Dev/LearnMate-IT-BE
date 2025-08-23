@@ -7,11 +7,15 @@ class GoogleUserInfo(
 ): OAuth2UserInfo {
 
     override fun getProviderId(): String {
-       return attributes.get("sub").toString()
+       return attributes["sub"].toString()
     }
 
     override fun getName(): String {
-        return attributes.get("name").toString()
+        return attributes["name"].toString()
+    }
+
+    override fun getEmail(): String {
+        return attributes["email"].toString()
     }
 
     override fun getProvider(): String {

@@ -1,12 +1,9 @@
 package learn_mate_it.dev.domain.auth.handler
 
-import ApiResponse
-import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
-import learn_mate_it.dev.common.status.SuccessStatus
 import learn_mate_it.dev.domain.auth.domain.dto.AppleUserInfo
 import learn_mate_it.dev.domain.auth.domain.dto.GoogleUserInfo
 import learn_mate_it.dev.domain.auth.domain.dto.OAuth2UserInfo
@@ -16,7 +13,6 @@ import learn_mate_it.dev.domain.auth.jwt.JwtUtil
 import learn_mate_it.dev.domain.user.domain.enums.PROVIDER
 import learn_mate_it.dev.domain.user.domain.model.User
 import learn_mate_it.dev.domain.user.domain.repository.UserRepository
-import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
@@ -44,6 +40,7 @@ class OAuthLoginSuccessHandler(
                 User(
                     username = userInfo.getName(),
                     providerId = userInfo.getProviderId(),
+                    email = userInfo.getEmail(),
                     provider = PROVIDER.from(userInfo.getProvider())
                 )
             )
@@ -80,14 +77,4 @@ class OAuthLoginSuccessHandler(
         )
     }
 
-    private fun setHttpResponse(response: HttpServletResponse) {
-        val mapper = ObjectMapper()
-        val status = SuccessStatus.SIGN_UP_SUCCESS
-        response.contentType = MediaType.APPLICATION_JSON_VALUE
-        response.characterEncoding = "UTF-8"
-        response.status = status.httpStatus.value()
-
-        val responseBody = ApiResponse.success(status).body
-        response.writer.write(mapper.writeValueAsString(responseBody))
-    }
 }
