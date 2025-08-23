@@ -20,6 +20,8 @@ enum class SuccessStatus (
     USER_LOGOUT_SUCCESS(HttpStatus.OK, "200", "로그아웃이 성공적으로 완료되었습니다."),
     DELETE_USER_SUCCESS(HttpStatus.OK, "200", "회원탈퇴가 성공적으로 완료되었습니다."),
     GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "200", "유저 프로필 조회가 성공적으로 완료되었습니다."),
+    SEND_EMAIL_VERIFICATION_CODE_SUCCESS(HttpStatus.OK, "200", "이메일 인증 코드 발송이 성공적으로 완료되었습니다."),
+    VERIFY_EMAIL_SUCCESS(HttpStatus.OK, "200", "이메일 인증이 성공적으로 완료되었습니다."),
 
     /**
      * Course

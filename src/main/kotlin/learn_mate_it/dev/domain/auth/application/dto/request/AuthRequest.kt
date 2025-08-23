@@ -34,3 +34,20 @@ data class SignInRequest(
     @field:Size(min = 8, message = "비밀번호는 최소 8자 이상이어야 합니다.")
     val password: String
 )
+
+data class EmailVerificationRequest(
+    @field:NotBlank(message = "이메일 주소는 필수입니다.")
+    @field:Email(message = "이메일 형식이 올바르지 않습니다.")
+    @field:Size(max = 30, message = "이메일은 30자를 초과할 수 없습니다.")
+    val email: String
+)
+
+data class ConfirmEmailVerificationRequest(
+    @field:NotBlank(message = "이메일 주소는 필수입니다.")
+    @field:Email(message = "이메일 형식이 올바르지 않습니다.")
+    @field:Size(max = 30, message = "이메일은 30자를 초과할 수 없습니다.")
+    val email: String,
+
+    @field:NotBlank(message = "인증 코드는 필수입니다.")
+    val code: String
+)
