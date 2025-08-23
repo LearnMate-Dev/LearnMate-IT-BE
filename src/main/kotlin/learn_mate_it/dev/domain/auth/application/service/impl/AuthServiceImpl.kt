@@ -71,7 +71,7 @@ class AuthServiceImpl(
      */
     override fun signIn(request: SignInRequest): TokenResponse {
         val user = getUserByEmail(request.email)
-        checkPwdIsMatch(user.password!!, request.password)
+        checkPwdIsMatch(request.password, user.password!!)
 
         val (accessToken, refreshToken) = tokenService.createAndSaveToken(user.userId)
         return TokenResponse(accessToken, refreshToken)
@@ -87,8 +87,8 @@ class AuthServiceImpl(
         return user
     }
 
-    private fun checkPwdIsMatch(encodedPwd: String, rawPassword: String) {
-        if (!passwordEncoder.matches(encodedPwd, rawPassword)) {
+    private fun checkPwdIsMatch(rawPassword: String, encodedPwd: String) {
+        if (!passwordEncoder.matches(rawPassword, encodedPwd)) {
             throw GeneralException(ErrorStatus.INVALID_PASSWORD)
         }
     }
