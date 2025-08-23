@@ -10,6 +10,8 @@ interface UserRepository : JpaRepository<User, Long> {
 
     fun findByProviderId(providerId: String): User?
     fun findByUserId(userId: Long): User?
+    fun findByEmail(email: String): User?
+    fun existsByEmail(email: String): Boolean
 
     @Modifying
     @Query("DELETE FROM User u " +

@@ -18,7 +18,7 @@ data class User(
     val email: String,
 
     @Column(nullable = true)
-    val providerId: String?,
+    val providerId: String? = null,
 
     @Column(nullable = true)
     val password: String? = null,

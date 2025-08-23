@@ -4,12 +4,10 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
+import learn_mate_it.dev.domain.auth.application.service.TokenService
 import learn_mate_it.dev.domain.auth.domain.dto.AppleUserInfo
 import learn_mate_it.dev.domain.auth.domain.dto.GoogleUserInfo
 import learn_mate_it.dev.domain.auth.domain.dto.OAuth2UserInfo
-import learn_mate_it.dev.domain.auth.domain.model.RefreshToken
-import learn_mate_it.dev.domain.auth.domain.repository.RefreshTokenRepository
-import learn_mate_it.dev.domain.auth.jwt.JwtUtil
 import learn_mate_it.dev.domain.user.domain.enums.PROVIDER
 import learn_mate_it.dev.domain.user.domain.model.User
 import learn_mate_it.dev.domain.user.domain.repository.UserRepository
@@ -20,9 +18,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class OAuthLoginSuccessHandler(
-    private val jwtUtil: JwtUtil,
-    private val userRepository: UserRepository,
-    private val refreshTokenRepository: RefreshTokenRepository
+    private val tokenService: TokenService,
+    private val userRepository: UserRepository
 ): AuthenticationSuccessHandler {
 
     override fun onAuthenticationSuccess(
@@ -45,15 +42,8 @@ class OAuthLoginSuccessHandler(
                 )
             )
 
-        // delete existing refresh token
-        refreshTokenRepository.findByUserId(user.userId).firstOrNull()?.let {
-            refreshTokenRepository.delete(it)
-        }
-
-        // make new token
-        val accessToken = jwtUtil.createAccessToken(user.userId)
-        val refreshToken = jwtUtil.createRefreshToken(user.userId)
-        saveRefreshToken(refreshToken, user.userId)
+        // create access, refresh token
+        val (accessToken, refreshToken) = tokenService.createAndSaveToken(user.userId)
 
         // set response
         val redirectUri = "com.learnmate.app://oauth2/callback?accessToken=$accessToken&refreshToken=$refreshToken"
@@ -69,12 +59,6 @@ class OAuthLoginSuccessHandler(
             "apple" -> AppleUserInfo(principal.attributes)
             else -> throw GeneralException(ErrorStatus.INVALID_OAUTH_PROVIDER)
         }
-    }
-
-    private fun saveRefreshToken(refreshToken: String, userId: Long) {
-        refreshTokenRepository.save(
-            RefreshToken(refreshToken, userId)
-        )
     }
 
 }

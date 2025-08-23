@@ -3,7 +3,7 @@ package learn_mate_it.dev.domain.user.application.service.impl
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
-import learn_mate_it.dev.domain.auth.application.service.AuthService
+import learn_mate_it.dev.domain.auth.application.service.TokenService
 import learn_mate_it.dev.domain.chat.application.service.ChatService
 import learn_mate_it.dev.domain.course.application.service.CourseService
 import learn_mate_it.dev.domain.diary.application.service.DiaryService
@@ -19,7 +19,7 @@ class UserServiceImpl(
     private val chatService: ChatService,
     private val courseService: CourseService,
     private val diaryService: DiaryService,
-    private val authService: AuthService,
+    private val tokenService: TokenService,
     private val userRepository: UserRepository,
 ): UserService {
 
@@ -30,7 +30,7 @@ class UserServiceImpl(
      * @param refreshToken from Request Header
      */
     override fun logout(refreshToken: String) {
-        authService.deleteRefreshToken(refreshToken)
+        tokenService.deleteRefreshToken(refreshToken)
     }
 
 
@@ -43,7 +43,7 @@ class UserServiceImpl(
         chatService.deleteByUserId(userId)
         courseService.deleteByUserId(userId)
         diaryService.deleteByUserId(userId)
-        authService.deleteRefreshToken(userId)
+        tokenService.deleteRefreshToken(userId)
         userRepository.deleteByUserId(userId)
     }
 

@@ -1,10 +1,18 @@
 package learn_mate_it.dev.domain.auth.presentation
 
+import ApiResponse
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import jakarta.validation.Valid
+import learn_mate_it.dev.common.status.SuccessStatus
 import learn_mate_it.dev.domain.auth.application.dto.request.AppleLoginRequest
+import learn_mate_it.dev.domain.auth.application.dto.request.SignInRequest
+import learn_mate_it.dev.domain.auth.application.dto.request.SignUpRequest
+import learn_mate_it.dev.domain.auth.application.dto.response.TokenResponse
 import learn_mate_it.dev.domain.auth.application.service.AuthService
+import learn_mate_it.dev.domain.auth.application.service.TokenService
 import learn_mate_it.dev.domain.auth.handler.OAuthLoginSuccessHandler
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -15,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/auth")
 class AuthController(
     private val authService: AuthService,
+    private val tokenService: TokenService,
     private val oAuthLoginSuccessHandler: OAuthLoginSuccessHandler
 ) {
 
@@ -33,9 +42,25 @@ class AuthController(
         @RequestHeader("Authorization") refreshToken: String,
         response: HttpServletResponse
     ) {
-        val newAccessToken = authService.reissueToken(refreshToken)
+        val newAccessToken = tokenService.reissueToken(refreshToken)
         val redirectUri = "com.learnmate.app://oauth2/callback?accessToken=$newAccessToken"
         response.sendRedirect(redirectUri)
+    }
+
+    @PostMapping("/sign-up")
+    fun signUp(
+        @Valid @RequestBody request: SignUpRequest
+    ): ResponseEntity<ApiResponse<Nothing>> {
+        authService.signUp(request)
+        return ApiResponse.success(SuccessStatus.SIGN_UP_SUCCESS)
+    }
+
+    @PostMapping("/sign-in")
+    fun signIn(
+        @Valid @RequestBody request: SignInRequest
+    ): ResponseEntity<ApiResponse<TokenResponse>> {
+        val response = authService.signIn(request)
+        return ApiResponse.success(SuccessStatus.SIGN_IN_SUCCESS, response)
     }
 
 }

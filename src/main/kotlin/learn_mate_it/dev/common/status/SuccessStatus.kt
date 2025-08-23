@@ -14,7 +14,8 @@ enum class SuccessStatus (
     /**
      * Auth
      */
-    SIGN_UP_SUCCESS(HttpStatus.CREATED, "201", "회원 인증이 성공적으로 완료되었습니다."),
+    SIGN_UP_SUCCESS(HttpStatus.CREATED, "201", "회원 가입이 성공적으로 완료되었습니다."),
+    SIGN_IN_SUCCESS(HttpStatus.OK, "200", "로그인이 성공적으로 완료되었습니다."),
     REISSUE_TOKEN_SUCCESS(HttpStatus.OK, "200", "토큰 재발행이 성공적으로 완료되었습니다."),
     USER_LOGOUT_SUCCESS(HttpStatus.OK, "200", "로그아웃이 성공적으로 완료되었습니다."),
     DELETE_USER_SUCCESS(HttpStatus.OK, "200", "회원탈퇴가 성공적으로 완료되었습니다."),
