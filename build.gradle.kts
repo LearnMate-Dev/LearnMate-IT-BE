@@ -56,6 +56,8 @@ dependencies {
 	// coroutine
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
+	// email
+	implementation ("org.springframework.boot:spring-boot-starter-mail")
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
