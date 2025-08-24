@@ -42,6 +42,7 @@ enum class ErrorStatus (
     APPLE_LOGIN_PUB_KEY_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "애플 로그인을 위한 공개키 조회 중 서버 오류가 발생했습니다."),
     APPLE_LOGIN_KID_DECODE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "애플 로그인을 위한 Key ID 추출 과정에서 서버 오류가 발생했습니다."),
     APPLE_LOGIN_VERIFY_IDENTITY_TOKEN_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "애플 로그인을 위한 Identity Token 검증 과정에서 오류가 발생했습니다."),
+    SEND_VERIFICATION_CODE_EMAIL_INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "이메일 인증 코드 발송 중 오류가 발생했습니다."),
 
     /**
      * Course
