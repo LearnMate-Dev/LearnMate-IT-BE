@@ -19,7 +19,7 @@ abstract class BaseEntity {
 
     @LastModifiedDate
     @Column(nullable = false)
-    private var updatedAt: LocalDateTime? = null
+    protected var updatedAt: LocalDateTime? = null
 
     fun getCreatedAtFormatted(): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")

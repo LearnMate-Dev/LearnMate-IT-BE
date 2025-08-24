@@ -33,7 +33,7 @@ data class EmailVerification(
     }
 
     fun isExpired(): Boolean {
-        val expirationTime = this.createdAt!!.plusMinutes(5L)
+        val expirationTime = this.updatedAt!!.plusMinutes(5L)
         return LocalDateTime.now().isAfter(expirationTime)
     }
 
