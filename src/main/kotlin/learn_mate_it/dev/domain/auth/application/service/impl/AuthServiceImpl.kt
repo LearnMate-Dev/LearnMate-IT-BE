@@ -1,6 +1,7 @@
 package learn_mate_it.dev.domain.auth.application.service.impl
 
 import io.jsonwebtoken.Claims
+import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.auth.application.dto.request.AppleLoginRequest
@@ -9,6 +10,7 @@ import learn_mate_it.dev.domain.auth.application.dto.request.SignUpRequest
 import learn_mate_it.dev.domain.auth.application.dto.response.TokenResponse
 import learn_mate_it.dev.domain.auth.application.service.AppleClient
 import learn_mate_it.dev.domain.auth.application.service.AuthService
+import learn_mate_it.dev.domain.auth.application.service.EmailVerificationService
 import learn_mate_it.dev.domain.auth.application.service.TokenService
 import learn_mate_it.dev.domain.auth.infra.application.dto.response.Key
 import learn_mate_it.dev.domain.auth.jwt.JwtUtil
@@ -33,15 +35,18 @@ class AuthServiceImpl(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val tokenService: TokenService,
+    private val emailVerificationService: EmailVerificationService,
     private val jwtUtil: JwtUtil
 ): AuthService {
 
     /**
      * Sign-Up with Email, Username, Pwd
      */
+    @Transactional
     override fun signUp(request: SignUpRequest) {
         checkEmailExist(request.email)
         checkPwdPatternIsValid(request.password)
+        emailVerificationService.validateIsEmailVerified(request.email)
 
         userRepository.save(
             User(

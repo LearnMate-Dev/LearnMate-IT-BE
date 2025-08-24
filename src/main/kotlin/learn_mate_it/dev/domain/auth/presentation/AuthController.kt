@@ -5,11 +5,10 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import learn_mate_it.dev.common.status.SuccessStatus
-import learn_mate_it.dev.domain.auth.application.dto.request.AppleLoginRequest
-import learn_mate_it.dev.domain.auth.application.dto.request.SignInRequest
-import learn_mate_it.dev.domain.auth.application.dto.request.SignUpRequest
+import learn_mate_it.dev.domain.auth.application.dto.request.*
 import learn_mate_it.dev.domain.auth.application.dto.response.TokenResponse
 import learn_mate_it.dev.domain.auth.application.service.AuthService
+import learn_mate_it.dev.domain.auth.application.service.EmailVerificationService
 import learn_mate_it.dev.domain.auth.application.service.TokenService
 import learn_mate_it.dev.domain.auth.handler.OAuthLoginSuccessHandler
 import org.springframework.http.ResponseEntity
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     private val authService: AuthService,
     private val tokenService: TokenService,
+    private val emailVerificationService: EmailVerificationService,
     private val oAuthLoginSuccessHandler: OAuthLoginSuccessHandler
 ) {
 
@@ -70,6 +70,22 @@ class AuthController(
     ): ResponseEntity<ApiResponse<Nothing>> {
         authService.logout(refreshToken)
         return ApiResponse.success(SuccessStatus.USER_LOGOUT_SUCCESS)
+    }
+
+    @PostMapping("/email")
+    fun sendEmailVerificationCode(
+        @Valid @RequestBody request: EmailVerificationRequest
+    ): ResponseEntity<ApiResponse<Nothing>> {
+        emailVerificationService.sendVerificationCodeToEmail(request.email)
+        return ApiResponse.success(SuccessStatus.SEND_EMAIL_VERIFICATION_CODE_SUCCESS)
+    }
+
+    @PostMapping("/email/confirm")
+    fun confirmEmailVerificationCode(
+        @Valid @RequestBody request: ConfirmEmailVerificationRequest
+    ): ResponseEntity<ApiResponse<Nothing>> {
+        emailVerificationService.confirmEmailVerificationCode(request.email, request.code)
+        return ApiResponse.success(SuccessStatus.VERIFY_EMAIL_SUCCESS)
     }
 
 }
