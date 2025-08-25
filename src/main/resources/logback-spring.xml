@@ -1,0 +1,55 @@
+<configuration>
+
+    <!--local log-->
+    <springProfile name="local">
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <Pattern>[%d{HH:mm:ss}] [%thread] [%-5level] %logger{36} %n %msg%n```%ex{full}```</Pattern>
+                <charset>utf8</charset>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!--dev log-->
+    <springProfile name="dev">
+        <property resource="application-secret.yml"/>
+        <springProperty name="DISCORD_WEBHOOK_URL" source="logging.discord.web-hook-url"/>
+
+        <appender name="DISCORD" class="com.github.napstr.logback.DiscordAppender">
+            <webhookUri>${DISCORD_WEBHOOK_URL}</webhookUri>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>[%d{HH:mm:ss}] [%thread] [%-5level] %logger{36} %n %msg%n```%ex{full}```</pattern>
+            </layout>
+            <username>[LearnMate]DEV SERVER ERROR</username>
+
+            <tts>false</tts>
+        </appender>
+
+        <appender name="ASYNC_DISCORD" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="DISCORD" />
+            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+                <level>ERROR</level>
+            </filter>
+        </appender>
+
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <Pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%t] %logger{36} - %msg%n</Pattern>
+                <charset>utf8</charset>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="ASYNC_DISCORD"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+
+</configuration>
