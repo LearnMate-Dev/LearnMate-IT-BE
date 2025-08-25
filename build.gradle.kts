@@ -23,8 +23,13 @@ configurations {
 
 repositories {
 	mavenCentral()
+
 	maven {
 		url = uri("https://repo.spring.io/milestone")
+	}
+
+	maven {
+		url = uri("https://jitpack.io")
 	}
 }
 
@@ -59,6 +64,8 @@ dependencies {
 	// email
 	implementation ("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	// discord
+	implementation("com.github.napstr:logback-discord-appender:1.0.0")
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
