@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -44,8 +45,15 @@ class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
     @ExceptionHandler(NullPointerException::class)
     fun handleNullPointerException(e: NullPointerException): ResponseEntity<ApiResponse<Nothing>> {
         val errorMessage = "서버에서 예기치 않은 오류가 발생했습니다. 요청을 처리하는 중에 Null 값이 참조되었습니다."
-        log.error(">>>>>>>>NullPointerException: $e")
+        log.error(">>>>>>>>NullPointerException: ", e)
         return ApiResponse.error(ErrorStatus.INTERNAL_SERVER_ERROR, errorMessage)
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
+    fun handleHttpRequestMethodNotSupported(e: HttpRequestMethodNotSupportedException): ResponseEntity<ApiResponse<Nothing>> {
+        val errorMessage = "지원하지 않는 HTTP 메소드 요청입니다: " + e.method
+        log.error(">>>>>>>>HttpRequestMethodNotSupportedException: ", e)
+        return ApiResponse.error(ErrorStatus.METHOD_NOT_ALLOWED, errorMessage)
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
