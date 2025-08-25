@@ -18,7 +18,7 @@ class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(GeneralException::class)
     fun handleGeneralException(e: GeneralException): ResponseEntity<ApiResponse<Nothing>> {
-        log.warn(">>>>>>>>GeneralException: ${e.message}")
+        log.error(">>>>>>>>GeneralException: ${e.message}")
         return ApiResponse.error(e.errorStatus)
     }
 
@@ -37,7 +37,28 @@ class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
             message = errorMessage?: errorCode.message,
             data = null
         )
+        log.error(">>>>>>>>MethodArgumentNotValidException: ${ex.message}")
         return handleExceptionInternal(ex, body, headers, status, request)
+    }
+
+    @ExceptionHandler(NullPointerException::class)
+    fun handleNullPointerException(e: NullPointerException): ResponseEntity<ApiResponse<Nothing>> {
+        val errorMessage = "서버에서 예기치 않은 오류가 발생했습니다. 요청을 처리하는 중에 Null 값이 참조되었습니다."
+        log.error(">>>>>>>>NullPointerException: ${e.message}")
+        return ApiResponse.error(ErrorStatus.INTERNAL_SERVER_ERROR, errorMessage)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<ApiResponse<Nothing>> {
+        val errorMessage = "잘못된 요청입니다: " + e.message
+        log.error(">>>>>>>>IllegalArgumentException: ${e.message}")
+        return ApiResponse.error(ErrorStatus.BAD_REQUEST, errorMessage)
+    }
+
+    @ExceptionHandler(Exception::class)
+    fun handleException(e: Exception): ResponseEntity<ApiResponse<Nothing>> {
+        log.error(">>>>>>>>Internal Server Error: {}", e.message)
+        return ApiResponse.error(ErrorStatus.INTERNAL_SERVER_ERROR)
     }
 
 }
