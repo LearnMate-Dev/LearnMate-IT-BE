@@ -5,9 +5,9 @@
     <!--인덱스로 추가할 서비스명-->
     <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
 
-    <logger name="ELK_LOGGER" level="INFO">
-        <appender-ref ref="LOGSTASH"/>
-    </logger>
+<!--    <logger name="ELK_LOGGER" level="INFO">-->
+<!--        <appender-ref ref="LOGSTASH"/>-->
+<!--    </logger>-->
 
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <!--로그 수집 후 출력할 주소-->
@@ -17,5 +17,9 @@
             <customFields>{"index":"${APP_NAME}"}</customFields>
         </encoder>
     </appender>
+
+    <root level="WARN">
+        <appender-ref ref="LOGSTASH" />
+    </root>
 
 </configuration>
