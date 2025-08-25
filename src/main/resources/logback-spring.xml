@@ -6,7 +6,7 @@
 
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
-                <Pattern>[%d{HH:mm:ss}] [%thread] [%-5level] %logger{36} %n %msg%n```%ex{full}```</Pattern>
+                <Pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%t] %logger{36} - %msg%n</Pattern>
                 <charset>utf8</charset>
             </encoder>
         </appender>
@@ -24,7 +24,7 @@
         <appender name="DISCORD" class="com.github.napstr.logback.DiscordAppender">
             <webhookUri>${DISCORD_WEBHOOK_URL}</webhookUri>
             <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>[%d{HH:mm:ss}] [%thread] [%-5level] %logger{36} %n %msg%n```%ex{full}```</pattern>
+                <pattern>[%d{HH:mm:ss}] [%-5level] %logger{36} %n %msg%n```%ex{full}```</pattern>
             </layout>
             <username>[LearnMate]DEV SERVER ERROR</username>
 

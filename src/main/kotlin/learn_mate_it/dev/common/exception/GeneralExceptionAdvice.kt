@@ -1,6 +1,7 @@
 package learn_mate_it.dev.common.exception
 
 import ApiResponse
+import learn_mate_it.dev.common.base.BaseStatus
 import learn_mate_it.dev.common.status.ErrorStatus
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
@@ -23,21 +24,14 @@ class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
         return ApiResponse.error(e.errorStatus)
     }
 
-    override fun handleMethodArgumentNotValid(
-        ex: MethodArgumentNotValidException,
-        headers: HttpHeaders,
-        status: HttpStatusCode,
-        request: WebRequest
+    override fun handleMethodArgumentNotValid(ex: MethodArgumentNotValidException,
+                                              headers: HttpHeaders,
+                                              status: HttpStatusCode,
+                                              request: WebRequest
     ): ResponseEntity<Any>? {
-        val errorCode = ErrorStatus.BAD_REQUEST
         val errorMessage = ex.bindingResult.fieldErrors.firstOrNull()?.defaultMessage
+        val body = createErrorBody(errorMessage, ErrorStatus.BAD_REQUEST)
 
-        val body = ApiResponse(
-            isSuccess = false,
-            code = errorCode.code,
-            message = errorMessage?: errorCode.message,
-            data = null
-        )
         log.error(">>>>>>>>MethodArgumentNotValidException: ", ex)
         return handleExceptionInternal(ex, body, headers, status, request)
     }
@@ -49,11 +43,17 @@ class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
         return ApiResponse.error(ErrorStatus.INTERNAL_SERVER_ERROR, errorMessage)
     }
 
-    @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
-    fun handleHttpRequestMethodNotSupported(e: HttpRequestMethodNotSupportedException): ResponseEntity<ApiResponse<Nothing>> {
-        val errorMessage = "지원하지 않는 HTTP 메소드 요청입니다: " + e.method
-        log.error(">>>>>>>>HttpRequestMethodNotSupportedException: ", e)
-        return ApiResponse.error(ErrorStatus.METHOD_NOT_ALLOWED, errorMessage)
+
+    override fun handleHttpRequestMethodNotSupported(ex: HttpRequestMethodNotSupportedException,
+                                            headers: HttpHeaders,
+                                            status: HttpStatusCode,
+                                            request: WebRequest
+    ): ResponseEntity<Any>? {
+        val errorMessage = "지원하지 않는 HTTP 메소드 요청입니다: " + ex.method
+        val body = createErrorBody(errorMessage, ErrorStatus.BAD_REQUEST)
+
+        log.error(">>>>>>>>HttpRequestMethodNotSupportedException: ", ex)
+        return handleExceptionInternal(ex, body, headers, status, request)
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
@@ -67,6 +67,15 @@ class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
     fun handleException(e: Exception): ResponseEntity<ApiResponse<Nothing>> {
         log.error(">>>>>>>>Internal Server Error: ", e)
         return ApiResponse.error(ErrorStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    private fun createErrorBody(errorMessage: String?, errorCode: BaseStatus): ApiResponse<Nothing> {
+        return ApiResponse(
+            isSuccess = false,
+            code = errorCode.code,
+            message = errorMessage?: errorCode.message,
+            data = null
+        )
     }
 
 }

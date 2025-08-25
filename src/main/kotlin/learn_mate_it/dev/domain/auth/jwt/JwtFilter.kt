@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import learn_mate_it.dev.common.base.BaseErrorStatus
+import learn_mate_it.dev.common.base.BaseStatus
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.domain.auth.domain.enums.TokenType
@@ -59,7 +59,7 @@ class JwtFilter(
         }
     }
 
-    private fun handleGeneralJwtError(errorStatus: BaseErrorStatus, response: HttpServletResponse) {
+    private fun handleGeneralJwtError(errorStatus: BaseStatus, response: HttpServletResponse) {
         val errorResponse = ApiResponse.error(errorStatus).body!!
         setHttpServletResponse(errorStatus.httpStatus.value(), errorResponse, response)
     }

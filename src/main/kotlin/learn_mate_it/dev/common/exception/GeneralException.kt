@@ -1,7 +1,7 @@
 package learn_mate_it.dev.common.exception
 
-import learn_mate_it.dev.common.base.BaseErrorStatus
+import learn_mate_it.dev.common.base.BaseStatus
 
 class GeneralException(
-    val errorStatus: BaseErrorStatus
+    val errorStatus: BaseStatus
 ) : RuntimeException(errorStatus.message)

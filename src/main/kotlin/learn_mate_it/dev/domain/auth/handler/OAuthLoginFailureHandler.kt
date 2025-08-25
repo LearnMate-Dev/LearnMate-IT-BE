@@ -3,7 +3,7 @@ package learn_mate_it.dev.domain.auth.handler
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import learn_mate_it.dev.common.base.BaseErrorStatus
+import learn_mate_it.dev.common.base.BaseStatus
 import learn_mate_it.dev.common.status.ErrorStatus
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
@@ -27,7 +27,7 @@ class OAuthLoginFailureHandler: AuthenticationFailureHandler {
         setHttpResponse(errorStatus, response)
     }
 
-    private fun setHttpResponse(errorStatus: BaseErrorStatus, response: HttpServletResponse) {
+    private fun setHttpResponse(errorStatus: BaseStatus, response: HttpServletResponse) {
         val mapper = ObjectMapper()
         response.contentType = MediaType.APPLICATION_JSON_VALUE
         response.characterEncoding = "UTF-8"
