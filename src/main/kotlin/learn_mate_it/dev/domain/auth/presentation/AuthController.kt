@@ -12,11 +12,7 @@ import learn_mate_it.dev.domain.auth.application.service.EmailVerificationServic
 import learn_mate_it.dev.domain.auth.application.service.TokenService
 import learn_mate_it.dev.domain.auth.handler.OAuthLoginSuccessHandler
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,6 +22,11 @@ class AuthController(
     private val emailVerificationService: EmailVerificationService,
     private val oAuthLoginSuccessHandler: OAuthLoginSuccessHandler
 ) {
+
+    @GetMapping("/discord-test")
+    fun discordTest() {
+        throw Exception("Discord Error Test")
+    }
 
     @PostMapping("/apple/login")
     fun appleLogin(

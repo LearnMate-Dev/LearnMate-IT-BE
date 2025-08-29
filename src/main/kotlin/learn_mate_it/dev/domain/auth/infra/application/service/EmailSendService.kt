@@ -16,7 +16,7 @@ class EmailSendService(
     private val templateEngine: TemplateEngine
 ) {
 
-    private val log = LoggerFactory.getLogger(this::class.java)
+    private val log = LoggerFactory.getLogger("Logger")
 
     fun sendEmail(email: String, code: String) {
         val subject = "[LearnMate] 이메일 인증 코드"
@@ -32,7 +32,7 @@ class EmailSendService(
 
             javaMailSender.send(mimeMessage)
         } catch (e: Exception) {
-            log.error("[*] Sending email Code : $e")
+            log.error("[*] Fail to Send email Code : $e")
             throw GeneralException(ErrorStatus.SEND_VERIFICATION_CODE_EMAIL_INTERNAL_SERVER_ERROR)
         }
 

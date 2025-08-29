@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
-    private val log = LoggerFactory.getLogger(this::class.java)
+    private val log = LoggerFactory.getLogger("Logger")
 
     @ExceptionHandler(GeneralException::class)
     fun handleGeneralException(e: GeneralException): ResponseEntity<ApiResponse<Nothing>> {
@@ -35,7 +35,7 @@ class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
         val errorMessage = ex.bindingResult.fieldErrors.firstOrNull()?.defaultMessage
         val body = createErrorBody(errorMessage, ErrorStatus.BAD_REQUEST)
 
-        log.error(">>>>>>>>MethodArgumentNotValidException: ", ex)
+        log.warn(">>>>>>>>MethodArgumentNotValidException: ", ex)
         return handleExceptionInternal(ex, body, headers, status, request)
     }
 
@@ -55,14 +55,14 @@ class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
         val errorMessage = "지원하지 않는 HTTP 메소드 요청입니다: " + ex.method
         val body = createErrorBody(errorMessage, ErrorStatus.BAD_REQUEST)
 
-        log.error(">>>>>>>>HttpRequestMethodNotSupportedException: ", ex)
+        log.warn(">>>>>>>>HttpRequestMethodNotSupportedException: ", ex)
         return handleExceptionInternal(ex, body, headers, status, request)
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<ApiResponse<Nothing>> {
         val errorMessage = "잘못된 요청입니다: " + e.message
-        log.error(">>>>>>>>IllegalArgumentException: ", e)
+        log.warn(">>>>>>>>IllegalArgumentException: ", e)
         return ApiResponse.error(ErrorStatus.BAD_REQUEST, errorMessage)
     }
 

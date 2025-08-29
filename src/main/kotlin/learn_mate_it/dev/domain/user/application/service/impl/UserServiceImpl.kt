@@ -11,7 +11,6 @@ import learn_mate_it.dev.domain.user.application.dto.response.UserProfileDto
 import learn_mate_it.dev.domain.user.application.service.UserService
 import learn_mate_it.dev.domain.user.domain.model.User
 import learn_mate_it.dev.domain.user.domain.repository.UserRepository
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,8 +21,6 @@ class UserServiceImpl(
     private val tokenService: TokenService,
     private val userRepository: UserRepository,
 ): UserService {
-
-    private val log = LoggerFactory.getLogger(this::class.java)
 
     /**
      * WithDraw And Delete All Data About User

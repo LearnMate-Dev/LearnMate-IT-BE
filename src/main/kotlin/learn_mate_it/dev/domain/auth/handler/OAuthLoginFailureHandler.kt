@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
 @Component
 class OAuthLoginFailureHandler: AuthenticationFailureHandler {
 
-    private val log = LoggerFactory.getLogger(this::class.java)
+    private val log = LoggerFactory.getLogger("Logger")
 
     override fun onAuthenticationFailure(
         request: HttpServletRequest?,

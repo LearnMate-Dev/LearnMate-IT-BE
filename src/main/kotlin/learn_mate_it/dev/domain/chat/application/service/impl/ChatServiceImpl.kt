@@ -16,7 +16,6 @@ import learn_mate_it.dev.domain.chat.domain.model.Chat
 import learn_mate_it.dev.domain.chat.domain.model.ChatRoom
 import learn_mate_it.dev.domain.chat.domain.repository.ChatRepository
 import learn_mate_it.dev.domain.chat.domain.repository.ChatRoomRepository
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -28,7 +27,6 @@ class ChatServiceImpl(
 
     private final val CONTENT_LENGTH: Int = 500
     private final val TITLE_LENGTH: Int = 30
-    private val log = LoggerFactory.getLogger(this::class.java)
 
     /**
      * Start chat with Text And Get recommend chat subject from AI

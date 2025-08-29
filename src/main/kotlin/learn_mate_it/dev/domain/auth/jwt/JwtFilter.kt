@@ -19,7 +19,7 @@ class JwtFilter(
     private val jwtUtil: JwtUtil
 ) : OncePerRequestFilter() {
 
-    private val log = LoggerFactory.getLogger(this::class.java)
+    private val log = LoggerFactory.getLogger("Logger")
     private val mapper = ObjectMapper()
 
     override fun doFilterInternal(

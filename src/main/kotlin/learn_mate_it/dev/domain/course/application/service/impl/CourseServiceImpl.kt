@@ -14,15 +14,12 @@ import learn_mate_it.dev.domain.course.domain.enums.StepStatus
 import learn_mate_it.dev.domain.course.domain.enums.StepType
 import learn_mate_it.dev.domain.course.domain.model.UserStepProgress
 import learn_mate_it.dev.domain.course.domain.repository.UserStepProgressRepository
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class CourseServiceImpl(
     private val stepProgressRepository: UserStepProgressRepository
 ) : CourseService {
-
-    private val log = LoggerFactory.getLogger(this::class.java)
 
     /**
      * Start User's New Step Course
