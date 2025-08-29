@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
-    private val log = LoggerFactory.getLogger(this::class.java)
+    private val log = LoggerFactory.getLogger("Logger")
 
     @ExceptionHandler(GeneralException::class)
     fun handleGeneralException(e: GeneralException): ResponseEntity<ApiResponse<Nothing>> {

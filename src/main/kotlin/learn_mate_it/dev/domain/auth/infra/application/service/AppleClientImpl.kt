@@ -16,7 +16,7 @@ class AppleClientImpl(
     private val webClient: WebClient
 ): AppleClient {
 
-    private val log = LoggerFactory.getLogger(this::class.java)
+    private val log = LoggerFactory.getLogger("Logger")
 
     /**
      * Get Public Key From Apple Server
@@ -28,14 +28,14 @@ class AppleClientImpl(
             .onStatus({ it.is4xxClientError }) { response ->
                 response.bodyToMono(String::class.java)
                     .flatMap {
-                        log.error("Client error body: {}", it)
+                        log.error("[*] Fail to get apple pub key: Client error body: {}", it)
                         Mono.error(GeneralException(ErrorStatus.APPLE_LOGIN_PUB_KEY_CLIENT_ERROR))
                     }
             }
             .onStatus({ it.is5xxServerError }) { response ->
                 response.bodyToMono(String::class.java)
                     .flatMap {
-                        log.error("Server error body: {}", it)
+                        log.error("[*] Fail to get apple pub key: Server error body: {}", it)
                         Mono.error(GeneralException(ErrorStatus.APPLE_LOGIN_PUB_KEY_SERVER_ERROR))
                     }
             }

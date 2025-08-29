@@ -21,7 +21,7 @@ class JwtUtil(
     @Value("\${jwt.access-token.expiration-time}") private val accessTokenExpirationTime: Long,
     @Value("\${jwt.refresh-token.expiration-time}") private val refreshTokenExpirationTime: Long,
 ) {
-    private val log = LoggerFactory.getLogger(this::class.java)
+    private val log = LoggerFactory.getLogger("Logger")
     private fun getSigningKey() = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret))
     private val objectMapper = ObjectMapper()
 
