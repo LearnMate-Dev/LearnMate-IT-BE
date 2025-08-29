@@ -11,6 +11,10 @@
             </encoder>
         </appender>
 
+        <logger name="Logger" additivity="false" level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
@@ -23,11 +27,8 @@
 
         <appender name="DISCORD" class="com.github.napstr.logback.DiscordAppender">
             <webhookUri>${DISCORD_WEBHOOK_URL}</webhookUri>
-            <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>[%d{HH:mm:ss}] [%-5level] %logger{36} %n %msg%n```%ex{full}```</pattern>
-            </layout>
+            <layout class="learn_mate_it.dev.common.log.dto.DiscordErrorLayout" />
             <username>[LearnMate]DEV SERVER ERROR</username>
-
             <tts>false</tts>
         </appender>
 
@@ -40,13 +41,17 @@
 
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
-                <Pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%t] %logger{36} - %msg%n</Pattern>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%t] %logger{36} - %msg%n</Pattern>
                 <charset>utf8</charset>
             </encoder>
         </appender>
 
-        <root level="INFO">
+        <logger name="Logger" additivity="false" level="INFO">
+            <appender-ref ref="CONSOLE"/>
             <appender-ref ref="ASYNC_DISCORD"/>
+        </logger>
+
+        <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
