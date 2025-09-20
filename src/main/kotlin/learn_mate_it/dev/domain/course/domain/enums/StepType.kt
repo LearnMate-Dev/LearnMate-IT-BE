@@ -46,24 +46,24 @@ enum class StepType (
      * Course 2
      */
     Step2_1(CourseType.COURSE_2, 1,
-        "Step2-1",
-        "Step2-1 Description",
+        "친구와 관계 맺기",
+        "센스 있는 소통의 기술을 배워요",
         listOf(QuizType.Quiz2_1_1,
             QuizType.Quiz2_1_2,
             QuizType.Quiz2_1_3)
     ),
 
     Step2_2(CourseType.COURSE_2, 2,
-        "Step2-2",
-        "Step2-2 Description",
+        "진심으로 사과하기",
+        "상황과 상대에 맞게 사과하는 표현을 배워요",
         listOf(QuizType.Quiz2_2_1,
             QuizType.Quiz2_2_2,
             QuizType.Quiz2_2_3)
     ),
 
     Step2_3(CourseType.COURSE_2, 3,
-        "Step2-3",
-        "Step2-3 Description",
+        "감사 표현으로 마음 전하기",
+        "감사함을 전하는 표현을 배워요",
         listOf(QuizType.Quiz2_3_1,
             QuizType.Quiz2_3_2,
             QuizType.Quiz2_3_3)
@@ -73,24 +73,24 @@ enum class StepType (
      * Course 3
      */
     Step3_1(CourseType.COURSE_3, 1,
-        "Step3-1",
-        "Step3-1 Description",
+        "윗사람과 대화하기",
+        "윗사람과 정중하게 대화하는 표현을 배워요",
         listOf(QuizType.Quiz3_1_1,
             QuizType.Quiz3_1_2,
             QuizType.Quiz3_1_3)
     ),
 
     Step3_2(CourseType.COURSE_3, 2,
-        "Step3-2",
-        "Step3-2 Description",
+        "지혜롭게 부탁하기",
+        "타인에게 부탁하는 표현을 배워요",
         listOf(QuizType.Quiz3_2_1,
             QuizType.Quiz3_2_2,
             QuizType.Quiz3_2_3)
     ),
 
     Step3_3(CourseType.COURSE_3, 3,
-        "Step3-3",
-        "Step3-3 Description",
+        "정중하게 거절하기",
+        "마음이 상하지 않게 거절하는 표현을 배워요",
         listOf(QuizType.Quiz3_3_1,
             QuizType.Quiz3_3_2,
             QuizType.Quiz3_3_3)
