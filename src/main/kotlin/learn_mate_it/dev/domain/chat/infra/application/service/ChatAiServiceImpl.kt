@@ -1,13 +1,13 @@
 package learn_mate_it.dev.domain.chat.infra.application.service
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.databind.ObjectMapper
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
 import learn_mate_it.dev.common.util.ResourceLoader
 import learn_mate_it.dev.domain.chat.application.dto.response.ChatDto
 import learn_mate_it.dev.domain.chat.application.service.ChatAiService
 import learn_mate_it.dev.domain.chat.infra.application.dto.response.ChatRoomAnalysisDto
+import org.slf4j.LoggerFactory
+import org.springframework.ai.chat.client.ChatClient
 import org.springframework.ai.openai.OpenAiChatModel
 import org.springframework.stereotype.Service
 
@@ -15,9 +15,10 @@ import org.springframework.stereotype.Service
 class ChatAiServiceImpl(
     private val chatModel: OpenAiChatModel,
     private val resourceLoader: ResourceLoader,
-    private val objectMapper: ObjectMapper
 ) : ChatAiService {
 
+    private val chatClient = ChatClient.builder(chatModel).build()
+    private val log = LoggerFactory.getLogger("Logger")
     private val RECOMMEND_SUBJECT_PROMPT: String = resourceLoader.getResourceContent("recommend-subject-prompt.txt")
     private val CHAT_PROMPT = resourceLoader.getResourceContent("chat-prompt.txt")
     private val ANALYSIS_CHAT_PROMPT = resourceLoader.getResourceContent("analysis-chat-prompt.txt")
@@ -42,19 +43,14 @@ class ChatAiServiceImpl(
 
     override fun analysisChatRoom(chatList: List<ChatDto>): ChatRoomAnalysisDto {
         try {
-            val response = chatModel.call(ANALYSIS_CHAT_PROMPT + chatList.toString())
-            return parseAiResponse<ChatRoomAnalysisDto>(response)
+            return chatClient.prompt()
+                .user(ANALYSIS_CHAT_PROMPT + chatList.toString())
+                .call()
+                .entity(ChatRoomAnalysisDto::class.java)
         } catch (e: Exception) {
+            log.error("[*] AI 채팅방 내용 요약 요청 중 오류 발생 : ", e)
             throw GeneralException(ErrorStatus.CHAT_AI_ANALYSIS_ERROR)
         }
     }
 
-    private inline fun <reified T> parseAiResponse(aiResponse: String): T {
-        return try {
-            val cleanResponse = aiResponse.replace("```json\\s*".toRegex(), "").replace("```".toRegex(), "");
-            objectMapper.readValue(cleanResponse, T::class.java)
-        } catch (e: JsonProcessingException) {
-            throw GeneralException(ErrorStatus.CHAT_AI_PARSING_ERROR)
-        }
-    }
 }

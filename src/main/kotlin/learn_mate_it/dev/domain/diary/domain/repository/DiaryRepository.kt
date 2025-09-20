@@ -23,13 +23,6 @@ interface DiaryRepository : JpaRepository<Diary, Long> {
 
     @Query("SELECT d " +
             "FROM Diary d " +
-            "WHERE d.diaryId = :diaryId")
-    fun findByDiaryId(
-        @Param("diaryId") diaryId: Long
-    ): Diary?
-
-    @Query("SELECT d " +
-            "FROM Diary d " +
                 "LEFT JOIN FETCH d.spelling s " +
                 "LEFT JOIN FETCH s.revisions sr " +
                 "LEFT JOIN FETCH d.spellingFeedback sf " +

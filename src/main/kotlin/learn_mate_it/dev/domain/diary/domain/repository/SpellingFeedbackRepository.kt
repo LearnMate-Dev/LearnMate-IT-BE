@@ -15,13 +15,9 @@ interface SpellingFeedbackRepository : JpaRepository<SpellingFeedback, Long> {
     fun deleteByUserId(@Param(value = "userId") userId: Long)
 
     @Modifying
-    @Query(
-        nativeQuery = true,
-        value = """
-        DELETE FROM spelling_feedback 
-        WHERE diary_id = :diaryId
-    """
-    )
+    @Query("DELETE " +
+            "FROM SpellingFeedback sf " +
+            "WHERE sf.diary.diaryId = :diaryId")
     fun deleteByDiaryId(@Param(value = "diaryId") diaryId: Long)
 
 }

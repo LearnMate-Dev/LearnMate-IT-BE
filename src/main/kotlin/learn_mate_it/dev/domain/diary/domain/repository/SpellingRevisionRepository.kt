@@ -15,16 +15,12 @@ interface SpellingRevisionRepository : JpaRepository<SpellingRevision, Long> {
     fun deleteByUserId(@Param(value = "userId") userId: Long)
 
     @Modifying
-    @Query(
-        nativeQuery = true,
-        value = """
-        DELETE FROM spelling_revision 
-        WHERE spelling_id IN (
-            SELECT spelling_id 
-            FROM spelling s 
-            WHERE diary_id = :diaryId
-        )
-    """
+    @Query("DELETE " +
+            "FROM SpellingRevision sr " +
+            "WHERE sr.spelling.spellingId IN ( " +
+                "SELECT s.spellingId " +
+                "FROM Spelling s " +
+                "WHERE s.diary.diaryId = :diaryId )"
     )
     fun deleteByDiaryId(@Param(value = "diaryId") diaryId: Long)
 
