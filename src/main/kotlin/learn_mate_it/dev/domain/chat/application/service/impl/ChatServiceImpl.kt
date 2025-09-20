@@ -76,7 +76,8 @@ class ChatServiceImpl(
         )
 
         // get ai's response
-        val response = chatAiService.getChatResponse(request.content)
+        val chatDtoList = chatRoom.chats.map { ChatDto.toChatDto(it) }.toString()
+        val response = chatAiService.getChatResponse(chatDtoList + request.content)
         validStringLength(response, CONTENT_LENGTH, ErrorStatus.CHAT_AI_CONTENT_OVER_FLOW)
         val aiChat = chatRepository.save(
             Chat(
