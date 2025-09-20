@@ -115,7 +115,7 @@ class DiaryServiceImpl(
      */
     @Transactional
     override fun deleteDiary(userId: Long, diaryId: Long) {
-        val diary = getDiary(diaryId)
+        val diary = getDiaryFetchSpelling(diaryId)
         diary.validIsUserAuthorized(userId)
 
         spellingService.deleteByDiaryId(diaryId)
@@ -128,11 +128,6 @@ class DiaryServiceImpl(
         spellingService.deleteByUserId(userId)
         feedbackService.deleteByUserId(userId)
         diaryRepository.deleteByUserId(userId)
-    }
-
-    private fun getDiary(diaryId: Long): Diary {
-        return diaryRepository.findByDiaryId(diaryId)
-            ?: throw GeneralException(ErrorStatus.NOT_FOUND_DIARY)
     }
 
 }
