@@ -1,33 +1,36 @@
 package learn_mate_it.dev.domain.diary.infra.application.dto.response
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 
-data class SpellingAnalysisResponse(
-    val origin: String,
-    val revised: String,
-    val revisedSentences: List<RevisedSentence>?
+
+data class SpellingAnalysisResponse @JsonCreator constructor(
+    @JsonProperty("origin") val origin: String,
+    @JsonProperty("revised") val revised: String,
+    @JsonProperty("revisedSentences") val revisedSentences: List<RevisedSentence>?
 )
 
-data class RevisedSentence(
-    val origin: String,
-    val revised: String,
-    val revisedBlocks: List<RevisedBlock>?,
+data class RevisedSentence @JsonCreator constructor(
+    @JsonProperty("origin") val origin: String,
+    @JsonProperty("revised") val revised: String,
+    @JsonProperty("revisedBlocks") val revisedBlocks: List<RevisedBlock>?,
 )
 
-data class RevisedBlock(
-    val origin: Origin,
-    val revised: String,
-    val revisions: List<Revision>
+data class RevisedBlock @JsonCreator constructor(
+    @JsonProperty("origin") val origin: Origin,
+    @JsonProperty("revised") val revised: String,
+    @JsonProperty("revisions") val revisions: List<Revision>
 )
 
-data class Origin(
-    val content: String,
-    val beginOffset: Int,
-    val length: Int
+data class Origin @JsonCreator constructor(
+    @JsonProperty("content") val content: String,
+    @JsonProperty("beginOffset") val beginOffset: Int,
+    @JsonProperty("length") val length: Int
 )
 
-data class Revision(
-    val revised: String,
-    val category: String,
-    val comment: String,
-    val examples: List<String>
+data class Revision @JsonCreator constructor(
+    @JsonProperty("revised") val revised: String,
+    @JsonProperty("category") val category: String,
+    @JsonProperty("comment") val comment: String,
+    @JsonProperty("examples") val examples: List<String>
 )

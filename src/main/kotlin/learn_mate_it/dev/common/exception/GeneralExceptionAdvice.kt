@@ -22,7 +22,7 @@ class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
     fun handleGeneralException(e: GeneralException): ResponseEntity<ApiResponse<Nothing>> {
         when {
             e.errorStatus.httpStatus.is5xxServerError -> log.error(">>>>>>>>GeneralException: ", e)
-            else -> log.warn(">>>>>>>>GeneralException: ", e)
+            else -> log.warn(">>>>>>>>GeneralException: $e")
         }
         return ApiResponse.error(e.errorStatus)
     }
