@@ -80,6 +80,7 @@ jobs:
           ./gradlew build -x test
 
       - name: Build and push Docker image
+        id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_NAME }}
