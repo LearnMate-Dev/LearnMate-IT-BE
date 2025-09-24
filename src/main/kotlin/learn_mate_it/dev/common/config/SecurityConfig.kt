@@ -32,7 +32,7 @@ class SecurityConfig(
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
-    private val allowedUrls = arrayOf("/v3/**", "/swagger-ui/**", "/", "/oauth2/**", "/api/auth/**")
+    private val allowedUrls = arrayOf("/v3/**", "/swagger-ui/**", "/", "/oauth2/**", "/api/auth/**", "/actuator/**")
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
