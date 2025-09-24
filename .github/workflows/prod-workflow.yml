@@ -93,11 +93,15 @@ jobs:
         run: |
           aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_NAME }} --query taskDefinition > task-definition.json
 
+      - name: Remove unnecessary keys from task definition
+        run: |
+          jq 'del(.enableFaultInjection)' task-definition.json > task-definition-clean.json
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: task-definition.json
+          task-definition: task-definition-clean.json
           container-name: ${{ secrets.ECS_CONTAINER_NAME }}
           image: $(cat image.txt)
 
