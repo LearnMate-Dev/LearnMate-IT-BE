@@ -78,7 +78,7 @@ jobs:
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:dev
           
-          docker build --platform linux/amd64 -t $IMAGE .
+          docker build --no-cache --platform linux/amd64 -t $IMAGE .
           docker push $IMAGE
   
   deploy-cd:
