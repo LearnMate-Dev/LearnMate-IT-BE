@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 @Entity
 data class EmailVerification(
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val email: String,
 
     @Column(nullable = false)
@@ -21,7 +21,7 @@ data class EmailVerification(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val emailVerificationId: Long = 0L
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     var isVerified: Boolean = false
 
     fun verify() {
