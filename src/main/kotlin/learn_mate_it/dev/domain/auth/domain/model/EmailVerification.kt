@@ -21,7 +21,7 @@ data class EmailVerification(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val emailVerificationId: Long = 0L
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     var isVerified: Boolean = false
 
     fun verify() {
@@ -37,7 +37,7 @@ data class EmailVerification(
         return LocalDateTime.now().isAfter(expirationTime)
     }
 
-    fun ensureIsNotVerified() {
+    fun ensureIsVerified() {
         if (!this.isVerified) {
             throw GeneralException(ErrorStatus.EMAIL_IS_NOT_VERIFIED)
         }
