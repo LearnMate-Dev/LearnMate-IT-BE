@@ -23,11 +23,6 @@ class AuthController(
     private val oAuthLoginSuccessHandler: OAuthLoginSuccessHandler
 ) {
 
-    @GetMapping("/discord-test")
-    fun discordTest() {
-        throw Exception("Discord Error Test")
-    }
-
     @PostMapping("/apple/login")
     fun appleLogin(
         @RequestBody request: AppleLoginRequest,

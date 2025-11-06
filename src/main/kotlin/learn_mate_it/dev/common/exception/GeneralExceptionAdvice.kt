@@ -35,7 +35,7 @@ class GeneralExceptionAdvice : ResponseEntityExceptionHandler() {
         val errorMessage = ex.bindingResult.fieldErrors.firstOrNull()?.defaultMessage
         val body = createErrorBody(errorMessage, ErrorStatus.BAD_REQUEST)
 
-        log.warn(">>>>>>>>MethodArgumentNotValidException: ", ex)
+        log.warn(">>>>>>>>MethodArgumentNotValidException: $ex")
         return handleExceptionInternal(ex, body, headers, status, request)
     }
 
