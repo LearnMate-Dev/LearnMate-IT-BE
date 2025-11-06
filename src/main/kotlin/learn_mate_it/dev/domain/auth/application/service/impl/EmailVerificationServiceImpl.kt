@@ -3,16 +3,17 @@ package learn_mate_it.dev.domain.auth.application.service.impl
 import jakarta.transaction.Transactional
 import learn_mate_it.dev.common.exception.GeneralException
 import learn_mate_it.dev.common.status.ErrorStatus
+import learn_mate_it.dev.domain.auth.application.listener.EmailSendEvent
 import learn_mate_it.dev.domain.auth.application.service.EmailVerificationService
 import learn_mate_it.dev.domain.auth.domain.model.EmailVerification
 import learn_mate_it.dev.domain.auth.domain.repository.EmailVerificationRepository
-import learn_mate_it.dev.domain.auth.infra.application.service.EmailSendService
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 
 @Service
 class EmailVerificationServiceImpl(
-    private val emailSendService: EmailSendService,
-    private val emailVerificationRepository: EmailVerificationRepository
+    private val emailVerificationRepository: EmailVerificationRepository,
+    private val applicationEventPublisher: ApplicationEventPublisher
 ): EmailVerificationService {
 
     /**
@@ -27,7 +28,7 @@ class EmailVerificationServiceImpl(
         verification.updateCode(code)
         emailVerificationRepository.save(verification)
 
-        emailSendService.sendEmail(email, code)
+        applicationEventPublisher.publishEvent(EmailSendEvent(email, code))
     }
 
     private fun createVerificationCode() = (100000..999999).random().toString()
@@ -54,7 +55,7 @@ class EmailVerificationServiceImpl(
     @Transactional
     override fun validateIsEmailVerified(email: String) {
         val verification = getEmailVerificationByEmail(email)
-        verification.ensureIsNotVerified()
+        verification.ensureIsVerified()
 
         emailVerificationRepository.delete(verification)
     }
