@@ -14,6 +14,8 @@ import learn_mate_it.dev.domain.course.domain.enums.StepStatus
 import learn_mate_it.dev.domain.course.domain.enums.StepType
 import learn_mate_it.dev.domain.course.domain.model.UserStepProgress
 import learn_mate_it.dev.domain.course.domain.repository.UserStepProgressRepository
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
 @Service
@@ -26,7 +28,7 @@ class CourseServiceImpl(
      *
      * @param courseLv level of course to start (1 ~ 3)
      * @param stepLv level of step to start (1 ~ 3)
-     * @return StepInitDto id of step progress, info of step, info of all quizes
+     * @return StepInitDto id of step progress, info of step, info of all quizzes
      */
     @Transactional
     override fun startStep(userId: Long, courseLv: Int, stepLv: Int): StepInitDto {
@@ -83,6 +85,7 @@ class CourseServiceImpl(
      *
      * @param stepProgressId id of step progress
      */
+    @CacheEvict(cacheNames = ["courses"], key = "#userId")
     @Transactional
     override fun endStep(userId: Long, stepProgressId: Long) {
         val stepProgress = getStepProgress(stepProgressId, userId)
@@ -109,6 +112,7 @@ class CourseServiceImpl(
      * @param courseLv level of course (1 ~ 3)
      * @return CourseDto Info of course, each step and status
      */
+    @Cacheable(cacheNames = ["courses"], key = "#userId")
     override fun getCourseInfo(userId: Long): CourseListDto {
         val courseList = CourseType.getAllCourseList()
         val completedStepSet = getAllCompletedStepTypeSet(userId)
