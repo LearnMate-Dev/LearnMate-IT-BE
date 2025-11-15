@@ -58,6 +58,7 @@ dependencies {
 	implementation ("io.jsonwebtoken:jjwt-jackson:0.12.3")
 	// redis
 	implementation ("org.springframework.boot:spring-boot-starter-data-redis")
+	implementation("org.springframework.boot:spring-boot-starter-cache")
 	// coroutine
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
