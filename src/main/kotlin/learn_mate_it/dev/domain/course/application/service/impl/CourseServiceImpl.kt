@@ -169,7 +169,7 @@ class CourseServiceImpl(
     private fun getCourseProgress(stepList: List<StepDto>): Int {
         if (stepList.isEmpty()) return 0
 
-        val progress = stepList.count { it.stepStatus == StepStatus.SOLVED }
+        val progress = stepList.count { it.isSolved() }
         return ((progress.toDouble() / stepList.size) * 100).toInt()
     }
 
