@@ -1,5 +1,6 @@
 package learn_mate_it.dev.domain.course.application.dto.response
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import learn_mate_it.dev.domain.course.domain.enums.StepStatus
 import learn_mate_it.dev.domain.course.domain.enums.StepType
 
@@ -29,23 +30,28 @@ data class StepInitDto (
     }
 }
 
-data class StepDto(
-    val stepLv: Int,
-    val stepTitle: String,
-    val stepDescription: String,
-    val stepStatus: StepStatus
-) {
+@JsonIgnoreProperties(ignoreUnknown = true)
+open class StepDto {
+    var stepLv: Int = 0
+    var stepTitle: String = ""
+    var stepDescription: String = ""
+    var stepStatus: StepStatus = StepStatus.LOCK
+
+    fun isSolved(): Boolean {
+        return this.stepStatus == StepStatus.SOLVED
+    }
+
     companion object {
         fun toStepDto(
             step: StepType,
             stepStatus: StepStatus
         ): StepDto {
-            return StepDto(
-                stepLv = step.level,
-                stepTitle = step.title,
-                stepDescription = step.description,
-                stepStatus = stepStatus
-            )
+            val dto = StepDto()
+            dto.stepLv = step.level
+            dto.stepTitle = step.title
+            dto.stepDescription = step.description
+            dto.stepStatus = stepStatus
+            return dto
         }
     }
 }
