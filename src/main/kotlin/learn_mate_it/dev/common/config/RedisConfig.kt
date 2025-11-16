@@ -1,6 +1,10 @@
 package learn_mate_it.dev.common.config
 
-import org.springframework.cache.CacheManager
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.cache.RedisCacheConfiguration
@@ -15,16 +19,23 @@ import java.time.Duration
 class RedisConfig {
 
     @Bean
-    fun cacheManager(connectionFactory: RedisConnectionFactory): CacheManager {
+    fun cacheManager(connectionFactory: RedisConnectionFactory): RedisCacheManager {
+        val objectMapper = ObjectMapper()
+            .registerKotlinModule()
+            .registerModule(JavaTimeModule())
+            .activateDefaultTyping(
+                BasicPolymorphicTypeValidator.builder()
+                    .allowIfBaseType(Any::class.java)
+                    .build(),
+                ObjectMapper.DefaultTyping.NON_FINAL_AND_ENUMS,
+                JsonTypeInfo.As.PROPERTY
+            )
+
+        val jsonSerializer = GenericJackson2JsonRedisSerializer(objectMapper)
+
         val cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-            // String으로 Key 직렬화
-            .serializeKeysWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer())
-            )
-            // JSON으로 Value 직렬화
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(GenericJackson2JsonRedisSerializer())
-            )
+            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer))
             .entryTtl(Duration.ofDays(1))
 
         return RedisCacheManager.RedisCacheManagerBuilder
@@ -32,5 +43,4 @@ class RedisConfig {
             .cacheDefaults(cacheConfig)
             .build()
     }
-
 }
